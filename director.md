@@ -1809,7 +1809,11 @@ The audited repository was published to the authorized public repository:
   documented placeholders remain
 
 The subsequent post-correction matching changes and this handoff update are
-pending one additional commit and push before Render creation.
+now pushed in the current public `main` head:
+
+- Current public `main` commit: `7d1f343a190386905501b912401096c252b45387`
+- The earlier `5bf4449fc1e363a778561f299842a2fcecb9b4e2` commit remains in the
+  public history as the initial classification-correction publication.
 
 ### Render status
 
