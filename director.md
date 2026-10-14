@@ -1875,3 +1875,179 @@ evidence here.
 Current status: **BUILDING, LOCAL CORE PROVEN, PUBLIC GITHUB PUBLISHED, PAID
 RENDER SERVICE LIVE, PRODUCTION SECRETS NOT YET POPULATED, CORE UAT BLOCKED**.
 
+## Directive 015 — Creative Director UI/UX reconstruction
+
+Updated: 2026-10-14 (Africa/Lagos). Mode: **REDESIGN with LAUNCH safeguards**.
+
+The owner rejected the earlier Evidence Desk 014A visual direction and supplied
+the Findor reference at `https://laudable-fly-396.convex.site/`. A new isolated
+branch was created from the pre-014A rollback point:
+
+- Branch: `codex/uiux-015-findor-reconstruction`
+- Base / rollback: `70f8042550cfbf28b15bc5adbf969a9baa48bd40` (`70f8042`)
+- Production/GitHub/Render state: unchanged by this directive
+- Release status: local/preview review only; no merge, push or production
+  deployment from this branch
+
+### Product Truth Brief
+
+**Observed product promise:** For freelancers and independent professionals
+who need credible client leads, Source turns a public portfolio or project URL
+into an editable, evidence-backed profile and helps investigate relevant,
+source-linked opportunities without promising clients or payment.
+
+**First-time job:** Understand Source, create an account, provide public work,
+review what the page actually supports, choose desired customer types, inspect
+live opportunity evidence, and prepare a credible proposal.
+
+**Returning-user job:** Sign in and recover saved opportunities and proposal
+drafts without repeating the first task when the existing backend can provide
+those records.
+
+**Primary value moment:** A real profile is visible with grounded excerpts,
+then a live source-linked result explains why it matched.
+
+**Protected surfaces:** Authentication/session routes, SSRF-safe website
+fetching, DeepSeek profile generation, Mastra workflow boundary, MongoDB
+schemas and ownership, discovery adapters/ranking, proposal route, Render
+configuration and secrets. The UI branch did not alter these surfaces.
+
+### Reference inspection evidence
+
+The supplied reference was opened in real Chromium and audited at 320, 390,
+768, 1280 and 1440px. Evidence is in `docs/uiux-015/reference-inspection.json`
+and `reference-screenshots/`.
+
+Verified observations:
+
+- Warm canvas `rgb(250, 248, 245)` and primary ink `rgb(20, 32, 26)`.
+- Plus Jakarta Sans body, Newsreader/Playfair/Fraunces-style display type.
+- Reference h1 measured `67.2px / 70.56px`, weight 700, `-2.016px` tracking.
+- Reference h2 measured `26.4px / 31.68px`, weight 700, `-0.528px` tracking.
+- 14 headings, 20 buttons, 1 text input, 5 sections, and a real sign-up
+  interaction that added `Create your account` in place.
+- No horizontal overflow at any required width; reference reduced-motion probe
+  reported `0s`.
+
+The legacy Source “before” screenshot was not fabricated. A detached rollback
+worktree was attempted for a real baseline capture, but Next/Turbopack rejected
+the dependency link and the bounded offline dependency install did not finish.
+The evidence folder records this P1 gap explicitly in
+`reference-teardown.md` and `known-limitations.md`.
+
+### Implemented vertical slice
+
+Only `src/components/SourceApp.tsx` and `src/app/globals.css` were changed in
+the product UI. The reconstruction adds:
+
+- A direct landing promise and URL-first activation path.
+- Original Source inline SVG logo, icon system and public-work/evidence/fit
+  artwork; no Findor artwork, logo, copy or image was copied.
+- Accessible registration/sign-in with visible error and busy states.
+- Dominant URL onboarding with real label, manual alternative, invalid URL
+  alert, preserved input and loading feedback.
+- Profile review organized into identity, grounded page evidence, suggestions,
+  editable profile fields and explicit evidence limits.
+- Four customer categories retained as actual controls: small businesses,
+  startups, agencies and individuals.
+- Discovery UI with query-impact copy, live provider response, classification,
+  rationale, original-source link, empty state and honest unconfirmed signals.
+- Proposal, save, refresh recovery, saved-work rail and logout/login recovery.
+- Responsive composition at required widths, visible focus, touch-sized
+  controls and reduced-motion rules.
+
+### Real browser acceptance evidence
+
+The final corrected `scripts/uiux-015-after.mjs` run passed with a fresh test
+account and real `https://www.frog.co/` analysis:
+
+```json
+{
+  "status": "pass",
+  "stages": [
+    "landing", "account", "onboarding", "url-error", "analysis-loading",
+    "live-analysis", "profile-edit", "customer-selection", "discovery",
+    "proposal", "refresh-recovery", "logout-login-recovery"
+  ],
+  "profileAnalysisHttpStatus": 200,
+  "discoveryHttpStatus": 200,
+  "evidenceVisible": true,
+  "editorVisible": true,
+  "errorInputPreserved": true,
+  "savedAndDrafted": true,
+  "sourceUrl": "https://www.frog.co/"
+}
+```
+
+The harness selected all four customer types, used live backend routes, and
+reported cleanup pass with one temporary account deleted. Visual evidence is
+in `docs/uiux-015/source-screenshots/`, including landing at 320/390/768/1280/
+1440px, profile evidence, audience selection, results, proposal, saved return
+and logout/login recovery.
+
+### Skill usage
+
+The user-supplied `director-uiux-excellence` archive was inspected directly
+from `C:\Users\HomePC\Downloads\Telegram Desktop\Director_UIUX_Excellence_Skill_v1.0-2.zip`.
+Read and applied: `SKILL.md`, `references/product-fit-and-architecture.md`,
+`references/taste-and-visual-system.md`, `references/audit-and-release-gates.md`,
+`references/test-missions.md`, `templates/product-truth-brief.md`,
+`templates/review-scorecard.md`, and `templates/director-to-builder-task.md`.
+The skill changed the work by requiring product truth before styling, a
+protected-surface freeze, real Chromium evidence, explicit empty/loading/error/
+recovery states, a 100-point scorecard and an honest release boundary.
+
+The Sites skill was also used for the local-only site workflow: keep work in
+the existing checkout, use a real local browser preview, and do not register,
+publish or deploy without explicit release approval.
+
+### Scorecard and release decision
+
+The recorded local visual score is **91/100** with no P0 defect. Full detail is
+in `docs/uiux-015/review-scorecard.md`. The result is not a production release
+decision because these P1 limitations remain:
+
+1. The protected backend exposes no profile-read route, so fresh-session UI
+   recovery cannot truthfully repopulate the confirmed profile editor.
+2. Proposal edits remain local until copied because no proposal-edit persistence
+   route exists.
+3. The old Source before screenshot could not be captured from the rollback
+   worktree in this environment.
+4. One live external excerpt contained replacement glyphs; a data-layer
+   encoding correction requires separate approval.
+
+Current Directive 015 status: **IMPLEMENTED LOCALLY, REAL BROWSER JOURNEY
+PROVEN, PREVIEW-ONLY, DIRECTOR REVIEW REQUIRED**.
+
+### Exact next tasks for a replacement director
+
+1. Review the reference and Source screenshots under `docs/uiux-015/` and the
+   scorecard/defect ledger.
+2. Decide whether the 91/100 local slice is accepted with disclosed
+   limitations or held for a separately authorized profile-read/proposal-edit
+   backend phase.
+3. Run the remaining quality gates and append their results:
+   `npm run lint`, `npm test -- --run`, `npm run build`, and the existing
+   backend probes where owner-approved.
+4. If accepted, commit this isolated branch, record the final SHA and exact
+   diff, then request a separate merge/production authorization. Do not touch
+   production in this phase.
+
+### Directive 015 quality gates completed
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS, ESLint exit code 0.
+- `npm test -- --run`: PASS, 2 test files / 8 tests.
+- `npm run build`: PASS, Next.js 16.4.0 compiled and generated 12 routes.
+- `npm run probe:mongodb`: PASS, ping/insert/read/delete/cleanup true.
+- `npm run probe:ownership`: PASS, separate registrations, owner save,
+  cross-account denial and saved-list isolation; two temporary accounts
+  deleted.
+- `npm run probe:gemma -- https://www.frog.co/`: PASS using the existing
+  DeepSeek provider/model, source HTTP 200, inference HTTP 200, one JSON object,
+  five claims and five grounded claims, no key exposure.
+
+The isolated UI branch has now passed its local engineering gates. This does
+not override the preview-only release boundary or close the documented
+profile-read/proposal-edit persistence limitations.
+
