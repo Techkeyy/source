@@ -1639,8 +1639,8 @@ procedure is in [docs/manual-acceptance.md](docs/manual-acceptance.md).
 
 The local repository and Render preparation remain ready:
 
-- Local Git commits exist: `568feaf` and the subsequent Directive 010 evidence
-  commit `aecbde2`; the current Directive 011 changes are pending commit.
+- Local Git commits exist: `568feaf`, Directive 010 evidence commit `aecbde2`,
+  and Directive 011 integration commit `351a975`.
 - No GitHub remote or GitHub token is configured.
 - `render.yaml` uses server-side DeepSeek configuration and does not include
   `.env.local`.
