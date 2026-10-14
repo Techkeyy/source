@@ -32,8 +32,10 @@ files, the two local browser evidence scripts and this evidence folder.
 - `npm run probe:gemma -- https://www.frog.co/` passed with DeepSeek
   `deepseek-flash`, source HTTP 200, inference HTTP 200, one JSON object and
   five grounded claims. The response metadata was redacted of credentials.
-- `git diff --name-only 70f8042..HEAD` must be run after commit and recorded
-  here. No protected backend path is expected in that result.
+- `git diff --name-only 70f8042..80e8f248e767d0c625f4c1c5c18e732f74ce8f83`
+  returned 48 expected paths: the director handoff, `docs/uiux-015/`, the two
+  browser scripts, `src/app/globals.css` and
+  `src/components/SourceApp.tsx`. No protected backend path appeared.
 
 ## Explicit non-change
 
