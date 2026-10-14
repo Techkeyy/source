@@ -6,7 +6,9 @@ This is the fallback procedure when automated browser control is unavailable. It
 
 1. Start Source with npm run dev or npm run build followed by npm run start.
 2. Confirm GET / returns the Source application.
-3. Confirm MongoDB Atlas is reachable and GOOGLE_API_KEY is configured.
+3. Confirm MongoDB Atlas is reachable and the active DeepSeek route is configured:
+   `INFERENCE_PROVIDER=deepseek`, `DEEPSEEK_MODEL=deepseek-flash`, and a
+   server-only `DEEPSEEK_API_KEY`.
 4. Use a real, publicly accessible project or portfolio URL that does not require a password.
 5. Capture the public URL, timestamp, account email alias, and the source links shown in the UI. Never capture passwords or API keys.
 
@@ -42,4 +44,4 @@ This is the fallback procedure when automated browser control is unavailable. It
 
 Mark each item with PASS, FAIL, or NOT RUN and include the timestamp, URL, and a short observation. A browser screenshot or screen recording may support the record, but it cannot replace checking persistence and ownership.
 
-Automated browser status for this workspace: the Codex browser connector failed to initialize with 'failed to write kernel assets: The system cannot find the path specified'; the project has no Playwright package or separately installed Chromium binary. Chrome and Edge executable paths are present, but no browser automation run was completed. Until an owner installs or enables a controlled browser runner, this manual procedure remains the authoritative fallback.
+Automated browser status for this workspace: the Codex in-app browser refused the local `http://localhost:3000/` tab under its URL policy. The project has no Playwright package or separately installed Chromium binary. The local HTTP integration harness completed the server-side journey, but it is not a substitute for visual browser UAT. Until an owner enables a controlled browser runner or performs the manual procedure, this document remains the authoritative visual-UAT fallback.

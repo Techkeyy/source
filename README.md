@@ -1,92 +1,183 @@
 # Source
 
-Source is an AI-assisted opportunity discovery product for freelancers and
-small independent businesses. A user can start with a public project URL, review
-the profile Source extracts from that site, choose the kinds of customers they
-want to work with, and search permitted sources for relevant opportunities.
+Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to find source-linked opportunities for the customer types they choose.
 
-## Current status
+**[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)**
 
-Directive 003 authorized the minimum complete application build. The first
-vertical implementation is present and passes typecheck, lint, security unit
-tests, UI copy audit, and a production build. It has not yet passed normal
-browser UAT, MongoDB persistence UAT, a real Gemma inference call, or public
-deployment. It is not submission-ready.
+> *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
-The current authoritative status is **BUILDING, CORE PATH NOT YET PROVEN**.
-The application deliberately reports missing server credentials instead of
-substituting fixtures.
+Source is for freelancers and small independent businesses that need a faster path from their existing work to credible client-opportunity research. It does not guarantee clients, payments, hiring outcomes, or responses.
 
-The current Core Outcome is:
+## Why this exists
 
-> Source is only genuinely working when a fresh signed-in user can submit a
-> public project URL, review and confirm a citation-backed profile, choose one
-> or more customer categories, run a real permitted source query, receive
-> source-linked matches with an evidence-based explanation, save one result, and
-> reload it later without operator intervention.
+Most opportunity search starts with a blank keyword box. That leaves the freelancer to translate their own work into search terms, judge whether a listing is real, and write a proposal without a grounded account of what they can support.
 
-## Local development
+Source starts with the user’s own public project, portfolio, agency, or business URL. It extracts a reviewable profile, keeps evidence quotes attached to claims, lets the user choose small businesses, startups, agencies, and individuals, then changes discovery queries and ranking signals according to those choices.
+
+```text
+Public project URL
+       |
+       v
+Safe fetch + content extraction
+       |
+       v
+DeepSeek JSON profile + evidence validation
+       |
+       v
+User edits and confirms profile
+       |
+       v
+Customer-type query planning
+       |
+       v
+Live permitted sources -> classified, source-linked opportunities
+       |
+       v
+Proposal -> save -> logout/login recovery
+```
+
+## What it does
+
+1. **Creates** an account with a server-side session and MongoDB ownership boundary.
+2. **Fetches** a public URL with SSRF checks, redirect revalidation, size limits, and content normalization.
+3. **Extracts** a structured profile with DeepSeek’s documented Chat Completions endpoint, JSON mode, disabled thinking, and a bounded prompt.
+4. **Validates** the response with Zod-compatible schema checks and deterministic evidence matching. Claims without matching source quotes are not accepted as verified facts.
+5. **Lets the user edit and confirm** the generated profile before it is persisted.
+6. **Plans** discovery queries from confirmed services, skills, keywords, and one or more selected customer categories: small businesses, startups, agencies, or individuals.
+7. **Queries** public Hacker News, Jobicy, and Remote OK sources, with optional SerpApi coverage when an owner-configured key exists.
+8. **Classifies and ranks** fresh freelance or contract signals, retains original URLs, explains profile/category matches, and labels unconfirmed buyer signals honestly.
+9. **Drafts** an editable proposal from the saved opportunity and confirmed profile evidence.
+10. **Persists** opportunities and proposal drafts so the same account can recover them after refresh or login.
+
+## Quickstart
+
+Install dependencies:
+
+```powershell
+npm install
+```
+
+Configure the server, never the browser:
 
 ```powershell
 Copy-Item .env.example .env.local
-npm install
+# Edit .env.local and set:
+# MONGODB_URI, MONGODB_DB, SESSION_SECRET
+# INFERENCE_PROVIDER=deepseek
+# DEEPSEEK_MODEL=deepseek-flash
+# DEEPSEEK_API_KEY=<owner-configured-secret>
+```
+
+Run the application:
+
+```powershell
 npm run dev
 ```
 
-Required server values are `MONGODB_URI`, `MONGODB_DB`, `SESSION_SECRET`, and
-one approved inference route. `INFERENCE_PROVIDER=gemma` uses one of
-`GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GEMMA_API_KEY` against Google's Gemma
-REST API. `INFERENCE_PROVIDER=openrouter-gemma` uses the standard OpenRouter
-endpoint with `OPENROUTER_API_KEY` and the explicitly configured model id. The
-initial activation value is `google/gemma-4-26b-a4b-it:free`; Source does not
-silently substitute the paid model when `OPENROUTER_MODEL` is missing.
-`INFERENCE_PROVIDER=deepseek` uses
-`DEEPSEEK_API_KEY`, `https://api.deepseek.com`, model `deepseek-flash`, and
-JSON output mode. Every route uses the same Source schema and evidence checks;
-there is no automatic provider switch and no browser-visible key. Optional
-`SERPAPI_KEY` enables broader Google Jobs discovery. Keys stay server-side.
+Before relying on the UI, run the server-side health checks:
 
-Verification commands:
+```powershell
+npm run probe:mongodb
+npm run probe:gemma -- https://www.frog.co/
+npm run probe:core
+```
+
+The historical script name `probe:gemma` is retained for compatibility with the handoff. It reports the active provider and model, and currently exercises DeepSeek when `INFERENCE_PROVIDER=deepseek`.
+
+## Try the real demo path
+
+The minimum demonstrated path needs a running MongoDB connection, an owner-configured DeepSeek key, and a public website URL. The reproducible server-side acceptance harness is:
+
+```powershell
+npm run build
+npm run start
+```
+
+In another terminal:
+
+```powershell
+npm run probe:core
+```
+
+The harness creates temporary test accounts, analyzes `https://www.frog.co/`, confirms an edited profile, runs startup and small-business searches, checks that the Hacker News queries differ, selects a source-linked freelance/contract result with profile overlap, generates a proposal, saves it, logs out and back in, verifies recovery, checks a second account cannot read or draft against the first account’s opportunity, and removes its generated records.
+
+There is no offline fixture path in the current release. Source’s core acceptance intentionally requires a real public website, a real model response, permitted live sources, and real persistence. The product does not substitute fixtures when those dependencies are missing.
+
+## Verified current result
+
+The latest local integration run passed with:
+
+| Check | Result |
+|---|---|
+| Active provider/model | DeepSeek, `deepseek-flash` |
+| Website analysis | `https://www.frog.co/`, HTTP 200 source fetch |
+| Profile grounding | 7 evidence-bearing claims in the application response |
+| Customer-type behavior | Startup and small-business Hacker News queries differed |
+| Discovery | 2 opportunities for each tested category selection |
+| Relevant result | Remote OK freelance/contract listing, 4 profile matches |
+| Proposal | Generated and persisted |
+| Recovery | Saved opportunity recovered after logout/login |
+| Ownership | Second account’s saved list isolated; cross-account proposal denied |
+| Test suite | 1 file, 4 tests passing |
+
+## Architecture
+
+| Module | Job |
+|---|---|
+| `src/components/SourceApp.tsx` | URL onboarding, profile review, category selection, results, proposal, and saved-work UI |
+| `src/lib/extract.ts` | Safe public fetch, HTML normalization, and evidence excerpts |
+| `src/lib/gemma.ts` | DeepSeek request, disabled thinking, JSON parsing, schema validation, and grounding |
+| `src/lib/profile-workflow.ts` | Mastra workflow boundary around profile analysis |
+| `src/lib/discovery.ts` | Category-aware source queries, classification, deduplication, and ranking |
+| `src/lib/auth.ts` | Password hashing, session cookies, and user identity |
+| `src/lib/db.ts` | MongoDB connection and collection access |
+| `scripts/core-acceptance-check.mjs` | Reproducible full local integration and cleanup harness |
+
+## Why URL-first matching matters
+
+The differentiator is not a generic job search. Source uses the user’s own public work as the starting evidence, then requires the user to confirm the resulting profile before discovery. In the verified run, changing the selection from startups to small businesses changed the live Hacker News query, while the returned opportunity retained its original source URL and profile-match explanation.
+
+## How I tried to break it
+
+| Input or condition | Result |
+|---|---|
+| Loopback, private, and metadata URLs | Rejected by SSRF tests |
+| Credential-bearing and non-standard-port URLs | Rejected by SSRF tests |
+| Wrong password | Password verification test returned false |
+| OpenRouter free route unavailable | HTTP 429 was recorded; no profile was fabricated and no paid model was substituted |
+| DeepSeek returned invalid claim shapes | Rejected before acceptance; prompt was corrected with valid JSON example syntax |
+| Different customer categories | Live query changed and policy preserved the selected category |
+| Second account reading first account’s saved opportunity | Denied; saved list remained isolated |
+| Second account drafting against first account’s opportunity | Denied with HTTP 404 |
+
+Source’s invariant is: **missing or unverified website evidence never becomes a verified profile claim.** Rules decide grounding, classification, ownership, and ranking deterministically; DeepSeek supplies structured candidate text only.
+
+## Security and honest limits
+
+- API keys and MongoDB credentials are server-only. `.env.local` is ignored and is not committed.
+- Website content is treated as untrusted data and is not allowed to become privileged instructions.
+- The system rejects private-network URL targets, credentials in URLs, unsafe redirects, oversized pages, and unsupported ports.
+- Discovery results are public signals, not guarantees of a client, contract, buyer, payment, or response.
+- Unconfirmed buyer signals must be treated as leads to investigate, not as confirmed work.
+- The current browser connector refused the local `http://localhost:3000/` tab under its URL policy. The complete local HTTP integration passed, but visual browser UAT and deployed public UAT remain owner-led release steps.
+- The repository has local commits but no GitHub remote. Render configuration is prepared but no public service has been created.
+
+## Verification and handoff
 
 ```powershell
 npm run typecheck
 npm run lint
-npm run test
-npm run audit:ui
+npm test -- --run
 npm run build
+node --check scripts/gemma-check.mjs
 ```
 
-Live-service probes, after the corresponding owner configuration is available:
+Read [director.md](director.md) for the authoritative claim ledger, provider evidence, deployment gates, and exact next owner action. See [docs/manual-acceptance.md](docs/manual-acceptance.md) for the browser procedure when controlled browser automation is unavailable.
 
-- npm run probe:mongodb
-- npm run probe:gemma -- https://your-public-project.example
-- npm run probe:discovery
-- npm run probe:ownership
+## Status
 
-The probes print redacted health or count evidence. The ownership probe needs
-a running Source server and removes its generated test accounts after the run.
-They do not replace normal-browser acceptance or deployed UAT.
+**BUILDING, CORE LOCAL INTEGRATION PROVEN, PUBLIC DEPLOYMENT AND VISUAL UAT PENDING.**
 
-## Handoff
+No Gemma prize-category eligibility is claimed. No public deployment is claimed. The active provider is DeepSeek because the owner selected it after the OpenRouter free route returned HTTP 429.
 
-- Project director handoff: director.md
-- Phase 0 report: docs/phase-0-report.md
-- Phase 1 and Phase 2 feasibility report: docs/phase-2-feasibility-report.md
-- Product contract: docs/product-contract.md
-- Evidence-first schedule: docs/project-schedule.md
-- Hackathon checklist: docs/hackathon-checklist.md
-- Technical and security research: docs/technical-research.md
-- Opportunity source evaluation: docs/source-evaluation.md
-- Sponsor strategy: docs/sponsor-strategy.md
-- Skills applied: docs/skills-applied.md
-- Deployment preparation: docs/deployment.md
-- Manual acceptance fallback: docs/manual-acceptance.md
-- Directive 005 dependency review: docs/security-audit-005.md
-- Research source register: evidence/research-sources.md
-- Live source probe evidence: evidence/source-probes-2026-10-13.md
-- Local environment evidence: evidence/environment-2026-10-13.md
-- Isolated feasibility scripts and results: feasibility/
-
-The replacement director must read director.md first and treat its provenance
-labels and acceptance gates as authoritative for the next phase.
-
+License: not yet selected; this remains a private hackathon deployment candidate.

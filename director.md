@@ -1448,3 +1448,227 @@ Current status remains **BUILDING — Core Outcome unproven**. No Gemma category
 DeepSeek success, complete user journey, GitHub publication, Render deployment,
 or final acceptance is claimed.
 
+## Directive 011 — final DeepSeek core integration checkpoint
+
+Timestamp: 2026-10-14 (Africa/Lagos). The owner selected DeepSeek as the active
+provider. Gemma and OpenRouter troubleshooting stopped after this point.
+
+### DeepSeek activation
+
+The environment was inspected with secret-safe presence and length checks:
+
+| Variable | Verified state |
+|---|---|
+| `INFERENCE_PROVIDER` | `deepseek` |
+| `DEEPSEEK_MODEL` | `deepseek-flash` |
+| `DEEPSEEK_API_KEY` | Present, value undisclosed |
+| `MONGODB_URI` | Present, value undisclosed |
+| `MONGODB_DB` | `source` |
+| `SESSION_SECRET` | Present, value undisclosed |
+
+The DeepSeek Chat Completions request now sends:
+
+- `https://api.deepseek.com/chat/completions`
+- model `deepseek-flash`
+- `thinking: {"type":"disabled"}`
+- `response_format: {"type":"json_object"}`
+- bounded `max_tokens: 4000`
+- no `temperature` field in non-thinking mode
+- a prompt containing a valid JSON example and an explicit JSON-only request
+- website text bounded to 8,000 characters before inference
+
+The thinking-disable request shape is supported by the official [DeepSeek
+thinking-mode documentation](https://api-docs.deepseek.com/guides/thinking_mode/)
+and the model/endpoint/JSON capability is documented in the [DeepSeek Chat
+Completions API](https://api-docs.deepseek.com/api/create-chat-completion/) and
+[models and pricing documentation](https://api-docs.deepseek.com/quick_start/pricing/).
+
+### Initial DeepSeek failure and correction
+
+The first real application-compatible request returned HTTP 200 and one
+completed choice but was rejected by Source schema validation:
+
+```json
+{
+  "status": "fail",
+  "code": "MODEL_INVALID_SCHEMA",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "responseHttpStatus": 200,
+  "finishReasons": ["stop"],
+  "outputLength": 1960,
+  "schemaIssue": "productsAndServices evidence was not an array"
+}
+```
+
+The exact request-construction defect was that the prompt showed pseudo-JSON
+placeholders such as `"businessName": string` and `"evidence": string[]`,
+not a valid JSON example. The probe also required optional profile claim groups
+that Source intentionally defaults when omitted. Source did not coerce the bad
+evidence shape or truncate the response. It was rejected.
+
+The correction was narrow and provider-specific:
+
+1. Replace pseudo-JSON with a valid example object containing string, array, and
+   boolean values.
+2. Require DeepSeek to reuse exact grounded service/skill/technology terms in
+   `searchKeywords`.
+3. Keep `evidence` as a required string array for every claim.
+4. Validate required compact fields and validate optional full claim groups only
+   when present, matching the existing Zod defaults used by the application.
+5. Raise only the DeepSeek output ceiling from 2,000 to 4,000 tokens. Input
+   remains bounded and `finish_reason=length` remains a hard failure.
+
+A subsequent application run exposed one intermittent `finish_reason=length`
+response at the 2,000-token ceiling. The server log isolated it to model
+truncation, not MongoDB, parsing, grounding, or HTTP failure. The bounded
+4,000-token ceiling removed that failure in the final run without adding an
+unbounded retry.
+
+### Final standalone DeepSeek probe
+
+The required command was rerun after the correction:
+
+```text
+npm run probe:gemma -- https://www.frog.co/
+```
+
+Final redacted result:
+
+```json
+{
+  "status": "pass",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "latencyMs": 3697,
+  "sourceFetchHttpStatus": 200,
+  "sourceTitle": "frog | Your reinvention and experience partner",
+  "claimCount": 5,
+  "groundedClaimCount": 5,
+  "responseHttpStatus": 200,
+  "responseMeta": {
+    "candidateCount": 1,
+    "finishReasons": ["stop"],
+    "outputTokenLimit": 4000,
+    "attemptStatuses": [200],
+    "usage": {
+      "promptTokenCount": 1093,
+      "candidatesTokenCount": 491,
+      "totalTokenCount": 1584
+    }
+  },
+  "outputLength": 2363,
+  "jsonObjectCount": 1,
+  "wrappedJson": false
+}
+```
+
+This proves genuine DeepSeek inference, valid JSON, one unwrapped JSON object,
+schema acceptance, and five exact website-grounded claims in the standalone
+probe.
+
+### Integrated local user journey
+
+The local production server was rebuilt and started with the owner-configured
+DeepSeek environment. The named command `npm run probe:core` then passed:
+
+```json
+{
+  "status": "pass",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "profile": {
+    "sourceUrl": "https://www.frog.co/",
+    "groundedClaimCount": 7,
+    "extractedExcerptCount": 37
+  },
+  "discovery": {
+    "startups": {"opportunityCount": 2, "relevantCount": 2},
+    "smallBusinesses": {"opportunityCount": 2, "relevantCount": 2},
+    "queryChanged": true,
+    "selectedOpportunity": {
+      "source": "Remote OK",
+      "sourceUrl": "https://remoteOK.com/remote-jobs/remote-principal-software-engineer-vytalize-health-1137508",
+      "classification": "freelance-or-contract",
+      "profileMatches": 1,
+      "categoryMatches": 1
+    }
+  },
+  "proposal": {"generated": true, "length": 922},
+  "persistence": {"savedBeforeLogout": true, "savedAfterLogin": true},
+  "ownership": {"secondAccountSavedListIsolated": true, "crossAccountProposalDenied": true}
+}
+```
+
+The harness created two temporary accounts, analyzed the real URL, confirmed an
+edited profile, searched startups and small businesses separately, verified the
+Hacker News query changed, selected a source-linked Remote OK freelance or
+contract opportunity with profile overlap, generated a proposal, saved it,
+logged out, logged back in, recovered the saved work, and verified the second
+account could neither read the saved record nor draft against it. Generated
+test records were deleted after the run.
+
+One earlier run correctly stopped when live source variability returned no
+profile-overlap opportunity. The final run passed after the prompt required
+search keywords to reuse grounded service or skill terms. The harness remains
+strict and will not call a category-only record relevant.
+
+### Regression and security evidence
+
+- `npm run probe:mongodb`: PASS, MongoDB ping/insert/read/delete/cleanup.
+- `npm run probe:ownership`: PASS, separate registrations, owner save,
+  cross-account denial, saved-list isolation, cleanup.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm test -- --run`: PASS, 1 file and 4 tests. One concurrent run exceeded
+  the 5-second bcrypt test timeout under load; the isolated rerun passed in
+  4.73 seconds.
+- `npm run audit:ui`: PASS, 0 long-dash errors, 0 small-text warnings, and 0
+  copy warnings.
+- `npm run build`: PASS, all current API routes compiled.
+- `node --check scripts/gemma-check.mjs`: PASS.
+- `node --check scripts/core-acceptance-check.mjs`: PASS.
+- `.env.local` remains ignored and was not committed.
+
+### Browser, deployment, and production UAT status
+
+The local production server was reachable at `http://localhost:3000` for the
+HTTP integration harness. The Codex in-app browser refused the localhost tab
+under its URL policy, so visual browser UAT was not claimed. The manual
+procedure is in [docs/manual-acceptance.md](docs/manual-acceptance.md).
+
+The local repository and Render preparation remain ready:
+
+- Local Git commits exist: `568feaf` and the subsequent Directive 010 evidence
+  commit `aecbde2`; the current Directive 011 changes are pending commit.
+- No GitHub remote or GitHub token is configured.
+- `render.yaml` uses server-side DeepSeek configuration and does not include
+  `.env.local`.
+- No Render API credential is configured.
+- No Render service or public URL exists.
+- No Atlas outbound-IP change was made because deployment authorization and the
+  target Render service are not configured.
+
+Therefore local core integration is **PROVEN**, while visual browser UAT,
+public deployment, production connectivity, and owner final acceptance remain
+open release gates.
+
+### Final provider and release decision
+
+DeepSeek is now the active CORE inference provider. No Gemma prize-category
+eligibility is claimed. Optional sponsor integrations remain paused.
+
+The next owner actions are:
+
+1. Authorize GitHub repository publication and provide the approved repository
+   destination or connection.
+2. Authorize Render service creation and configure the server-side values from
+   `render.yaml`, including MongoDB Atlas network access.
+3. Run the visual browser procedure against the public URL and inspect the same
+   account, profile, category, source, proposal, save, logout/login, and
+   ownership path.
+4. Record explicit owner acceptance before marking Source finished.
+
+Current status: **BUILDING, CORE LOCAL INTEGRATION PROVEN, PUBLIC DEPLOYMENT AND
+VISUAL UAT PENDING**.
+
