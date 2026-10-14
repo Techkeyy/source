@@ -1,0 +1,39 @@
+{
+  "name": "source",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit --incremental false",
+    "lint": "eslint src tests --max-warnings 0",
+    "test": "vitest run",
+    "audit:ui": "python C:/Users/HomePC/Desktop/skill/design-skill/scripts/audit_ui_text.py .",
+    "probe:mongodb": "node scripts/mongodb-check.mjs",
+    "probe:gemma": "node scripts/gemma-check.mjs",
+    "probe:discovery": "node scripts/discovery-check.mjs",
+    "probe:ownership": "node scripts/auth-ownership-check.mjs",
+    "probe:all": "npm run probe:mongodb && npm run probe:gemma && npm run probe:discovery && npm run probe:ownership"
+  },
+  "dependencies": {
+    "@mastra/core": "latest",
+    "bcryptjs": "latest",
+    "cheerio": "latest",
+    "jose": "latest",
+    "mongodb": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

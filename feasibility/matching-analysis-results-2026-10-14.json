@@ -1,0 +1,127 @@
+{
+  "test": "grounded-matching-feasibility",
+  "test_date_utc": "2026-10-14T05:10:49.645004+00:00",
+  "profile": {
+    "source_url": "https://www.frog.co/",
+    "confirmed_terms_used": [
+      "ai",
+      "design",
+      "research",
+      "experience",
+      "strategy"
+    ],
+    "supporting_evidence": [
+      {
+        "field": "business_or_project_name",
+        "value": "frog",
+        "excerpt": "frog | Your reinvention and experience partner",
+        "source_url": "https://www.frog.co/",
+        "evidence_type": "DIRECT"
+      },
+      {
+        "field": "what_it_does",
+        "value": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+        "excerpt": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+        "source_url": "https://www.frog.co/",
+        "evidence_type": "DIRECT"
+      },
+      {
+        "field": "service_or_product_signal",
+        "value": "Designing Robots for Human Spaces",
+        "excerpt": "Designing Robots for Human Spaces",
+        "source_url": "https://www.frog.co/",
+        "evidence_type": "DIRECT"
+      },
+      {
+        "field": "service_or_product_signal",
+        "value": "Human-Led, AI-Augmented: The Next Generation of Research",
+        "excerpt": "Human-Led, AI-Augmented: The Next Generation of Research",
+        "source_url": "https://www.frog.co/",
+        "evidence_type": "DIRECT"
+      },
+      {
+        "field": "technology_signal",
+        "value": "AI",
+        "excerpt": "AI",
+        "source_url": "https://www.frog.co/",
+        "evidence_type": "DIRECT"
+      },
+      {
+        "field": "value_proposition",
+        "value": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+        "excerpt": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+        "source_url": "https://www.frog.co/",
+        "evidence_type": "DIRECT"
+      }
+    ],
+    "unsupported_claims_detected": [
+      {
+        "field": "pricing",
+        "status": "NOT_SUPPORTED_BY_SOURCE",
+        "message": "No source evidence found; do not invent this field."
+      },
+      {
+        "field": "ownership",
+        "status": "NOT_SUPPORTED_BY_SOURCE",
+        "message": "No source evidence found; do not invent this field."
+      },
+      {
+        "field": "years_experience",
+        "status": "NOT_SUPPORTED_BY_SOURCE",
+        "message": "No source evidence found; do not invent this field."
+      }
+    ]
+  },
+  "accepted_example": {
+    "decision": "ACCEPT_FOR_REVIEW",
+    "title": "Product Design Lead",
+    "source": "Remote OK",
+    "canonical_url": "https://remoteOK.com/remote-jobs/remote-product-design-lead-fuel50-1137474",
+    "published_at": "2026-10-09T08:00:04+00:00",
+    "classification": "potential_buyer_signal_unconfirmed",
+    "profile_overlap": [
+      "ai",
+      "design",
+      "experience"
+    ],
+    "reasons": [
+      "fresh, source-linked, non-permanent signal with profile overlap"
+    ],
+    "source_excerpt": "Fuel50 is a workforce transformation platform helping organisations understand workforce capability, build skills and enable internal mobility in an AI-driven world. Our products combine skills intelligence, talent marketplace experiences and responsible AI to help people and organisations take their next step.Â We are looking for a Product Design Lead to shape the next chapter of our product experience and design organisation.Â This is a senior player-coach role. You will lead and develop our p"
+  },
+  "rejected_example": {
+    "decision": "REJECT",
+    "title": "Senior iOS Engineer (Swift & AWS)",
+    "source": "Jobicy",
+    "canonical_url": "https://jobicy.com/jobs/155230-senior-ios-engineer-swift-aws",
+    "published_at": "2026-10-13T20:08:25+00:00",
+    "classification": "permanent_or_unspecified_employment",
+    "profile_overlap": [],
+    "reasons": [
+      "record is permanent or employment-type is not freelance/contract",
+      "no overlap with the confirmed profile vocabulary"
+    ],
+    "source_excerpt": "Join Our Team Oowlish, one of Latin America's rapidly expanding software development companies, is seeking experienced technology professionals to enhance our diverse and vibrant team. As a valued member of Oowlish, you will collaborate with premier clients from the United States and Europe, contributing to pioneering digital solutions. Our commitment to creating a nurturing work environment is recognized by our certification as a Great Place to Work, where you will have opportunities for profes"
+  },
+  "proposal": {
+    "status": "DRAFTED_FROM_SUPPORTED_CLAIMS",
+    "text": "Hello,\\n\\nI found your public opportunity, “Product Design Lead,” on Remote OK. The source describes this as: “Fuel50 is a workforce transformation platform helping organisations understand workforce capability, build skills and enable internal mobility in an AI-driven world. Our products combine skills intelligence, talent marke”.\\n\\nMy public profile describes my work as: We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.; Designing Robots for Human Spaces; Human-Led, AI-Augmented: The Next Generation of Research. I would be glad to discuss whether that background fits this request. You can review the supporting profile evidence here: https://www.frog.co/.\\n\\nIf useful, I can share a short plan and clarify scope, timing, and requirements before proposing any commercial terms.\\n\\nRegards",
+    "boundary": "Editable draft only; no auto-send and no unsupported past-client, ownership, pricing, or guarantee claims."
+  },
+  "decision_rule": {
+    "accept_only_if": [
+      "fresh within the 30-day feasibility window",
+      "canonical source URL exists",
+      "classification is explicit freelance/contract or unconfirmed public demand",
+      "at least one normalized profile term appears in source text"
+    ],
+    "reject_if": [
+      "permanent/unspecified employment",
+      "stale",
+      "no source URL",
+      "no profile overlap",
+      "irrelevant or unclear signal"
+    ]
+  },
+  "overall_status": "PASS"
+}

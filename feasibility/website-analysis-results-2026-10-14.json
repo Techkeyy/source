@@ -1,0 +1,632 @@
+{
+  "test": "website-analysis-feasibility",
+  "test_date": "2026-10-14",
+  "model": {
+    "status": "BLOCKED",
+    "provider": null,
+    "reason": "No Gemma credential or local Gemma runtime was available on 2026-10-14."
+  },
+  "ssrf_cases": [
+    {
+      "url": "file:///C:/Windows/win.ini",
+      "expected": "reject",
+      "observed": "only http and https URLs are allowed",
+      "status": "PASS"
+    },
+    {
+      "url": "http://127.0.0.1/",
+      "expected": "reject",
+      "observed": "unsafe destination address(es): 127.0.0.1",
+      "status": "PASS"
+    },
+    {
+      "url": "http://localhost/",
+      "expected": "reject",
+      "observed": "unsafe destination address(es): 127.0.0.1, ::1",
+      "status": "PASS"
+    },
+    {
+      "url": "http://10.0.0.1/",
+      "expected": "reject",
+      "observed": "unsafe destination address(es): 10.0.0.1",
+      "status": "PASS"
+    },
+    {
+      "url": "http://169.254.169.254/latest/meta-data/",
+      "expected": "reject",
+      "observed": "unsafe destination address(es): 169.254.169.254",
+      "status": "PASS"
+    },
+    {
+      "url": "https://example.com/",
+      "expected": "accept",
+      "observed": "accepted",
+      "status": "PASS"
+    }
+  ],
+  "sites": [
+    {
+      "label": "freelancer-portfolio-like",
+      "url": "https://www.austinkleon.com/",
+      "classification": "personal creator and portfolio-like site",
+      "status": "PASS",
+      "fetch": {
+        "requested_url": "https://austinkleon.com/",
+        "final_url": "https://austinkleon.com/",
+        "validated_address": "104.199.117.222",
+        "status": 200,
+        "content_type": "text/html; charset=UTF-8",
+        "bytes": 65562
+      },
+      "profile": {
+        "business_or_project_name": "Dont Call it Art is out now! - Austin Kleon",
+        "what_it_does": "My long-awaited followup to the Steal Like an Artist trilogy is in bookstores today!",
+        "products_and_services": [
+          "About the author",
+          "Subscribe to my newsletter",
+          "NEW BOOK!",
+          "Listen to the audiobook trilogy",
+          "Read my books",
+          "Order t-shirts on demand"
+        ],
+        "problems_it_solves": [],
+        "skills_and_technologies": [
+          "JavaScript"
+        ],
+        "value_proposition_and_differentiators": {
+          "value": "My long-awaited followup to the Steal Like an Artist trilogy is in bookstores today!",
+          "evidence_type": "DIRECT"
+        },
+        "portfolio_or_project_evidence": [
+          "About the author",
+          "Subscribe to my newsletter",
+          "NEW BOOK!",
+          "Listen to the audiobook trilogy",
+          "Read my books",
+          "Order t-shirts on demand",
+          "Recent posts",
+          "More about me"
+        ],
+        "direct_customer_category_signals": [],
+        "suggested_customer_categories": [
+          {
+            "category": "small businesses",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "startups",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "agencies",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "individuals",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          }
+        ],
+        "suggested_search_keywords": [
+          "JavaScript",
+          "long-awaited",
+          "followup",
+          "Steal",
+          "Artist",
+          "trilogy",
+          "bookstores",
+          "today"
+        ],
+        "evidence": [
+          {
+            "field": "business_or_project_name",
+            "value": "Dont Call it Art is out now! - Austin Kleon",
+            "excerpt": "Dont Call it Art is out now! - Austin Kleon",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "what_it_does",
+            "value": "My long-awaited followup to the Steal Like an Artist trilogy is in bookstores today!",
+            "excerpt": "My long-awaited followup to the Steal Like an Artist trilogy is in bookstores today!",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "About the author",
+            "excerpt": "About the author",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Subscribe to my newsletter",
+            "excerpt": "Subscribe to my newsletter",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "NEW BOOK!",
+            "excerpt": "NEW BOOK!",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Listen to the audiobook trilogy",
+            "excerpt": "Listen to the audiobook trilogy",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Read my books",
+            "excerpt": "Read my books",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "technology_signal",
+            "value": "JavaScript",
+            "excerpt": "JavaScript",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "value_proposition",
+            "value": "My long-awaited followup to the Steal Like an Artist trilogy is in bookstores today!",
+            "excerpt": "My long-awaited followup to the Steal Like an Artist trilogy is in bookstores today!",
+            "source_url": "https://austinkleon.com/",
+            "evidence_type": "DIRECT"
+          }
+        ],
+        "unsupported_claims_detected": [
+          {
+            "field": "past_clients",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "pricing",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "ownership",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          }
+        ],
+        "grounding_note": "This fallback profile contains direct excerpts and explicitly labeled inferences; no LLM was used."
+      }
+    },
+    {
+      "label": "agency-or-service",
+      "url": "https://www.frog.co/",
+      "classification": "design and strategy service organization",
+      "status": "PASS",
+      "fetch": {
+        "requested_url": "https://www.frog.co/",
+        "final_url": "https://www.frog.co/",
+        "validated_address": "165.227.71.252",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 313315
+      },
+      "profile": {
+        "business_or_project_name": "frog",
+        "what_it_does": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+        "products_and_services": [
+          "Designing Robots for Human Spaces",
+          "Human-Led, AI-Augmented: The Next Generation of Research",
+          "The New Lines of Luxury",
+          "Futurescape: Artificial Realities",
+          "Why Being Found No Longer Wins",
+          "Welcome to the pond"
+        ],
+        "problems_it_solves": [],
+        "skills_and_technologies": [
+          "WordPress",
+          "AI"
+        ],
+        "value_proposition_and_differentiators": {
+          "value": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+          "evidence_type": "DIRECT"
+        },
+        "portfolio_or_project_evidence": [
+          "Designing Robots for Human Spaces",
+          "Human-Led, AI-Augmented: The Next Generation of Research",
+          "The New Lines of Luxury",
+          "Futurescape: Artificial Realities",
+          "Why Being Found No Longer Wins",
+          "Welcome to the pond",
+          "Our work",
+          "How we work"
+        ],
+        "direct_customer_category_signals": [
+          "individuals"
+        ],
+        "suggested_customer_categories": [
+          {
+            "category": "small businesses",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "startups",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "agencies",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          }
+        ],
+        "suggested_search_keywords": [
+          "WordPress",
+          "AI",
+          "challenge",
+          "status",
+          "create",
+          "transformative",
+          "experiences",
+          "hearts",
+          "markets",
+          "eco-digital",
+          "individuals"
+        ],
+        "evidence": [
+          {
+            "field": "business_or_project_name",
+            "value": "frog",
+            "excerpt": "frog | Your reinvention and experience partner",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "what_it_does",
+            "value": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+            "excerpt": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Designing Robots for Human Spaces",
+            "excerpt": "Designing Robots for Human Spaces",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Human-Led, AI-Augmented: The Next Generation of Research",
+            "excerpt": "Human-Led, AI-Augmented: The Next Generation of Research",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "The New Lines of Luxury",
+            "excerpt": "The New Lines of Luxury",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Futurescape: Artificial Realities",
+            "excerpt": "Futurescape: Artificial Realities",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Why Being Found No Longer Wins",
+            "excerpt": "Why Being Found No Longer Wins",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "technology_signal",
+            "value": "WordPress",
+            "excerpt": "WordPress",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "technology_signal",
+            "value": "AI",
+            "excerpt": "AI",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "customer_segment_signal",
+            "value": "individuals",
+            "excerpt": "individuals",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "value_proposition",
+            "value": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+            "excerpt": "We challenge the status quo to create transformative experiences that win hearts and move markets in the eco-digital era. Join us to make your mark.",
+            "source_url": "https://www.frog.co/",
+            "evidence_type": "DIRECT"
+          }
+        ],
+        "unsupported_claims_detected": [
+          {
+            "field": "pricing",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "ownership",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "years_experience",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          }
+        ],
+        "grounding_note": "This fallback profile contains direct excerpts and explicitly labeled inferences; no LLM was used."
+      }
+    },
+    {
+      "label": "product-landing-page",
+      "url": "https://www.campfire.so/",
+      "classification": "software product landing page",
+      "status": "PASS",
+      "fetch": {
+        "requested_url": "https://www.campfire.so/",
+        "final_url": "https://www.campfire.so/",
+        "validated_address": "44.232.173.249",
+        "status": 200,
+        "content_type": "text/html",
+        "bytes": 19676
+      },
+      "profile": {
+        "business_or_project_name": "Campfire.so for sale",
+        "what_it_does": "Campfire.so is for sale on Spaceship. Secure checkout and quick transfer. See all purchase options. No hidden fees.",
+        "products_and_services": [
+          "Listed with",
+          "get this domain",
+          "You will be redirected to",
+          "Buyer protection program"
+        ],
+        "problems_it_solves": [],
+        "skills_and_technologies": [],
+        "value_proposition_and_differentiators": {
+          "value": "Campfire.so is for sale on Spaceship. Secure checkout and quick transfer. See all purchase options. No hidden fees.",
+          "evidence_type": "DIRECT"
+        },
+        "portfolio_or_project_evidence": [
+          "Domain for sale",
+          "Listed with",
+          "get this domain",
+          "You will be redirected to",
+          "Buyer protection program",
+          "Fast and easy transfer",
+          "Flexible payment methods"
+        ],
+        "direct_customer_category_signals": [],
+        "suggested_customer_categories": [
+          {
+            "category": "small businesses",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "startups",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "agencies",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "individuals",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          }
+        ],
+        "suggested_search_keywords": [
+          "Campfire",
+          "Spaceship",
+          "Secure",
+          "checkout",
+          "quick",
+          "transfer",
+          "purchase",
+          "options"
+        ],
+        "evidence": [
+          {
+            "field": "business_or_project_name",
+            "value": "Campfire.so for sale",
+            "excerpt": "Campfire.so for sale | Spaceship.com",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "what_it_does",
+            "value": "Campfire.so is for sale on Spaceship. Secure checkout and quick transfer. See all purchase options. No hidden fees.",
+            "excerpt": "Campfire.so is for sale on Spaceship. Secure checkout and quick transfer. See all purchase options. No hidden fees.",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Listed with",
+            "excerpt": "Listed with",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "get this domain",
+            "excerpt": "get this domain",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "You will be redirected to",
+            "excerpt": "You will be redirected to",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "service_or_product_signal",
+            "value": "Buyer protection program",
+            "excerpt": "Buyer protection program",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "value_proposition",
+            "value": "Campfire.so is for sale on Spaceship. Secure checkout and quick transfer. See all purchase options. No hidden fees.",
+            "excerpt": "Campfire.so is for sale on Spaceship. Secure checkout and quick transfer. See all purchase options. No hidden fees.",
+            "source_url": "https://www.campfire.so/",
+            "evidence_type": "DIRECT"
+          }
+        ],
+        "unsupported_claims_detected": [
+          {
+            "field": "past_clients",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "ownership",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "years_experience",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          }
+        ],
+        "grounding_note": "This fallback profile contains direct excerpts and explicitly labeled inferences; no LLM was used."
+      }
+    },
+    {
+      "label": "sparse-difficult",
+      "url": "https://example.com/",
+      "classification": "intentionally sparse public HTML; not treated as a business",
+      "status": "PASS",
+      "fetch": {
+        "requested_url": "https://example.com/",
+        "final_url": "https://example.com/",
+        "validated_address": "104.20.23.154",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 577
+      },
+      "profile": {
+        "business_or_project_name": "Example Domain",
+        "what_it_does": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+        "products_and_services": [],
+        "problems_it_solves": [],
+        "skills_and_technologies": [],
+        "value_proposition_and_differentiators": {
+          "value": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+          "evidence_type": "DIRECT"
+        },
+        "portfolio_or_project_evidence": [
+          "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes."
+        ],
+        "direct_customer_category_signals": [],
+        "suggested_customer_categories": [
+          {
+            "category": "small businesses",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "startups",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "agencies",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          },
+          {
+            "category": "individuals",
+            "evidence_type": "INFERRED",
+            "reason": "No direct customer-category evidence was found; this is a reviewable suggestion only."
+          }
+        ],
+        "suggested_search_keywords": [
+          "domain",
+          "documentation",
+          "examples",
+          "without",
+          "needing",
+          "permission",
+          "service",
+          "avoid"
+        ],
+        "evidence": [
+          {
+            "field": "business_or_project_name",
+            "value": "Example Domain",
+            "excerpt": "Example Domain",
+            "source_url": "https://example.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "what_it_does",
+            "value": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+            "excerpt": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+            "source_url": "https://example.com/",
+            "evidence_type": "DIRECT"
+          },
+          {
+            "field": "value_proposition",
+            "value": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+            "excerpt": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+            "source_url": "https://example.com/",
+            "evidence_type": "DIRECT"
+          }
+        ],
+        "unsupported_claims_detected": [
+          {
+            "field": "past_clients",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "pricing",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "ownership",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          },
+          {
+            "field": "years_experience",
+            "status": "NOT_SUPPORTED_BY_SOURCE",
+            "message": "No source evidence found; do not invent this field."
+          }
+        ],
+        "grounding_note": "This fallback profile contains direct excerpts and explicitly labeled inferences; no LLM was used."
+      }
+    }
+  ]
+}

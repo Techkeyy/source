@@ -1,0 +1,23 @@
+research_name: hf26-week2-side-hustle
+status: phase-0-evidence-hold
+last_updated: 2026-10-13
+authority: user-builder-directive-plus-official-dev-week2-rules
+current_phase: competition-and-dependency-research
+decision: HOLD
+decision_reason: >
+  Source is a product contract supplied by the builder directive. It has
+  credible source-access evidence, but no user interview, deployed workflow,
+  or sponsor integration proof exists yet.
+next_gate: >
+  Resolve owner decisions, then implement the smallest evidence-backed path
+  and test it through the real user-facing journey.
+artifacts:
+  - Competition Brief.md
+  - Pain Signal Ledger.md
+  - Winner Pattern Ledger.md
+  - Candidate Board.md
+  - Dead Idea Registry.md
+  - Competitor Matrix.md
+  - Counterfactual Matrix.md
+  - Finalist Scorecard.md
+  - Research Trail.md

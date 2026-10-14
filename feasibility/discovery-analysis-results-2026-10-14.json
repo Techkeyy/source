@@ -1,0 +1,2662 @@
+{
+  "test": "client-discovery-and-category-feasibility",
+  "test_date_utc": "2026-10-14T05:10:49.645004+00:00",
+  "freshness_policy_for_test": {
+    "days": 30,
+    "note": "This is a feasibility threshold, not yet a product policy."
+  },
+  "profile_used_for_matching": {
+    "services": [
+      "experience design",
+      "research",
+      "AI-augmented research",
+      "strategy"
+    ],
+    "keywords": [
+      "ai",
+      "creative",
+      "design",
+      "experience",
+      "product",
+      "research",
+      "strategy",
+      "technology"
+    ]
+  },
+  "providers": [
+    {
+      "source": "Hacker News",
+      "endpoint": "https://hn.algolia.com/api/v1/search_by_date?query=freelance&tags=job&hitsPerPage=50",
+      "status": "PASS",
+      "raw_record_count": 15,
+      "summary": {
+        "total_records": 15,
+        "fresh_records": 0,
+        "freshness_cutoff_utc": "2026-09-14T05:10:49.645004+00:00",
+        "classification_counts_all": {
+          "potential_buyer_signal_unconfirmed": 4,
+          "explicit_freelance_or_contract": 11
+        },
+        "classification_counts_fresh": {},
+        "records_with_explicit_budget_or_compensation_signal": 0,
+        "records_with_usable_contact_or_application_signal": 0,
+        "records_with_profile_keyword_overlap": 1,
+        "duplicate_records_within_provider": 1
+      },
+      "sample_records": [
+        {
+          "source": "Hacker News",
+          "title": "Scratch Data (YC S21) Is Hiring",
+          "canonical_url": "https://www.ycombinator.com/companies/scratch-data/jobs/ZWGfZWg-open-source-golang-freelancer",
+          "published_at": "2024-03-18T17:00:14+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Keeper Tax (YC W19) is hiring a data engineer to save freelancers $ on taxes",
+          "canonical_url": "https://www.ycombinator.com/companies/keeper-tax/jobs/skoGD7B-data-engineer",
+          "published_at": "2022-07-23T17:00:25+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Keeper Tax (YC W19) Is Hiring a freelance designer (design systems)",
+          "canonical_url": "https://www.ycombinator.com/companies/keeper-tax/jobs/RsXu0Yl-product-designer-design-systems-contract",
+          "published_at": "2022-06-16T17:01:03+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "design"
+          ],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Impraise (YC S14) is hiring a UX Copywriter (part-time)",
+          "canonical_url": "https://jobs.impraise.com/o/ux-copywriter-freelancer-parttime-16hweek-3-months",
+          "published_at": "2020-11-17T12:00:49+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Keeper Tax (YC W19) is hiring a freelance developer",
+          "canonical_url": "https://news.ycombinator.com/item?id=21087333",
+          "published_at": "2019-09-27T00:42:23+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "job_text",
+            "objectID",
+            "title",
+            "updated_at"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Onemonth.com (Learn to Code in 30 Days) Is Hiring a Freelance Writer",
+          "canonical_url": "https://docs.google.com/document/d/14uE_d4mU00gLJSZRrk0vSIWYi2BjcxD5oRJgGEEDdxU/edit#",
+          "published_at": "2019-05-14T20:35:11+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Onemonth.com (Learn to Code in 30 Days) Is Hiring a Freelance Writer",
+          "canonical_url": "https://docs.google.com/document/d/14uE_d4mU00gLJSZRrk0vSIWYi2BjcxD5oRJgGEEDdxU/edit#",
+          "published_at": "2019-03-21T17:15:41+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "One Month (Learn to Code in 30 Days) Is Hiring a Freelance Writer",
+          "canonical_url": "https://docs.google.com/document/d/1CQARzHz891hKkpoHpJGsLP16D3JUM-gm7ZEaUoh2BKs/edit#",
+          "published_at": "2019-01-30T22:45:18+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Smarking (YC W15) Is Hiring On-Site Freelance Back End Engineers in SF",
+          "canonical_url": "https://news.ycombinator.com/item?id=17789138",
+          "published_at": "2018-08-18T16:13:02+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "job_text",
+            "objectID",
+            "title",
+            "updated_at"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Sixty (YC S17) is hiring freelance Rails developers",
+          "canonical_url": "https://news.ycombinator.com/item?id=14823820",
+          "published_at": "2017-07-21T21:20:13+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "job_text",
+            "objectID",
+            "title",
+            "updated_at"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "HotelFlex (YC S17) is hiring a freelance React front end dev",
+          "canonical_url": "https://news.ycombinator.com/item?id=14713172",
+          "published_at": "2017-07-06T19:28:50+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "job_text",
+            "objectID",
+            "title",
+            "updated_at"
+          ]
+        },
+        {
+          "source": "Hacker News",
+          "title": "Priceonomics (YC W12) Is Looking for Freelancers – Interested in These Topics?",
+          "canonical_url": "http://priceonomics.com/request-for-articles-is-anyone-interested-in/",
+          "published_at": "2016-03-31T06:19:13+00:00",
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "_highlightResult",
+            "_tags",
+            "author",
+            "created_at",
+            "created_at_i",
+            "objectID",
+            "title",
+            "updated_at",
+            "url"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "Jobicy",
+      "endpoint": "https://jobicy.com/api/v2/remote-jobs?count=50&tag=typescript",
+      "status": "PASS",
+      "raw_record_count": 50,
+      "summary": {
+        "total_records": 50,
+        "fresh_records": 50,
+        "freshness_cutoff_utc": "2026-09-14T05:10:49.645004+00:00",
+        "classification_counts_all": {
+          "permanent_or_unspecified_employment": 47,
+          "explicit_freelance_or_contract": 2,
+          "irrelevant_or_unclear": 1
+        },
+        "classification_counts_fresh": {
+          "permanent_or_unspecified_employment": 47,
+          "explicit_freelance_or_contract": 2,
+          "irrelevant_or_unclear": 1
+        },
+        "records_with_explicit_budget_or_compensation_signal": 47,
+        "records_with_usable_contact_or_application_signal": 39,
+        "records_with_profile_keyword_overlap": 50,
+        "duplicate_records_within_provider": 0
+      },
+      "sample_records": [
+        {
+          "source": "Jobicy",
+          "title": "Senior iOS Engineer (Swift & AWS)",
+          "canonical_url": "https://jobicy.com/jobs/155230-senior-ios-engineer-swift-aws",
+          "published_at": "2026-10-13T20:08:25+00:00",
+          "description_excerpt": "Join Our Team Oowlish, one of Latin America's rapidly expanding software development companies, is seeking experienced technology professionals to enhance our diverse and vibrant team. As a valued member of Oowlish, you will collaborate with premier clients from the United States and Europe, contributing to pioneering digital solutions. Our commitment to creating a nurturing work environment is recognized by our certification as a Great Place to Work, where you will have opportunities for profes",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior Software Engineer (Full Stack | Node.js & React | AI Focus)",
+          "canonical_url": "https://jobicy.com/jobs/155233-senior-software-engineer-full-stack-node-js-react-ai-focus",
+          "published_at": "2026-10-13T20:08:23+00:00",
+          "description_excerpt": "Join Our Team Oowlish, one of Latin America's rapidly expanding software development companies, is seeking experienced technology professionals to enhance our diverse and vibrant team. As a valued member of Oowlish, you will collaborate with premier clients from the United States and Europe, contributing to pioneering digital solutions. Our commitment to creating a nurturing work environment is recognized by our certification as a Great Place to Work, where you will have opportunities for profes",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Junior Software Engineer – Early Career (Strong Problem solving & Coding Focus) - 100% Remote within Spain",
+          "canonical_url": "https://jobicy.com/jobs/155228-junior-software-engineer-early-career-strong-problem-solving-coding-focus-100-remote-within-spain-2",
+          "published_at": "2026-10-13T20:08:23+00:00",
+          "description_excerpt": "Welcome to the good side of tech You might know us as ZnanyLekarz in Poland or Doctoralia in Spain. Globally, we are Docplanner . We build technology that helps people live longer, healthier lives. Our products connect patients with doctors, power clinical workflows, and support healthcare systems used by millions of people every month. Engineering at Docplanner is about building reliable, scalable systems with real human impact. What we ship affects patients, doctors, and clinics in everyday, h",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "research",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior Backend Engineer",
+          "canonical_url": "https://jobicy.com/jobs/155200-senior-backend-engineer-10",
+          "published_at": "2026-10-13T09:48:23+00:00",
+          "description_excerpt": "About Solace Healthcare in the U.S. is fundamentally broken. The system is so complex that 88% of U.S. adults do not have the health literacy necessary to navigate it without help. Solace cuts through the red tape of healthcare by pairing patients with expert advocates and giving them the tools to make better decisions—and get better outcomes. We're a Series C startup, founded in 2022 and backed by Inspired Capital, Craft Ventures, Torch Capital, Menlo Ventures, Signalfire, and IVP. Our U.S. bas",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "salaryCurrency",
+            "salaryMax",
+            "salaryMin",
+            "salaryPeriod",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Staff Software Engineer",
+          "canonical_url": "https://jobicy.com/jobs/155199-staff-software-engineer-8",
+          "published_at": "2026-10-13T09:48:23+00:00",
+          "description_excerpt": "About Solace Healthcare in the U.S. is fundamentally broken. The system is so complex that 88% of U.S. adults do not have the health literacy necessary to navigate it without help. Solace cuts through the red tape of healthcare by pairing patients with expert advocates and giving them the tools to make better decisions—and get better outcomes. We're a Series C startup, founded in 2022 and backed by Inspired Capital, Craft Ventures, Torch Capital, Menlo Ventures, Signalfire, and IVP. Our U.S. bas",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "salaryCurrency",
+            "salaryMax",
+            "salaryMin",
+            "salaryPeriod",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior GTM Systems & AI Specialist",
+          "canonical_url": "https://jobicy.com/jobs/155196-senior-gtm-systems-ai-specialist",
+          "published_at": "2026-10-13T09:48:23+00:00",
+          "description_excerpt": "Who We Are Cobalt was founded on the belief of a fundamental human aspiration: the desire to live better and safer. It all started in 2013, when our founders realized that pentesting can be better. Today our diverse, fully remote team is committed to helping organizations of all sizes with seamless, effective and collaborative Offensive Security Testing that empower organizations to OPERATE FEARLESSLY and INNOVATE SECURELY. Our customers can start a pentest in as little as 24 hours and integrate",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "research",
+            "strategy",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "salaryCurrency",
+            "salaryMax",
+            "salaryMin",
+            "salaryPeriod",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Technical Lead (Engineering)",
+          "canonical_url": "https://jobicy.com/jobs/155201-technical-lead-engineering",
+          "published_at": "2026-10-13T09:48:22+00:00",
+          "description_excerpt": "About Solace Healthcare in the U.S. is fundamentally broken. The system is so complex that 88% of U.S. adults do not have the health literacy necessary to navigate it without help. Solace cuts through the red tape of healthcare by pairing patients with expert advocates and giving them the tools to make better decisions—and get better outcomes. We're a Series C startup, founded in 2022 and backed by Inspired Capital, Craft Ventures, Torch Capital, Menlo Ventures, Signalfire, and IVP. Our U.S. bas",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "salaryCurrency",
+            "salaryMax",
+            "salaryMin",
+            "salaryPeriod",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior Full Stack Engineer",
+          "canonical_url": "https://jobicy.com/jobs/155195-senior-full-stack-engineer-7",
+          "published_at": "2026-10-13T09:48:22+00:00",
+          "description_excerpt": "About Solace Healthcare in the U.S. is fundamentally broken. The system is so complex that 88% of U.S. adults do not have the health literacy necessary to navigate it without help. Solace cuts through the red tape of healthcare by pairing patients with expert advocates and giving them the tools to make better decisions—and get better outcomes. We're a Series C startup, founded in 2022 and backed by Inspired Capital, Craft Ventures, Torch Capital, Menlo Ventures, Signalfire, and IVP. Our U.S. bas",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "salaryCurrency",
+            "salaryMax",
+            "salaryMin",
+            "salaryPeriod",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior Software Engineer, Canvas Core",
+          "canonical_url": "https://jobicy.com/jobs/155192-senior-software-engineer-canvas-core-3",
+          "published_at": "2026-10-13T09:45:51+00:00",
+          "description_excerpt": "ABOUT THE TEAM The Canvas Core team builds and maintains the foundational platform that powers Mural ’s visual thinking experience. This includes the infinite canvas, key editor components, document editing behaviors, asset management, real-time collaboration, and the systems that enable fast, reliable, and intuitive interaction on the canvas. We’re also responsible for the Mural UI, the real-time message protocol that enables seamless remote collaboration, and the developer-friendly APIs that i",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "salaryCurrency",
+            "salaryMax",
+            "salaryMin",
+            "salaryPeriod",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior Software Engineer, Admin & IAM",
+          "canonical_url": "https://jobicy.com/jobs/155185-senior-software-engineer-admin-iam",
+          "published_at": "2026-10-13T09:45:51+00:00",
+          "description_excerpt": "ABOUT THE TEAM The Admin & Identity and Access Management (Admin & IAM) team at Mural defines how users sign in, manage their identities, and access Mural's products, as well as how administrators configure and govern their organizations. We own authentication & authorization, Single Sign-On (SSO), Multi-Factor Authentication (MFA), user provisioning (SCIM), session management, and the core permission model that powers roles and access control across companies and workspaces. We also own the ent",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Senior Software Engineer (Full-Stack, JavaScript)",
+          "canonical_url": "https://jobicy.com/jobs/155186-senior-software-engineer-full-stack-javascript",
+          "published_at": "2026-10-13T09:45:49+00:00",
+          "description_excerpt": "Back in 2012, we were a group of engineers and designers who decided we wanted to build things, so we did. Able started as an engineering and product hub building for a portfolio of early-stage startups. We built many relationships while developing products that were thoughtful, effective, and genuinely useful. But, since then, we’ve grown… and so has our ambition. Now, we’re entering our next chapter, defined by applied AI. AI is a powerful force in the end-to-end software development cycle, an",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "url"
+          ]
+        },
+        {
+          "source": "Jobicy",
+          "title": "Sr. Forward Deployed AI Engineer (Remote Eligible in the UK)",
+          "canonical_url": "https://jobicy.com/jobs/155167-sr-forward-deployed-ai-engineer-remote-eligible-in-the-uk",
+          "published_at": "2026-10-13T09:38:19+00:00",
+          "description_excerpt": "For over 20 years, Smartsheet has empowered teams to manage work seamlessly and scale solutions smarter. Now, in our most ambitious chapter yet, we are uniting human teams with AI agents. By orchestrating the work agents do best, automating manual tasks and uncovering insights at scale, we create the space for people to focus on what truly matters: judgment, creativity, and big thinking. That is magic at work, and it’s what we show up for every day. You independently lead the most complex AI dep",
+          "raw_job_type": "['Full-Time']",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "strategy"
+          ],
+          "raw_record_keys": [
+            "companyLogo",
+            "companyName",
+            "id",
+            "jobDescription",
+            "jobExcerpt",
+            "jobGeo",
+            "jobIndustry",
+            "jobLevel",
+            "jobSlug",
+            "jobTitle",
+            "jobType",
+            "pubDate",
+            "url"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "Remote OK",
+      "endpoint": "https://remoteok.com/api?tag=dev",
+      "status": "PASS",
+      "raw_record_count": 100,
+      "summary": {
+        "total_records": 100,
+        "fresh_records": 17,
+        "freshness_cutoff_utc": "2026-09-14T05:10:49.645004+00:00",
+        "classification_counts_all": {
+          "irrelevant_or_unclear": 45,
+          "explicit_freelance_or_contract": 10,
+          "potential_buyer_signal_unconfirmed": 26,
+          "permanent_or_unspecified_employment": 19
+        },
+        "classification_counts_fresh": {
+          "irrelevant_or_unclear": 6,
+          "explicit_freelance_or_contract": 1,
+          "potential_buyer_signal_unconfirmed": 6,
+          "permanent_or_unspecified_employment": 4
+        },
+        "records_with_explicit_budget_or_compensation_signal": 77,
+        "records_with_usable_contact_or_application_signal": 50,
+        "records_with_profile_keyword_overlap": 84,
+        "duplicate_records_within_provider": 0
+      },
+      "sample_records": [
+        {
+          "source": "Remote OK",
+          "title": "",
+          "canonical_url": "",
+          "published_at": null,
+          "description_excerpt": "",
+          "raw_job_type": "",
+          "classification": "irrelevant_or_unclear",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "last_updated",
+            "legal"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Principal Software Engineer",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-principal-software-engineer-vytalize-health-1137508",
+          "published_at": "2026-10-13T00:00:18+00:00",
+          "description_excerpt": "Your Opportunity As a Principal Engineer , you will help design, build, and operate the clinical decision support and API-driven data delivery platform that enables Vytalize Health to embed timely, actionable clinical insights directly into provider workflows. Working cross-functionally with Data Engineering, Product, Clinical Operations, and EMR partners, your solutions will transform how clinicians access dataâmoving from external tools and workarounds to seamless, in-workflow decision suppo",
+          "raw_job_type": "",
+          "classification": "irrelevant_or_unclear",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "design",
+            "experience",
+            "product",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Graphic Designer & Video Editor",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-graphic-designer-video-editor-bluetuskr-1137507",
+          "published_at": "2026-10-13T00:00:06+00:00",
+          "description_excerpt": "Description BlueTuskr is a full-service e-commerce growth agency built exclusively for e-commerce brands. We combine paid media, owned media, creative, and analytics to help our clients scale profitably. Our team is made up of specialists who are deeply invested in their craft â and in the success of the brands they serve. This isn't a \"jack of all trades\" environment. We hire people who are exceptional at what they do, then give them the resources and autonomy to do it well. The Opportunity W",
+          "raw_job_type": "",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "creative",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Product Design Director",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-product-design-director-midnite-1137497",
+          "published_at": "2026-10-11T16:00:03+00:00",
+          "description_excerpt": "ð Why Midnite? Midnite is a next-generation sports betting and gaming platform built for a new wave of players. We combine sharp product thinking, bold brand, and fast execution to create experiences that feel modern, intuitive, and built for how people actually play today. Over 400,000 players have already made the move, and weâre only just getting started. Weâre a high-performance team operating at pace. High ownership. Constant iteration. No hiding behind processes. We move quickly, te",
+          "raw_job_type": "",
+          "classification": "irrelevant_or_unclear",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "creative",
+            "design",
+            "experience",
+            "product",
+            "strategy"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Manager Clinical Data Management",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-manager-clinical-data-management-edetek-1137481",
+          "published_at": "2026-10-10T08:00:08+00:00",
+          "description_excerpt": "Manager, Clinical Data Management leads clinical data management team to handle project management documentation, preform clinical data management activities and system implementations for EDETEKâs CONFORM eClinical, write design specifications for the system (forms, reports, etc.), and facilitate testing of system implementations. In addition to stay hands-on with clinical data management operations and activities, Manager of Clinical Data Management oversees data management projects to ensur",
+          "raw_job_type": "",
+          "classification": "irrelevant_or_unclear",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "creative",
+            "design",
+            "experience"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Product Engineering Lead",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-product-engineering-lead-tether-operations-limited-1137478",
+          "published_at": "2026-10-10T00:00:05+00:00",
+          "description_excerpt": "Join Tether and Shape the Future of Digital Finance At Tether, weâre not just building products, weâre pioneering a global financial revolution. Our cutting-edge solutions empower businessesâfrom exchanges and wallets to payment processors and ATMsâto seamlessly integrate reserve-backed tokens across blockchains. By harnessing the power of blockchain technology, Tether enables you to store, send, and receive digital tokens instantly, securely, and globally, all at a fraction of the cost.",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "research",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Senior React Full stack Developer",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-senior-react-full-stack-developer-lemon-io-1137475",
+          "published_at": "2026-10-09T13:09:18+00:00",
+          "description_excerpt": "Are you a talented Senior Developer looking for a remote job that lets you show your skills and get decent compensation? Look no further than Lemon.io â the marketplace that connects you with hand-picked startups in the US and Europe. What we offer: The rate depends on your seniority level, skills and experience. We've already paid out over $11M to our engineers. No more hunting for clients or negotiating rates â let us handle the business side of things so you can focus on what you do best.",
+          "raw_job_type": "",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "original",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Product Design Lead",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-product-design-lead-fuel50-1137474",
+          "published_at": "2026-10-09T08:00:04+00:00",
+          "description_excerpt": "Fuel50 is a workforce transformation platform helping organisations understand workforce capability, build skills and enable internal mobility in an AI-driven world. Our products combine skills intelligence, talent marketplace experiences and responsible AI to help people and organisations take their next step.Â We are looking for a Product Design Lead to shape the next chapter of our product experience and design organisation.Â This is a senior player-coach role. You will lead and develop our p",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "research",
+            "strategy",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Federal Business Development Director",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-federal-business-development-director-fortanix-1137463",
+          "published_at": "2026-10-04T16:00:03+00:00",
+          "description_excerpt": "About Fortanix In today's world, where data spreads across various clouds and devices, traditional security measures aren't enough. Businesses and Government need a dynamic approach to defend against constant cyber threats and ensure agile data security. Fortanix leads the way in data-centric cybersecurity for hybrid multicloud environments, using advanced cryptography, encryption, PQC and Confidential AI solutions.Â Â In an era where customers want solutions that allow their AI models to be clo",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "creative",
+            "experience",
+            "product",
+            "strategy"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Software Engineer",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-software-engineer-prenosis-1137427",
+          "published_at": "2026-09-23T14:00:02+00:00",
+          "description_excerpt": "Remote - Prenosis Inc. is an artificial intelligence company pioneering precision medicine in acute care. Our Immunixâ¢ precision medicine platform drives the development of precision products and enables real-time delivery of optimal therapy. We've created and validated the fi... Please mention the word **STELLARLY** and tag RMTAyLjg4LjE2OC4xNzQ= when applying to show you read the job post completely (#RMTAyLjg4LjE2OC4xNzQ=). This is a beta feature to avoid spam applicants. Companies can searc",
+          "raw_job_type": "",
+          "classification": "irrelevant_or_unclear",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "Senior Growth Product Manager AI Native",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-senior-growth-product-manager-ai-native-magic-eden-1137414",
+          "published_at": "2026-09-22T00:00:07+00:00",
+          "description_excerpt": "About Magic Eden and Dicey Magic Eden reached unicorn status in just 9 months after launch, one of the fastest in history. We built a category-defining NFT marketplace from scratch and proved we know how to move fast. Now we're doing it again. Dicey is our crypto casino and sportsbook platform, targeting the $180B+ iGaming and sports betting markets. We're a small, fully remote team. We ship fast, we're hands-on with our data, and we're rebuilding how a growth team operates around AI from the gr",
+          "raw_job_type": "",
+          "classification": "potential_buyer_signal_unconfirmed",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        },
+        {
+          "source": "Remote OK",
+          "title": "People Operations Coordinator",
+          "canonical_url": "https://remoteOK.com/remote-jobs/remote-people-operations-coordinator-ashby-1137412",
+          "published_at": "2026-09-21T16:00:11+00:00",
+          "description_excerpt": "Hi! Iâm Hannah and I lead People Operations here at Ashby. I joined over four years ago as the first People hire and Iâm excited that our People Ops team is growing! The People Operations team supports Ashby employees through the development and implementation of programs, policies, and services that contribute to a productive and inclusive working environment. We ensure the work we do aligns with our Operating Principles and strengthens the environment weâre building at Ashby. Our approac",
+          "raw_job_type": "",
+          "classification": "irrelevant_or_unclear",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "experience"
+          ],
+          "raw_record_keys": [
+            "apply_url",
+            "company",
+            "company_logo",
+            "date",
+            "description",
+            "epoch",
+            "id",
+            "location",
+            "logo",
+            "position",
+            "salary_max",
+            "salary_min",
+            "slug",
+            "tags",
+            "url"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "Himalayas",
+      "endpoint": "https://himalayas.app/jobs/api/search?q=typescript&sort=recent",
+      "status": "PASS",
+      "raw_record_count": 20,
+      "summary": {
+        "total_records": 20,
+        "fresh_records": 20,
+        "freshness_cutoff_utc": "2026-09-14T05:10:49.645004+00:00",
+        "classification_counts_all": {
+          "explicit_freelance_or_contract": 2,
+          "permanent_or_unspecified_employment": 18
+        },
+        "classification_counts_fresh": {
+          "explicit_freelance_or_contract": 2,
+          "permanent_or_unspecified_employment": 18
+        },
+        "records_with_explicit_budget_or_compensation_signal": 18,
+        "records_with_usable_contact_or_application_signal": 11,
+        "records_with_profile_keyword_overlap": 19,
+        "duplicate_records_within_provider": 0
+      },
+      "sample_records": [
+        {
+          "source": "Himalayas",
+          "title": "Junior Software Engineer",
+          "canonical_url": "",
+          "published_at": "2026-10-13T13:00:10+00:00",
+          "description_excerpt": "Role Title: Junior Software Engineer Role Type: Contractor Location: Remote About the Role micro1 is partnering with a leading AI lab to hire junior software engineers from top companies. You'll evaluate AI-generated code, create challenging engineering problems, and help push model performance on real-world software tasks. Scope of Work Evaluate AI-generated code for correctness, quality, and design Write challenging coding problems, reference solutions, and test cases Review model reasoning on",
+          "raw_job_type": "Contractor",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Senior React Full-stack Developer",
+          "canonical_url": "",
+          "published_at": "2026-09-22T11:19:56+00:00",
+          "description_excerpt": "Are you a talented Senior Developer looking for a remote job that lets you show your skills and get decent compensation? Look no further than Lemon.io — the marketplace that connects you with hand-picked startups in the US and Europe. What we offer: The rate depends on your seniority level, skills and experience. We've already paid out over $11M to our engineers. No more hunting for clients or negotiating rates — let us handle the business side of things so you can focus on what you do best. We'",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Software Engineer",
+          "canonical_url": "",
+          "published_at": "2026-09-21T03:43:48+00:00",
+          "description_excerpt": "About Us ElitevoraSys is a modern engineering consultancy focused on building high-performance operational platforms, automation pipelines, and data-driven workflows for clients who need real results - not just software. We partner with organizations to design and deliver systems that streamline dispatch, asset management, field operations, and enterprise integrations. Job Description This is a remote position. Team: Engineering – Platform Consulting About ElitevoraSys ElitevoraSys is a modern e",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Staff Software Developer (Remote Canada)",
+          "canonical_url": "",
+          "published_at": "2026-10-14T04:07:10+00:00",
+          "description_excerpt": "Staff Software Developer (Remote Canada) About Our Client Our client is a technology company transforming the building supply industry through modern digital solutions. Their platform helps independent building suppliers deliver exceptional customer experiences by streamlining commerce, sales, accounts receivable, operations, and customer service. They are a curious, solution-driven, customer-focused team that is passionate about building technology that solves real-world problems and helps busi",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Front-End Developer (React.js)",
+          "canonical_url": "",
+          "published_at": "2026-10-14T04:02:37+00:00",
+          "description_excerpt": "Remote – LATAM About Us AccelOne provides custom software development and design services for companies across the US and Latin America. We are built on core principles of transparency, communication, and accountability , and we aim to deliver exceptional solutions for our clients. About Our Project Our client is a U.S.-based technology company and a global leader in digital experience personalization . Their platform enables major retail and e-commerce brands to deliver highly customized user e",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "AI Engineer- Anthropic",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:59:18+00:00",
+          "description_excerpt": "Job Description Artificial Intelligence Engineer – Anthropic About Quantum Strides Quantum Strides is looking for a talented and hands-on Artificial Intelligence Engineer to join our growing AI engineering team. The ideal candidate will have strong practical experience building and deploying AI/ML solutions, with specific expertise in Anthropic's Claude ecosystem, APIs, and generative AI technologies . This is a fully remote, full-time opportunity for an engineer who enjoys working with emerging",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Senior Backend Engineer - Hyperliquid",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:50:41+00:00",
+          "description_excerpt": "This is a remote position. This company is a Web3 player offering a unified API to access all on-chain liquidity across major blockchains in order to simplify multi-chain DeFi for traditional financial institutions, fintechs and service providers, for best price same-chain and cross-chain swaps. They are looking fora Backend Developer with a dedicated focus on integrating Hyperliquid functionalities into their API platform. This role is backend-only (no frontend or design work required) letting ",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "design",
+            "experience"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Senior Quality Engineer - Checkout & Payments (m/w/d)",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:50:08+00:00",
+          "description_excerpt": "Shopware ist ein führendes E-Commerce-System, das es Unternehmen weltweit ermöglicht, im digitalen Handel schnell und effizient zu skalieren. Als zukunftsweisende Open-Source-Lösung wird Shopware bereits von einigen der größten europäischen Marken, Einzelhändlern und Herstellern im B2C- und B2B-Bereich eingesetzt. Als Senior Quality Engineer – Checkout & Payments trägst du dazu bei, zuverlässige Zahlungsabläufe über Shopware, Shopware Payments und externe Systeme hinweg sicherzustellen. Dein Sch",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [
+            "product"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "(Fluent English) T3 Support Engineer",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:45:07+00:00",
+          "description_excerpt": "Who are we? SupportYourApp is a global Intelligent Support-as-a-Service leader, partnering with tech companies and industry leaders like MasterCard, Calm and MacPaw in 30+ countries since 2010 to deliver secure customer and technical support. We operate globally, supporting clients in 60 languages across diverse industries. So what if you had a chance to be a part of the world’s leading SaaS, software, or hardware solutions? Join our community as a T3 Support Engineer today and thrive in a multi",
+          "raw_job_type": "Contractor",
+          "classification": "explicit_freelance_or_contract",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "experience",
+            "research"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Quality Engineering Lead / Automation Architect",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:31:21+00:00",
+          "description_excerpt": "About POMS POMS develops Manufacturing Execution System (MES) software solutions for the life sciences industry. POMS is investing heavily in automated quality engineering, modern software delivery practices, and AI-assisted testing to further product quality and accelerate delivery. Position Summary POMS is seeking a hands-on Quality Engineering Lead / Automation Architect to lead the shift from predominantly manual testing to automation-driven quality engineering. This is a hands-on role: the ",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "design",
+            "experience",
+            "product",
+            "strategy"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Desenvolvedor Java SR",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:23:39+00:00",
+          "description_excerpt": "No Grupo Stefanini , acreditamos no poder da colaboração. Co-criamos soluções inovadoras em parceria com nossos clientes, combinando tecnologia de ponta, inteligência artificial e a criatividade humana. Estamos na vanguarda da resolução de problemas de negócios, proporcionando impacto real em escala global. Ao se juntar à Stefanini , você se torna parte de uma jornada global de transformação. Estamos empenhados em criar impacto positivo não apenas nos negócios, mas também na vida de nossos colab",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": false,
+          "has_usable_contact_or_application_signal": false,
+          "profile_keyword_hits": [],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        },
+        {
+          "source": "Himalayas",
+          "title": "Frontend Desktop Engineer (Internal)",
+          "canonical_url": "",
+          "published_at": "2026-10-14T03:09:35+00:00",
+          "description_excerpt": "Join Tether and Shape the Future of Digital Finance At Tether, we’re not just building products, we’re pioneering a global financial revolution. Our cutting-edge solutions empower businesses—from exchanges and wallets to payment processors and ATMs—to seamlessly integrate reserve-backed tokens across blockchains. By harnessing the power of blockchain technology, Tether enables you to store, send, and receive digital tokens instantly, securely, and globally, all at a fraction of the cost. Transpa",
+          "raw_job_type": "Full Time",
+          "classification": "permanent_or_unspecified_employment",
+          "has_explicit_budget_or_compensation_signal": true,
+          "has_usable_contact_or_application_signal": true,
+          "profile_keyword_hits": [
+            "ai",
+            "experience",
+            "product",
+            "technology"
+          ],
+          "raw_record_keys": [
+            "applicationLink",
+            "categories",
+            "companyLogo",
+            "companyName",
+            "companySlug",
+            "currency",
+            "description",
+            "employmentType",
+            "excerpt",
+            "expiryDate",
+            "guid",
+            "locationRestrictions",
+            "maxSalary",
+            "minSalary",
+            "parentCategories",
+            "pubDate",
+            "salaryPeriod",
+            "seniority",
+            "timezoneRestrictions",
+            "title"
+          ]
+        }
+      ]
+    }
+  ],
+  "category_tests": {
+    "representative_profile": {
+      "source": "frog homepage extraction",
+      "confirmed_direct_signals": [
+        "transformative experiences",
+        "research",
+        "AI",
+        "design",
+        "experience partner"
+      ],
+      "model_status": "not used; website test recorded Gemma as BLOCKED"
+    },
+    "categories": {
+      "small businesses": {
+        "query": "small business design",
+        "endpoint": "https://hn.algolia.com/api/v1/search_by_date?query=small+business+design&tags=story&hitsPerPage=20",
+        "status": "PASS",
+        "raw_record_count": 20,
+        "shortlist": [
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Studis – Turn product photos into social media ads with AI",
+            "canonical_url": "https://studis.io/",
+            "published_at": "2026-05-11T12:11:18+00:00",
+            "description_excerpt": "I built Studis to solve a problem I kept seeing with small business owners — they have great products but spend hours in Canva trying to make decent ads, or pay $50+ per image to a designer. Upload a product photo, and Studis generates a professional ad creative with copy, hashtags, and audience targeting. It uses Gemini Flash for image generation and Claude for copy. Stack: Laravel, Vue/Inertia, Gemini 3.1 Flash Image, Claude, Pusher for real-time progress. Free to try (5 generations, no card):",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "creative",
+              "product"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "small businesses",
+              "score": 12,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "small business",
+                "owner"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "creative",
+                "product"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: ChatSpark – Live chat widget for solo operators",
+            "canonical_url": "https://www.chatspark.dev",
+            "published_at": "2026-03-16T14:39:28+00:00",
+            "description_excerpt": "ChatSpark is a lightweight, embeddable live chat widget for solopreneurs and small business owners who handle support themselves. Single script tag embed. One dashboard. Real-time messaging via WebSocket. Email/push notifications. Offline mode with leave-a-message form. Optional AI auto-replies from your FAQ content. Built with Next.js, Node.js, WebSocket, PostgreSQL. Deployed on Kubernetes. Free tier: 1 widget, 50 conversations/month. Pro: $12/mo. Business: $29/mo with AI replies. The main desi",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "small businesses",
+              "score": 11,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "small business",
+                "owner"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Broccoli, one shot coding agent on the cloud",
+            "canonical_url": "https://github.com/besimple-oss/broccoli",
+            "published_at": "2026-04-22T16:09:56+00:00",
+            "description_excerpt": "Hi HN — we built Broccoli, an open-source harness for taking coding tasks from Linear, running them in isolated cloud sandboxes, and opening PRs for a human to review. We’re a small team, and our main company supplies voice data. But we kept running into the same problem with coding agents. We’d have a feature request, a refactor, a bug, and some internal tooling work all happening at once, and managing that through local agent sessions meant a lot of context switching, worktree juggling, and la",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "small businesses",
+              "score": 9,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "small team",
+                "local"
+              ],
+              "profile_terms_found_in_source_text": [
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: TimerVana a Local-first scheduler for real world routines",
+            "canonical_url": "https://timervana.net/browse",
+            "published_at": "2026-09-04T22:47:59+00:00",
+            "description_excerpt": "Hi HN, I’m the creator of TimerVana. It's not just \"another timer app\". The engineering analogy is a lightweight task scheduler for things people do in the real world. A normal timer models one countdown. TimerVana models a small dependency graph in JSON: some steps run sequentially, others run in parallel, and everything can converge on a target finish time. You can also combine multiple timers (e.g., combine a timer with all the steps to cook a steak + a timer for roasting vegetables). I origi",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design",
+              "experience"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "small businesses",
+              "score": 8,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "local"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design",
+                "experience"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Tell HN: If your idea is worth stealing, AI makes it easy. NDA or not",
+            "canonical_url": "https://news.ycombinator.com/item?id=47287434",
+            "published_at": "2026-03-07T13:25:39+00:00",
+            "description_excerpt": "We're a small team. >7 years of R&D, self-funded, friends-and-family money. We solved a hard problem in a way that experts told us couldn't work. Non-obvious architecture — dozens of design decisions that only make sense once you've tried all the alternatives that don't. We got it working. Signed paying customers. Started building a real business. Another large company approached us for an evaluation. NDA signed. Over an extended period we shared everything — architecture, internals, custom buil",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at"
+            ],
+            "category_match": {
+              "category": "small businesses",
+              "score": 7,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "small team"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          }
+        ],
+        "observed_effects": {
+          "query_changed": true,
+          "qualification_rule_changed": true,
+          "ranking_terms_changed": true,
+          "match_explanation_changed": true
+        }
+      },
+      "startups": {
+        "query": "startup design",
+        "endpoint": "https://hn.algolia.com/api/v1/search_by_date?query=startup+design&tags=story&hitsPerPage=20",
+        "status": "PASS",
+        "raw_record_count": 20,
+        "shortlist": [
+          {
+            "source": "Hacker News",
+            "title": "Launch: Assury Cross platform agent lifecycle mangement",
+            "canonical_url": "https://news.ycombinator.com/item?id=50072334",
+            "published_at": "2026-10-13T14:29:21+00:00",
+            "description_excerpt": "Hey HN, I am David Girvi, co-founder of Assury.ai. We are practitioners who became vendors last year. I wanted to share that we have launched agent lifecycle management for cross-platform agents. One centralized spot for all your agents. AWS, Databricks, Snowflake, Salesforce, etc. Lifecycle does auto-discovery in every environment, plus auto-tagging. We bring everything into a tamper-proof, searchable audit trail. Easily see who or what teams own the agents etc. We also have Kill/resume control",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design",
+              "product",
+              "research",
+              "technology"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at"
+            ],
+            "category_match": {
+              "category": "startups",
+              "score": 10,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "founder"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design",
+                "product",
+                "research",
+                "technology"
+              ],
+              "freshness_pass": true,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Freeform – One click shareable AI generated apps",
+            "canonical_url": "https://sharefreeform.com",
+            "published_at": "2026-09-16T11:43:17+00:00",
+            "description_excerpt": "TLDR: Curious if YC startup requests are a valid take, so I built freeform in a weekend. Storytime: I’ve been working on a startup for a while (another context layer startup) and one night while I had One Piece playing in the background and I was going through YCs request for startups list. I was watching the videos and reading the transcripts when two of them particularly stood out to me: cloud for small apps and shareable apps. Specifically the quote “AI hasn't had its multiplayer moment yet”.",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": true,
+            "profile_keyword_hits": [
+              "ai",
+              "design",
+              "product"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "startups",
+              "score": 10,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "startup"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design",
+                "product"
+              ],
+              "freshness_pass": true,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Ask HN: Ceremonious Architecture in Times of AI",
+            "canonical_url": "https://news.ycombinator.com/item?id=49795847",
+            "published_at": "2026-09-22T01:44:58+00:00",
+            "description_excerpt": "There's extensive literature on several software architecture patterns and styles whose benefits are well known, but which are often ignored due to the cost of their boilerplatic layers and abstractions. For example: Domain-Driven Design is cool, but it probably won't be applied to a CRUD-heavy startup backend; Clean Architecture is great, but defining a database schema via some annotations on entity fields is simpler and faster. It's clear that having a single `FooService` mapped to endpoints a",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at"
+            ],
+            "category_match": {
+              "category": "startups",
+              "score": 8,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "startup"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design"
+              ],
+              "freshness_pass": true,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Tell HN: The Thoughts and Woes of a Full-Time Founder Part 2",
+            "canonical_url": "https://news.ycombinator.com/item?id=49571763",
+            "published_at": "2026-09-05T00:22:08+00:00",
+            "description_excerpt": "Skills to Learn vs Outsource as a Founder Amongst all circles of entrepreneurship I’ve interacted with, it appears mutually agreed upon that a founder needs to possess skills in selling, and to some degree even persuasion. But more specifically, a founder should probably also know methods of marketing and advertising to the extent they can at least gain customers and users for their product or service in a recurring fashion and at scale. If one is developing an organization that revolves around ",
+            "raw_job_type": "",
+            "classification": "permanent_or_unspecified_employment",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "design",
+              "product",
+              "technology"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at"
+            ],
+            "category_match": {
+              "category": "startups",
+              "score": 8,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "founder"
+              ],
+              "profile_terms_found_in_source_text": [
+                "design",
+                "product",
+                "technology"
+              ],
+              "freshness_pass": false,
+              "classification": "permanent_or_unspecified_employment",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Will Jev pull the lever in the trolley problem?",
+            "canonical_url": "https://gpu.studio/trolley",
+            "published_at": "2026-09-20T08:31:26+00:00",
+            "description_excerpt": "The Jev benchmark you've all been waiting for: Will Jev pull the lever in the trolley problem? Don't think too much about it :) Place whatever you'd like on each side of the tracks, and GPU (my startup's AI system, whee!) will have Jev judge the result. As a bonus, two really good looking SVGs are rendered with gpt-oss-120b for what you place on the tracks. I've made a really high quality thing here. My first impression is that Jev does well! I understand it's not exactly designed for this kind ",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "startups",
+              "score": 7,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "startup"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai"
+              ],
+              "freshness_pass": true,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          }
+        ],
+        "observed_effects": {
+          "query_changed": true,
+          "qualification_rule_changed": true,
+          "ranking_terms_changed": true,
+          "match_explanation_changed": true
+        }
+      },
+      "agencies": {
+        "query": "agency design",
+        "endpoint": "https://hn.algolia.com/api/v1/search_by_date?query=agency+design&tags=story&hitsPerPage=20",
+        "status": "PASS",
+        "raw_record_count": 20,
+        "shortlist": [
+          {
+            "source": "Hacker News",
+            "title": "A 30 Year OG Application Developer Available",
+            "canonical_url": "https://news.ycombinator.com/item?id=48668766",
+            "published_at": "2026-06-25T04:09:52+00:00",
+            "description_excerpt": "https://www.youtube.com/watch?v=DACtpW9Q-hc That link is the #1 Architectural Interior Design software used by the top firms in the world. What you are looking at is the result of pure architectural discipline. To handle massive global budgets, complex subcontractor workflows, and real-time synchronization with massive enterprise CAD suites, I engineered a closed-loop, self-aware data object model. The data objects carry their own application logic and database schemas. It is a zero-exception, s",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": true,
+            "profile_keyword_hits": [
+              "ai",
+              "design",
+              "experience"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at"
+            ],
+            "category_match": {
+              "category": "agencies",
+              "score": 9,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "subcontract"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design",
+                "experience"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Proposalkit.io – you write the content, we control the design",
+            "canonical_url": "https://proposalkit.io/",
+            "published_at": "2026-05-20T11:30:28+00:00",
+            "description_excerpt": "This is a proposal creation and analytics software for small agencies. Who is it for: a five person web design studio sending a $15K-ish project proposal after a discovery call I've been long wanting to start building my own businesses, and this is my first true attempt to do so. I've built systems on top of platforms like Airtable and Shopify before, but this is the first time I've attempted to do the thing most people think when they think of SaaS. Landing site: Astro on Cloudflare Pages App: ",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": true,
+            "profile_keyword_hits": [
+              "design",
+              "product"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "agencies",
+              "score": 8,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "studio"
+              ],
+              "profile_terms_found_in_source_text": [
+                "design",
+                "product"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Reviewskits – Open-source, headless, and self-hostable social proof",
+            "canonical_url": "https://reviewskits.com",
+            "published_at": "2026-04-02T13:36:21+00:00",
+            "description_excerpt": "Hi HN, I built Reviewskits because of a recurring frustration I faced while working for a web agency in Switzerland. Our designers created beautiful, pixel-perfect layouts, but when it came to testimonials, we were stuck with rigid, pre-made widgets from tools like Senja or Trustpilot. Hacking them with CSS to match our UI was a nightmare. When we looked at their API pricing to build our own components for 100+ clients, the cost was astronomical ($90 to $300+/mo). Later, as an indie dev building",
+            "raw_job_type": "",
+            "classification": "potential_buyer_signal_unconfirmed",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "agencies",
+              "score": 8,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "agency"
+              ],
+              "profile_terms_found_in_source_text": [
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "potential_buyer_signal_unconfirmed",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: I lost billable hours forgetting timers. I turned my calendar into a DB",
+            "canonical_url": "https://www.timescanner.io/",
+            "published_at": "2026-03-12T16:58:23+00:00",
+            "description_excerpt": "Hi HN, I’m Adrien. I run a dev agency and work as a fractional CTO. I lost too much billable hours simply because I forgot to start or stop a timer. It’s a friction point that fails exactly when you're most focused on deep work. I realized my calendar was already a perfect, 100% accurate log of my week. If a meeting or a task happened, it’s in my agenda. So I built Timescanner to turn those [Client] tags in my calendar into invoices. Why I built it this way: - Privacy by design: your calendar is",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "agencies",
+              "score": 7,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "agency"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Ask HN: Agencies/MSPs, how do you manage VPN access across many clients?",
+            "canonical_url": "https://news.ycombinator.com/item?id=47333997",
+            "published_at": "2026-03-11T10:57:17+00:00",
+            "description_excerpt": "Hi HN, we're a software development agency with several clients scattered across Europe. Due to the nature of our products many require to connect to the client's VPN to offer assistance and perform maintenance. Most times we can't install our own VPN. This has led to some of our devs needing to manage more than 20 different VPNs, all with different clients (sometimes with incompatible versions, looking at you Fortinet), credentials, expirations, tokens and such. Some of those get unused for mon",
+            "raw_job_type": "",
+            "classification": "potential_buyer_signal_unconfirmed",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at"
+            ],
+            "category_match": {
+              "category": "agencies",
+              "score": 7,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "agency"
+              ],
+              "profile_terms_found_in_source_text": [
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "potential_buyer_signal_unconfirmed",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          }
+        ],
+        "observed_effects": {
+          "query_changed": true,
+          "qualification_rule_changed": true,
+          "ranking_terms_changed": true,
+          "match_explanation_changed": true
+        }
+      },
+      "individuals": {
+        "query": "personal project design",
+        "endpoint": "https://hn.algolia.com/api/v1/search_by_date?query=personal+project+design&tags=story&hitsPerPage=20",
+        "status": "PASS",
+        "raw_record_count": 20,
+        "shortlist": [
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Ecdeos – P2P Web/Native Distributed OS on Entity Core Protocol",
+            "canonical_url": "https://ecdeos.org",
+            "published_at": "2026-08-25T21:20:05+00:00",
+            "description_excerpt": "Hello, I wanted to share an update of the current progress of the Entity System. https://ecdeos.org is one domain in a constellation of peers/sites that is the main project of the Entity System, a Tauri Rust/WASM browser engine and Rust backend built on the Entity Core Protocol. It's primarily a research prototype of a P2P distributed cross-platform userspace operating system. The long-term goal is functional P2P management of devices and applications, scaling from individual use (managing perso",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": true,
+            "profile_keyword_hits": [
+              "ai",
+              "design",
+              "research",
+              "technology"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "individuals",
+              "score": 10,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "individual"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design",
+                "research",
+                "technology"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: College application essay inspiration and brainstorm",
+            "canonical_url": "https://essaycompass.net/",
+            "published_at": "2026-07-29T16:10:16+00:00",
+            "description_excerpt": "I collected thousands of outstanding college application essays to train a specialized AI model designed to inspire and coach students throughout the essay-writing process. Unlike general-purpose AI, each essay is highly personalized based on the applicant's background, experiences, and personal story. The AI also adapts its writing to emphasize the qualities and values that different universities are looking for. You can browse our essay library for free, explore each applicant's profile, and s",
+            "raw_job_type": "",
+            "classification": "potential_buyer_signal_unconfirmed",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": true,
+            "profile_keyword_hits": [
+              "ai"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "individuals",
+              "score": 9,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "coach"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai"
+              ],
+              "freshness_pass": false,
+              "classification": "potential_buyer_signal_unconfirmed",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Television – an open source GUI for your agent harness",
+            "canonical_url": "https://television.run/",
+            "published_at": "2026-10-02T23:25:04+00:00",
+            "description_excerpt": "Hi HN, I'm co-creator of Television ( https://television.run/ ). Me and the team at Telepath ( https://telepath.computer/ ) have been cooking on this and testing it with a few hundred alpha users. We just opened up the repo to the public today. Television is a clean, beautiful place for all your artifacts. Think of it as a GUI for your agent harness, a visual space for creating and working with artifacts in collaboration with your agent. It works with any agent harness (Claude Code, Codex, Herme",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "individuals",
+              "score": 7,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "creator"
+              ],
+              "profile_terms_found_in_source_text": [
+                "design"
+              ],
+              "freshness_pass": true,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Tape Music Hub, local music library manager with a P2P phone companion",
+            "canonical_url": "https://tape-music-hub.gordo.design/",
+            "published_at": "2026-08-07T20:34:58+00:00",
+            "description_excerpt": "Hi HN, This is a personal project I have been building for the last three years. I had the technical and product background, but never quite enough uninterrupted time to take it all the way. AI coding tools finally gave me enough leverage to finish the version I had been carrying around in my head. I have spent years accumulating a proper local music library. I DJ from time to time, and I always have music locally that is not distributed on any “public” platform such as Spotify or Apple Music, s",
+            "raw_job_type": "",
+            "classification": "irrelevant_or_unclear",
+            "has_explicit_budget_or_compensation_signal": false,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "experience",
+              "product"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "individuals",
+              "score": 7,
+              "qualification": "explicit",
+              "category_terms_found_in_source_text": [
+                "personal project"
+              ],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "experience",
+                "product"
+              ],
+              "freshness_pass": false,
+              "classification": "irrelevant_or_unclear",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          },
+          {
+            "source": "Hacker News",
+            "title": "Show HN: Open-source simulation testing infra for voice agents",
+            "canonical_url": "https://github.com/egma-ai/egma",
+            "published_at": "2026-09-10T17:01:14+00:00",
+            "description_excerpt": "Hey HN, we’re Nischal & Naman. We’re brothers, and together we’re building an open-source platform for simulation based testing of voice agents (try it out in 5 mins - https://docs.egma.ai/docs/get-started/quickstart , 2 min demo video - https://youtu.be/wgDWEe5UAUY ) Platforms that help you do simulation testing already exist. But they all charge a heavy premium on top of inference costs. We believe if the industry truly wants to scale simulation testing of voice agents, we need to stop chargin",
+            "raw_job_type": "",
+            "classification": "potential_buyer_signal_unconfirmed",
+            "has_explicit_budget_or_compensation_signal": true,
+            "has_usable_contact_or_application_signal": false,
+            "profile_keyword_hits": [
+              "ai",
+              "design"
+            ],
+            "raw_record_keys": [
+              "_highlightResult",
+              "_tags",
+              "author",
+              "children",
+              "created_at",
+              "created_at_i",
+              "num_comments",
+              "objectID",
+              "points",
+              "story_id",
+              "story_text",
+              "title",
+              "updated_at",
+              "url"
+            ],
+            "category_match": {
+              "category": "individuals",
+              "score": 5,
+              "qualification": "uncertain",
+              "category_terms_found_in_source_text": [],
+              "profile_terms_found_in_source_text": [
+                "ai",
+                "design"
+              ],
+              "freshness_pass": false,
+              "classification": "potential_buyer_signal_unconfirmed",
+              "boundary": "Category is explicit only when source text contains category evidence; otherwise this is an uncertain match, not a fact."
+            }
+          }
+        ],
+        "observed_effects": {
+          "query_changed": true,
+          "qualification_rule_changed": true,
+          "ranking_terms_changed": true,
+          "match_explanation_changed": true
+        }
+      }
+    }
+  },
+  "interpretation": {
+    "important_boundary": "HTTP success is not treated as opportunity proof; records are classified conservatively from returned text and fields.",
+    "buyer_boundary": "Potential buyer signals are unconfirmed unless source text explicitly describes demand.",
+    "ranking_boundary": "The category run demonstrates observable query, qualification, score, and explanation changes; it does not prove that all source records expose reliable customer-type labels."
+  }
+}

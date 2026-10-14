@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+coverage/
+.vitest-cache/
+.env
+.env.local
+.env.*.local
+env.local.txt
+npm-debug.log*
+*.tsbuildinfo
+
