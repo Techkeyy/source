@@ -1290,3 +1290,161 @@ ownership recovery, then prepare Render deployment and repeat the acceptance
 test against the public URL. No Gemma sponsor claim, DeepSeek provider claim,
 full acceptance claim, or deployment claim is valid before those proofs exist.
 
+## Directive 010 — final model activation and deployment checkpoint
+
+Timestamp: 2026-10-14 (Africa/Lagos). Owner deadline recorded as October 14,
+2026, 11:51 PM WAT. This checkpoint records only newly verified activation and
+deployment-preparation evidence; the Core Outcome remains unproven.
+
+### OpenRouter free activation result
+
+The owner-configured server environment was checked without printing secret
+values. It contained `INFERENCE_PROVIDER=openrouter-gemma`, an
+`OPENROUTER_API_KEY`, and `OPENROUTER_MODEL=google/gemma-4-26b-a4b-it:free`.
+The standard paid model was not selected. `DEEPSEEK_API_KEY` was absent.
+
+The first-priority command was run against the real public site:
+
+```text
+npm run probe:gemma -- https://www.frog.co/
+```
+
+Redacted result:
+
+```json
+{
+  "status": "fail",
+  "reason": "provider-or-extraction-or-parsing-failed",
+  "code": "MODEL_HTTP_429",
+  "provider": "openrouter-gemma",
+  "model": "google/gemma-4-26b-a4b-it:free",
+  "sourceFetchHttpStatus": 200,
+  "responseHttpStatus": 429,
+  "responseMeta": {
+    "candidateCount": 0,
+    "finishReasons": [],
+    "partCount": 0,
+    "attemptStatuses": [429, 429],
+    "usage": null
+  },
+  "outputLength": 0,
+  "latencyMs": 1558
+}
+```
+
+The website extraction layer passed. OpenRouter's free provider route returned
+HTTP 429 on both bounded attempts, so no model content existed to parse and no
+profile could reach schema validation or evidence grounding. This is a
+provider-capacity/rate-limit failure, not a claim that a profile was generated.
+Per the directive, repeated attempts were stopped within the 15-minute
+activation window.
+
+The OpenRouter model-selection guard was tightened after this test:
+
+- `INFERENCE_PROVIDER=openrouter-gemma` now requires `OPENROUTER_MODEL`.
+- Source never silently substitutes `google/gemma-4-26b-a4b-it` when the
+  environment variable is missing.
+- `.env.example` and `render.yaml` explicitly select
+  `google/gemma-4-26b-a4b-it:free` for the initial activation.
+- The provider still uses JSON mode plus Source-side validation; it does not
+  rely on free-route strict JSON Schema enforcement.
+
+### DeepSeek fallback result
+
+The fallback was not callable because `DEEPSEEK_API_KEY` is not present in the
+server environment. The provider-aware probe therefore failed closed before
+contacting DeepSeek:
+
+```json
+{
+  "status": "blocked",
+  "reason": "missing-environment",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "missing": ["DEEPSEEK_API_KEY"]
+}
+```
+
+No DeepSeek profile, schema result, grounding result, or provider qualification
+is claimed. The next permitted model action is to configure the owner's key
+securely, set `INFERENCE_PROVIDER=deepseek`, and run the same real `frog.co`
+probe once. No further repeated OpenRouter free-route attempts are justified.
+
+### Application and security verification
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm test -- --run`: PASS, 1 file and 4 tests.
+- `npm run build`: PASS; all current API routes compiled.
+- `node --check scripts/gemma-check.mjs`: PASS from the preceding provider
+  implementation verification.
+- `.env.local` remains ignored and was not staged.
+- A filenames-only high-confidence credential scan found no credential pattern
+  outside the handoff's explicit placeholder examples.
+- The current provider-aware server route remains server-only; no key is sent
+  to the browser.
+
+### Repository and Render preparation
+
+Source was initialized as a clean local Git repository at
+`C:\Users\HomePC\Desktop\source` and committed locally:
+
+```text
+568feaf chore: initialize Source deployment candidate
+```
+
+The repository has no configured remote and has not been published. That is an
+authorization boundary, not a deployment failure.
+
+The Render Blueprint at `render.yaml` was updated and locally reviewed to use:
+
+- `INFERENCE_PROVIDER=openrouter-gemma`
+- `OPENROUTER_MODEL=google/gemma-4-26b-a4b-it:free`
+- secret `OPENROUTER_API_KEY` with `sync: false`
+- secret `DEEPSEEK_API_KEY` with `sync: false`
+- `DEEPSEEK_MODEL=deepseek-flash`
+- existing MongoDB, session, discovery, observability, and application URL
+  variables
+
+No Render API credential is configured, no GitHub token is configured, no
+remote repository exists, no Atlas networking change was made, and no service
+was created. Publishing and service creation still require owner authorization.
+
+### Core journey status
+
+The full integrated journey was **not run** because neither approved model
+route produced a grounded profile:
+
+`Registration -> URL analysis -> profile review/confirmation -> customer
+category selection -> live discovery -> source-linked inspection -> proposal ->
+save -> refresh -> logout/login recovery`
+
+The earlier real MongoDB CRUD and account-isolation probes remain reusable
+evidence, but they do not replace integrated browser proof. No claim is made
+that the current deployed-or-local user path has completed end to end, and no
+customer-category differentiation was revalidated in this checkpoint.
+
+### Remaining owner actions and exact next step
+
+1. Securely configure the owner's DeepSeek credential in the server environment
+   without pasting it into chat:
+
+   ```text
+   INFERENCE_PROVIDER=deepseek
+   DEEPSEEK_API_KEY=<owner-configured-secret>
+   DEEPSEEK_MODEL=deepseek-flash
+   ```
+
+2. Run exactly one real `frog.co` probe and record HTTP status, latency,
+   schema validity, and grounded-claim count.
+3. If that profile passes, authorize GitHub publication and Render service
+   creation, add the Atlas networking rule, and run the complete browser path
+   against the public deployment.
+4. If browser automation remains unavailable, use
+   `docs/manual-acceptance.md` and obtain explicit owner acceptance for each
+   step; do not convert manual instructions into a pass without that response.
+
+Current status remains **BUILDING — Core Outcome unproven**. No Gemma category,
+DeepSeek success, complete user journey, GitHub publication, Render deployment,
+or final acceptance is claimed.
+
