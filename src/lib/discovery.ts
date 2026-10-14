@@ -78,11 +78,14 @@ export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode)
 }
 
 function profileTerms(profile: ProfileDraft) {
-  return [...new Set([
+  const stopWords = new Set(["about", "after", "again", "also", "and", "with", "from", "into", "that", "this", "their", "your", "have", "help", "more", "most", "only", "page", "project", "projects", "service", "services", "work", "works"]);
+  const phrases = [
     ...profile.searchKeywords,
     ...profile.skillsAndTechnologies.map((claim) => claim.text),
     ...profile.productsAndServices.map((claim) => claim.text),
-  ].map((item) => item.toLowerCase().replace(/[^a-z0-9+#. -]/g, " ").trim()).filter((item) => item.length >= 3))].slice(0, 24);
+  ].map((item) => item.toLowerCase().replace(/[^a-z0-9+#. -]/g, " ").replace(/\s+/g, " ").trim()).filter((item) => item.length >= 3);
+  const terms = phrases.flatMap((phrase) => [phrase, ...phrase.split(" ").filter((token) => token.length >= 4 && !stopWords.has(token))]);
+  return [...new Set(terms)].slice(0, 36);
 }
 
 function budgetSignal(value: string) {

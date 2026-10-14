@@ -1753,3 +1753,79 @@ public URL has yet been created. The next execution order is:
 Current status: **BUILDING, CLASSIFICATION CORRECTION PROVEN, PUBLIC
 PUBLICATION AND DEPLOYMENT AUTHORIZED BUT NOT YET EXECUTED**.
 
+### Post-correction acceptance rerun
+
+The first post-correction core run failed honestly because the former Vytalize
+candidate was excluded and the remaining live records had no exact whole-phrase
+overlap with the generated Frog profile. The product was not relaxed to accept
+an unrelated record. Matching was tightened for recall using grounded phrase
+terms plus individual grounded concept tokens, with common stopwords excluded.
+The matching evidence still comes only from confirmed profile claims and source
+text.
+
+The strict rerun then passed:
+
+```json
+{
+  "status": "pass",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "profile": {
+    "sourceUrl": "https://www.frog.co/",
+    "groundedClaimCount": 7,
+    "extractedExcerptCount": 37
+  },
+  "discovery": {
+    "startups": {"opportunityCount": 1, "relevantCount": 1},
+    "smallBusinesses": {"opportunityCount": 1, "relevantCount": 1},
+    "queryChanged": true,
+    "selectedOpportunity": {
+      "source": "Remote OK",
+      "sourceUrl": "https://remoteOK.com/remote-jobs/remote-graphic-designer-video-editor-bluetuskr-1137507",
+      "classification": "freelance-or-contract",
+      "profileMatches": 6,
+      "categoryMatches": 0
+    }
+  },
+  "proposal": {"generated": true, "length": 796},
+  "persistence": {"savedBeforeLogout": true, "savedAfterLogin": true},
+  "ownership": {"secondAccountSavedListIsolated": true, "crossAccountProposalDenied": true}
+}
+```
+
+The harness cleanup passed and deleted both temporary accounts. This proves the
+corrected local HTTP journey remains complete with an actual source-linked
+contract signal, while Vytalize remains excluded from that category.
+
+### GitHub publication
+
+The audited repository was published to the authorized public repository:
+
+- URL: https://github.com/Techkeyy/source
+- Published branch: `main`
+- Published commit: `5bf4449fc1e363a778561f299842a2fcecb9b4e2`
+- `.env.local`: ignored and not published
+- Credential-pattern scan: no real keys or connection strings found; only
+  documented placeholders remain
+
+The subsequent post-correction matching changes and this handoff update are
+pending one additional commit and push before Render creation.
+
+### Render status
+
+The official Render documentation confirms that a Next.js server-rendered app
+belongs on a free Web Service, that Free Web Services are available but can
+spin down after 15 minutes and have outbound-traffic/build limits, and that a
+Blueprint requires owner-supplied secret values. See [Render free services](https://render.com/docs/free),
+[Render web services](https://render.com/docs/web-services), and the
+[Blueprint reference](https://render.com/docs/infrastructure-as-code).
+
+The Render dashboard opened successfully, but its GitHub OAuth flow reached the
+GitHub login screen and requires the owner to authenticate interactively. No
+Render service, environment variables, Atlas network change, or public Render
+URL has been created yet. No paid action was taken.
+
+Current status: **BUILDING, CLASSIFICATION AND CORRECTED LOCAL CORE JOURNEY
+PROVEN, GITHUB PUBLICATION COMPLETE, RENDER AUTHENTICATION AND DEPLOYMENT
+PENDING OWNER INTERACTIVE LOGIN**.
+
