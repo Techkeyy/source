@@ -1886,6 +1886,7 @@ branch was created from the pre-014A rollback point:
 - Branch: `codex/uiux-015-findor-reconstruction`
 - Base / rollback: `70f8042550cfbf28b15bc5adbf969a9baa48bd40` (`70f8042`)
 - Verified implementation commit: `80e8f248e767d0c625f4c1c5c18e732f74ce8f83`
+- Final handoff metadata commit: `38a19fa` (this branch remains local-only)
 - Production/GitHub/Render state: unchanged by this directive
 - Release status: local/preview review only; no merge, push or production
   deployment from this branch
