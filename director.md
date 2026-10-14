@@ -1672,3 +1672,84 @@ The next owner actions are:
 Current status: **BUILDING, CORE LOCAL INTEGRATION PROVEN, PUBLIC DEPLOYMENT AND
 VISUAL UAT PENDING**.
 
+## Directive 013 — publication authorization and discovery-classification correction
+
+Directive 013 authorized public GitHub publication and free-tier Render
+deployment, subject to owner account authentication and no paid-service
+activation. Before publication, the live discovery classifier was corrected.
+
+### Classification root cause and correction
+
+The Remote OK record for Vytalize Health (`1137508`) was previously labeled
+`freelance-or-contract` because the description contains ordinary technical
+phrases such as “API contracts.” Its provider employment-type field was empty.
+That was not sufficient evidence of a contract engagement.
+
+The classifier now:
+
+- checks provider employment fields separately for explicit values such as
+  `contract`, `freelance`, or `contractor`;
+- accepts free-text contract evidence only when it is employment-contextual,
+  such as “contract role,” “independent contractor,” “contract-to-hire,”
+  `1099`, or an equivalent explicit phrase;
+- recognizes strong full-time evidence such as `full-time`, annual salary,
+  health insurance, or paid leave; and
+- returns `unknown-employment-type` for fresh records without enough evidence
+  instead of implying a contract. Unknown records are excluded from shown
+  opportunities.
+
+The corresponding standalone live probe uses the same rule set and now
+includes a regression assertion for the affected public record. It passed:
+
+```json
+{
+  "status": "pass",
+  "regressionChecks": {
+    "remoteOkVytalize": {
+      "found": true,
+      "classification": "full-time-employment",
+      "freelanceOrContract": false
+    }
+  }
+}
+```
+
+Positive and negative unit regressions were added in
+`tests/discovery.test.ts`: API-contract language does not imply contract
+employment; salary/benefit evidence classifies a Vytalize-shaped listing as
+full-time; explicit independent-contractor language qualifies; and untyped
+listings remain unknown. The suite passed with 2 test files and 8 tests.
+TypeScript, lint, and the discovery probe also passed.
+
+The earlier Directive 011 local acceptance output recorded the Vytalize item as
+`freelance-or-contract`; that historical output is superseded by this
+correction. A replacement core acceptance run is required before final release
+because the corrected policy may legitimately remove that particular item from
+the returned freelance/project set.
+
+### Publication and deployment gate
+
+The owner has now authorized creation of the public `source` GitHub repository,
+free-tier Render service creation, secure production configuration, deployment,
+and production testing. No paid upgrade, domain purchase, or billable resource
+activation is authorized. The local repository remains clean apart from the
+intentional classification changes and pre-existing workspace files
+`next-env.d.ts` and `AGENTS.md`; those files require review before committing.
+
+At this checkpoint no GitHub remote, GitHub authentication, Render service, or
+public URL has yet been created. The next execution order is:
+
+1. review and commit the classifier correction without staging `.env.local`;
+2. inspect available GitHub/Render authentication and create the new repository
+   only after confirming the destination account;
+3. validate the Render Blueprint and configure server-side MongoDB, session,
+   DeepSeek, and application URL variables;
+4. establish Atlas network access using Render's actual outbound IP guidance,
+   without weakening database security;
+5. redeploy and repeat the complete browser journey against the public URL;
+6. capture the deployed commit SHA, URLs, production status, security results,
+   and owner manual-UAT outcome here.
+
+Current status: **BUILDING, CLASSIFICATION CORRECTION PROVEN, PUBLIC
+PUBLICATION AND DEPLOYMENT AUTHORIZED BUT NOT YET EXECUTED**.
+

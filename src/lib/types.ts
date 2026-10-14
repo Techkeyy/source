@@ -12,6 +12,7 @@ export type OpportunityClassification =
   | "freelance-or-contract"
   | "potential-buyer-signal-unconfirmed"
   | "full-time-employment"
+  | "unknown-employment-type"
   | "irrelevant"
   | "expired-or-stale";
 

@@ -17,7 +17,7 @@ interface ProviderStatus {
   query?: string;
 }
 
-interface RawOpportunity {
+export interface RawOpportunity {
   provider: string;
   title: string;
   description: string;
@@ -26,6 +26,21 @@ interface RawOpportunity {
   type: string;
   id?: string;
 }
+
+const FULL_TIME_TYPE_PATTERN = /\b(full[- ]?time|permanent|salary|employee|employment)\b/i;
+const FULL_TIME_CONTEXT_PATTERN = /\b(full[- ]?time|permanent(?:\s+(?:role|position|job|employment))?|annual\s+salary|salary\s+(?:range|package)|employee\s+benefits|health\s+insurance|paid\s+(?:time off|vacation|sick)|benefits\s+package)\b/i;
+const CONTRACT_TYPE_PATTERN = /\b(freelance|contract(?:or)?|temporary|fixed[- ]term|project[- ]based|part[- ]time\s+contract)\b/i;
+const CONTRACT_CONTEXT_PATTERNS = [
+  /\bfreelance(?:r|rs)?\b/i,
+  /\bindependent\s+contractor\b/i,
+  /\bcontract(?:or)?\s+(?:role|position|job|engagement|assignment|opportunity|work)\b/i,
+  /\b(?:role|position|job|engagement|assignment|opportunity|work)\s+(?:is|as|on)\s+(?:a\s+)?contract(?:or)?\b/i,
+  /\bcontract[- ]to[- ]hire\b/i,
+  /\b(?:temporary|short[- ]term|fixed[- ]term|hourly)\s+(?:contract|position|role|engagement)\b/i,
+  /\b(?:contract|freelance)\s+(?:basis|work|engagement)\b/i,
+  /\b(?:1099|c2c|corp[- ]to[- ]corp)\b/i,
+  /\bproject[- ]based\s+(?:role|work|engagement)\b/i,
+];
 
 function text(value: unknown) {
   return typeof value === "string" ? value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "";
@@ -52,14 +67,14 @@ function isFresh(provider: string, publishedAt: string | null) {
   return age >= 0 && age <= FRESHNESS_DAYS[provider] * 24 * 60 * 60 * 1000;
 }
 
-function classify(record: RawOpportunity, mode: DiscoveryMode): OpportunityClassification {
-  const combined = `${record.title} ${record.description} ${record.type}`.toLowerCase();
+export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode): OpportunityClassification {
+  const combined = `${record.title} ${record.description}`;
   if (!isFresh(record.provider, record.publishedAt)) return "expired-or-stale";
-  if (/\b(full[- ]?time|permanent|salary|employee)\b/i.test(record.type) || /full[- ]time employment|full[- ]time role/i.test(combined)) return "full-time-employment";
+  if (FULL_TIME_TYPE_PATTERN.test(record.type) || FULL_TIME_CONTEXT_PATTERN.test(combined)) return "full-time-employment";
   if (record.provider === "Hacker News" && /seek(?:ing|s)\s+freelancer|looking for (?:a|an) freelancer|need (?:a|an) freelancer/i.test(combined)) return "explicit-project-request";
-  if (/\b(freelance|contractor|contract|project[- ]based|part[- ]time contract)\b/i.test(combined)) return "freelance-or-contract";
+  if (CONTRACT_TYPE_PATTERN.test(record.type) || CONTRACT_CONTEXT_PATTERNS.some((pattern) => pattern.test(combined))) return "freelance-or-contract";
   if (mode === "product" && /\b(looking for|seeking|need|wanted|hiring)\b/i.test(combined)) return "potential-buyer-signal-unconfirmed";
-  return "irrelevant";
+  return "unknown-employment-type";
 }
 
 function profileTerms(profile: ProfileDraft) {
@@ -83,7 +98,7 @@ function inferClientType(value: string, selected: CustomerType[]) {
 
 function toOpportunity(record: RawOpportunity, profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): Opportunity | null {
   const combined = `${record.title} ${record.description}`.toLowerCase();
-  const classification = classify(record, mode);
+  const classification = classifyOpportunity(record, mode);
   if (!["explicit-project-request", "freelance-or-contract", "potential-buyer-signal-unconfirmed"].includes(classification)) return null;
   const terms = profileTerms(profile);
   const profileMatches = terms.filter((term) => combined.includes(term)).slice(0, 6);
@@ -192,5 +207,5 @@ export async function discoverOpportunities(profile: ProfileDraft, selected: Cus
     const opportunity = toOpportunity(record, profile, selected, mode);
     return opportunity ? [opportunity] : [];
   }).sort((a, b) => b.score - a.score || (b.publishedAt || "").localeCompare(a.publishedAt || "")).slice(0, 20);
-  return { opportunities, providers: statuses, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "irrelevant", "expired or stale"], mode, selectedCustomerTypes: selected } };
+  return { opportunities, providers: statuses, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale"], mode, selectedCustomerTypes: selected } };
 }
