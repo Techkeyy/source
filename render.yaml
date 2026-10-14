@@ -2,7 +2,7 @@ services:
   - type: web
     name: source
     runtime: node
-    plan: free
+    plan: 0.5c-512mb
     buildCommand: npm ci && npm run build
     startCommand: npm run start
     healthCheckPath: /
