@@ -2053,3 +2053,166 @@ The isolated UI branch has now passed its local engineering gates. This does
 not override the preview-only release boundary or close the documented
 profile-read/proposal-edit persistence limitations.
 
+## Directive 016 / Authorization 016A — persistence and seamless return flow
+
+Updated: 2026-10-14 (Africa/Lagos). Owner authorization received for the two
+narrow backend changes described in Authorization 016A. The approved Directive
+015 visual system remains frozen. No provider, discovery-ranking,
+authentication-architecture, secret, infrastructure, merge, or production
+deployment change was made.
+
+### Root causes identified
+
+1. **Confirmed profile recovery:** `POST /api/profile/confirm` already wrote a
+   profile scoped by the authenticated `userId`, but there was no authenticated
+   read route. On a fresh session `SourceApp` called `/api/auth/me` and
+   `/api/saved`, then initialized the profile to an empty local object. The
+   sign-out path also intentionally cleared that local object. Consequently a
+   returning user could recover saved opportunities but not the confirmed
+   profile or its discovery context.
+2. **Proposal draft persistence:** `POST /api/opportunities/:id/proposal`
+   generated and stored the original proposal, but the UI textarea only changed
+   React state. There was no explicit draft-save route or UI save action; the
+   existing footer accurately said edits stayed local. Reloading therefore
+   recovered the generated text, not the user's edits. Reopening a saved item
+   could also regenerate and overwrite that stored draft.
+
+### Implemented authorized fix
+
+- Added authenticated `GET /api/profile`. It reads only `{ userId }` from the
+  session and returns the user's confirmed profile or `profile: null` for a new
+  account.
+- Added authenticated `PUT /api/profile`. It reuses the existing bounded
+  profile sanitizer, requires a source URL, business/project name and summary,
+  writes by session `userId`, and updates the same `profiles` document. It does
+  not accept a client-supplied owner id.
+- Refactored the existing confirm route to use the same validation boundary.
+- Added authenticated `PUT /api/opportunities/:id/proposal`. It accepts only a
+  string proposal up to 12,000 characters and updates by `{ _id, userId }`.
+  The response confirms `saved: true` only after MongoDB acknowledges the
+  update. The exact submitted text is preserved, including user edits.
+- Made proposal generation non-destructive by default: if a saved proposal
+  already exists, `POST` returns it instead of silently replacing it. Explicit
+  regeneration remains available only through a future explicit action with
+  `regenerate: true`.
+- On authenticated bootstrap, the UI now retrieves a confirmed profile and
+  opens the audience step. Users can edit and save the profile without
+  repeating website analysis, or intentionally use **Start over**.
+- The proposal editor now exposes **Save draft**, with saving, saved, unsaved,
+  and failed states. Failed saves retain the textarea content.
+
+### Changed files
+
+- `src/lib/profile-validation.ts` — shared server-side profile normalization
+  and completeness checks.
+- `src/app/api/profile/route.ts` — authenticated profile read/update contract.
+- `src/app/api/profile/confirm/route.ts` — uses the shared validation boundary.
+- `src/app/api/opportunities/[id]/proposal/route.ts` — idempotent generation and
+  ownership-scoped exact draft updates.
+- `src/components/SourceApp.tsx` — session profile recovery, edit/start-over
+  controls, and persistent proposal editor states.
+- `src/app/globals.css` — minimal layout treatment for the profile action row.
+- `scripts/core-acceptance-check.mjs` — profile/draft recovery, malformed
+  request and cross-account read/write assertions.
+- `tests/profile-persistence.test.ts` — focused profile validation regression
+  tests.
+
+### API and ownership boundaries
+
+All new operations require the existing HTTP-only session cookie. Profile reads
+and writes use the authenticated session's MongoDB `userId`; proposal reads,
+generation and writes use both the authenticated `userId` and opportunity
+`_id`. A client cannot select another account by passing an id. The existing
+SSRF guard, auth/session implementation, DeepSeek route, discovery adapters and
+ranking logic were not changed.
+
+### Verified evidence
+
+Engineering and live integration evidence from 2026-10-14:
+
+```text
+npm run typecheck                         PASS
+npm run lint -- --no-cache                PASS (0 errors, 0 warnings)
+npm test -- --run --testTimeout=15000     PASS (3 files, 10 tests)
+npm run build                             PASS (Next.js 16.4.0; /api/profile added)
+npm run probe:mongodb                     PASS (ping/insert/read/delete/cleanup)
+npm run probe:ownership                   PASS (isolation and cross-account denial)
+npm run probe:gemma -- https://www.frog.co/ PASS (DeepSeek active path)
+npm run probe:core                        PASS; cleanup PASS (2 accounts deleted)
+```
+
+The successful profile probe reported safe, redacted metadata only:
+
+```json
+{
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "sourceFetchHttpStatus": 200,
+  "responseHttpStatus": 200,
+  "sourceTitle": "frog | Your reinvention and experience partner",
+  "claimCount": 5,
+  "groundedClaimCount": 5,
+  "candidateCount": 1,
+  "finishReasons": ["stop"],
+  "jsonObjectCount": 1
+}
+```
+
+The updated core acceptance reached the real local frontend APIs and live
+external sources, then reported: DeepSeek `deepseek-flash`; Frog profile with
+8 grounded claims and 37 extracted excerpts; different startup and small-
+business query strings; one source-linked relevant result; generated proposal;
+exact edited proposal recovery after login; profile edit recovery after login;
+unauthenticated profile denial; second-account profile/saved-list isolation;
+cross-account proposal read and write denial; and malformed profile/proposal
+requests rejected. Test accounts were deleted after the pass.
+
+The earlier first run encountered transient Atlas SRV DNS timeouts during the
+probe and cleanup. After network permission was granted, the probes and cleanup
+passed. No credential or private profile content was printed.
+
+### Browser evidence and release boundary
+
+The existing Directive 015 Chromium evidence remains valid for the approved
+visual system and its pre-016 journey. A new 016 browser screenshot run was
+not completed in this environment: the in-app browser reported the localhost
+tab could not be reached and the CUA connector rejected a localhost tab
+attachment; Playwright was not installed in the project, and temporary no-save
+installation attempts were stopped after npm cache/network permission errors.
+No screenshot was fabricated or added as 016 evidence. The HTTP core probe is
+not a substitute for desktop/mobile visual acceptance.
+
+Therefore the branch status is:
+
+**FUNCTIONAL BACKEND AND HTTP ACCEPTANCE PROVEN; LOCAL BROWSER UAT PENDING;
+PREVIEW-ONLY; DO NOT MERGE OR DEPLOY.**
+
+### Owner manual UAT required before release
+
+On the running local app at `http://localhost:3000/`, use a fresh account and
+record screenshots at 1440px and 390px:
+
+1. Register, analyze `https://www.frog.co/`, edit the summary, and confirm.
+2. Sign out and sign back in; verify the confirmed profile is shown at the
+   audience step without re-analysis.
+3. Choose at least two customer types, search, and inspect the source link,
+   classification and evidence.
+4. Save/draft an opportunity. Edit the proposal, confirm **Unsaved edit**,
+   click **Save draft**, and confirm **Saved draft** only after the request
+   completes.
+5. Refresh, reopen the saved opportunity, and verify the exact edited text.
+6. Sign out/in again and repeat the saved proposal check.
+7. In a second account, verify no first-account profile or saved opportunity is
+   visible. Do not use production credentials or real private data.
+8. Check keyboard focus, 320/390px horizontal overflow, and failed-save/error
+   recovery before authorizing a merge.
+
+### Next director actions
+
+1. Complete the owner-led desktop/mobile browser UAT above and attach original
+   screenshots to the Director review.
+2. If UAT passes, commit this isolated change set, review the diff and release
+   plan, then request explicit merge/deployment authorization.
+3. If UAT finds a defect, keep production unchanged and fix only the reported
+   persistence/recovery issue on this branch.
+

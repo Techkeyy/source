@@ -259,6 +259,7 @@ textarea { resize: vertical; line-height: 1.55; }
 .editor-grid .wide textarea { min-height: 76px; }
 .editor-grid label small { color: var(--muted); font-size: 10px; font-weight: 500; line-height: 1.4; }
 .section-actions { display: flex; justify-content: flex-end; margin-top: 25px; }
+.profile-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 22px; }
 
 .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 43px; }
 .category-option { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr) 18px; align-items: center; gap: 11px; padding: 17px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); color: var(--ink); transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
