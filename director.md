@@ -1833,3 +1833,45 @@ Current status: **BUILDING, CLASSIFICATION AND CORRECTED LOCAL CORE JOURNEY
 PROVEN, GITHUB PUBLICATION COMPLETE, RENDER AUTHENTICATION AND DEPLOYMENT
 PENDING OWNER INTERACTIVE LOGIN**.
 
+### Paid Render deployment checkpoint — 2026-10-14
+
+The owner subsequently authorized paid Render hosting using available credits,
+with no domain purchase or other paid service activation. Source was created as
+a Render Blueprint named `source-production`:
+
+- Blueprint: `exs-db7rncrbc2fs7388n7i0`
+- Web service: `srv-db7rok8473hc739m4cvg`
+- Plan: `0.5c-512mb` (Render's current Starter-equivalent paid web plan)
+- Estimated service cost shown by Render: approximately `$7/month`
+- Public URL: https://source-9k1o.onrender.com
+- GitHub repository: https://github.com/Techkeyy/source
+- Deployed application commit: `de086455e2ab679c602ebcf2680a1b82cb061483`
+- Deployment: `dep-db7rrkmk1f9s73cptra0`
+
+Render evidence showed `Build successful`, Next.js `16.4.0`, `npm run start`,
+`Your service is live`, and the successful health check state `Deploy
+succeeded | Live`. The public homepage rendered from the deployed service.
+
+The first production registration attempt exposed a configuration failure:
+`MONGODB_URI is not configured on the server.` The Render environment screen
+was then edited to include the variable names `MONGODB_URI`,
+`DEEPSEEK_API_KEY`, and `NEXT_PUBLIC_APP_URL`, followed by a successful
+redeploy. However, the production registration check still returned the same
+MongoDB configuration error. A follow-up inspection established the exact
+blocker: Render displays the expected secret variable names, but the secret
+text areas were empty because the attempted browser clipboard transfer did not
+populate their values. No secret was logged or committed.
+
+Production acceptance status is therefore **BLOCKED BEFORE REGISTRATION**.
+The app runtime is hosted and reachable on Render, but the owner must manually
+paste the existing MongoDB connection string into the Render service's
+`MONGODB_URI` value field and the existing DeepSeek key into
+`DEEPSEEK_API_KEY`, then click **Save, rebuild, and deploy**. The owner should
+not paste `.env.local` as a file or expose either value in chat. After that
+owner action, rerun the production path and record the actual inference,
+database, discovery, persistence, logout/login, and second-account isolation
+evidence here.
+
+Current status: **BUILDING, LOCAL CORE PROVEN, PUBLIC GITHUB PUBLISHED, PAID
+RENDER SERVICE LIVE, PRODUCTION SECRETS NOT YET POPULATED, CORE UAT BLOCKED**.
+
