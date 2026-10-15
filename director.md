@@ -2669,3 +2669,143 @@ the next step is exactly one redacted rollback registration attempt, followed
 by cleanup of any account created successfully. No frontend, provider,
 schema, security protection, or deployment setting was changed.
 
+## Directive 019A — controlled production testing and release candidate promotion
+
+Updated: 2026-10-15 (Africa/Lagos). Owner verification confirmed that both
+Render outbound CIDR ranges are present and Active in MongoDB Atlas Project 0:
+
+- `74.220.48.0/24`
+- `74.220.56.0/24`
+
+No Atlas network change was required. Render auto-deploy remained disabled.
+
+### Rollback registration gate
+
+One disposable registration was sent through the real public application on
+rollback `70f8042`, using a unique `example.test` account and a bounded HTTP
+request. Safe result:
+
+```json
+{
+  "status": "pass",
+  "target": "rollback-70f8042",
+  "registration": {
+    "httpStatus": 201,
+    "cookieSet": true,
+    "userIdPresent": true,
+    "errorPresent": false
+  },
+  "cleanup": {
+    "status": "pass",
+    "matchedAccounts": 1,
+    "deletedAccounts": 1,
+    "deletedProfiles": 0,
+    "deletedOpportunities": 0
+  }
+}
+```
+
+The first local wrapper attempt before this result failed during promise-chain
+construction and produced no HTTP status. Render's log window showed no new
+application log for that failed wrapper, so it was not counted as a
+production registration result and no account from it was retained.
+
+### Controlled deployment
+
+Because rollback registration passed, the verified release candidate was
+manually deployed through the existing Render service dashboard with
+auto-deploy still disabled:
+
+- Commit: `6cbe759b16ae775a13d122abb3d9686b69d73877`
+- Render deploy ID: `dep-db8lcfnavr4c7386v3lg`
+- Trigger: manual dashboard deployment
+- Build: successful
+- Runtime: Next.js ready; service reported Live
+- Public URL: `https://source-9k1o.onrender.com`
+
+Render's deployment log showed checkout of the exact commit, successful
+TypeScript/build stages, `npm run start`, Next.js readiness, and the service
+becoming Live. No environment, secret, provider, schema, or Atlas security
+configuration was changed.
+
+### Release registration and full production core journey
+
+Registration was tested first on the new live release. Safe result:
+
+```json
+{
+  "status": "pass",
+  "target": "release-6cbe759",
+  "registration": {
+    "httpStatus": 201,
+    "cookieSet": true,
+    "userIdPresent": true,
+    "errorPresent": false
+  },
+  "cleanup": {
+    "status": "pass",
+    "matchedAccounts": 1,
+    "deletedAccounts": 1,
+    "deletedProfiles": 0,
+    "deletedOpportunities": 0
+  }
+}
+```
+
+The existing `npm run probe:core` was then run against the public Render URL.
+It completed the real backend journey with two disposable accounts and passed:
+
+- DeepSeek profile generation using `deepseek-flash`.
+- `https://www.frog.co/` analysis with 9 grounded claims from 37 extracted
+  excerpts.
+- Profile confirmation, edit, retrieval, logout, login, and profile recovery.
+- Startup and small-business discovery with distinct selected customer types
+  and different Hacker News queries.
+- One source-linked relevant opportunity with six profile matches and the
+  `freelance-or-contract` classification.
+- Proposal generation, exact edited draft save, refresh/recovery, and
+  logout/login recovery.
+- Unauthenticated profile denial, malformed JSON/input rejection, and
+  cross-account saved-list/profile/proposal isolation.
+- Cleanup of both disposable accounts.
+
+Sanitized probe summary:
+
+```text
+status=pass
+provider=deepseek
+model=deepseek-flash
+groundedClaimCount=9
+extractedExcerptCount=37
+startupOpportunityCount=1
+smallBusinessOpportunityCount=1
+queryChanged=true
+proposalEditedAndSaved=true
+exactTextRecovered=true
+profileEditedAndRecovered=true
+crossAccountProposalDenied=true
+malformedRequestsRejected=true
+cleanup=pass; deletedTestAccounts=2
+```
+
+### Browser evidence and remaining acceptance boundary
+
+The public deployed landing page rendered in Chromium after hydration. The
+desktop smoke check at a 1280px viewport showed the expected Source headline,
+URL-first value proposition, account creation form, sign-in toggle, evidence
+workflow, customer-fit explanation, and honest no-guarantee boundary. The
+document and body scroll widths were both 1265px against a 1280px viewport;
+no horizontal overflow was detected. The deployed sign-in view also rendered
+with email/password controls and a clear create-account return action.
+
+The current in-app browser connector did not expose a viewport override in
+this run, so a fresh 390px/320px production browser capture was not claimed.
+The same release candidate has existing Chromium 390px and 320px evidence in
+`docs/uiux-016b/mobile-screenshots/`; owner UAT must still repeat the public
+journey at mobile widths before final acceptance. This is an evidence-boundary
+note, not a reported mobile defect.
+
+Current status: **PRODUCTION DEPLOYMENT AND API-LEVEL CORE JOURNEY PASS;
+DESKTOP PUBLIC SMOKE PASS; MOBILE PUBLIC UAT AND OWNER FINAL ACCEPTANCE
+PENDING.** The product is not yet marked finished or publicly accepted.
+
