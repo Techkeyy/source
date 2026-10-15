@@ -2445,3 +2445,99 @@ Next actions for the replacement director:
 7. Do not call Source finished or submission-ready until public acceptance is
    verified and the owner confirms final acceptance.
 
+### Controlled promotion result and rollback
+
+Updated: 2026-10-15 (Africa/Lagos). The predeployment gates passed on the
+merged release, and the normal merge and push completed without force-push:
+
+- GitHub `main` now points to merge commit
+  `6cbe759b16ae775a13d122abb3d9686b69d73877` (`merge: promote Source release
+  candidate`) at `https://github.com/Techkeyy/source`.
+- The exact merged revision deployed to the existing Render service as deploy
+  `dep-db8f2t4s728c73832up0` and Render reported **Live / Deployed**. The
+  service booted on the merged revision; no new service, paid upgrade, secret,
+  or database was created.
+- Server-side production environment names were present and masked in the
+  Render dashboard. No secret values were revealed, copied, or logged.
+
+The disposable-account public core probe reached the deployed application but
+stopped at the first stateful operation:
+
+```text
+status=fail
+reason=core-acceptance-check-failed
+registration returned HTTP 500
+completed: provider=deepseek, model=deepseek-flash, userRegistered=false,
+profileAnalyzed=false, startupSearch=false, smallBusinessSearch=false,
+savedId=false, proposalGenerated=false, proposalEdited=false
+cleanup: pass; deletedTestAccounts=2
+```
+
+Render application logs provide the sanitized root cause: the container
+started normally, but the registration path could not select a MongoDB Atlas
+replica-set primary because the outbound TLS handshake failed with
+`ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR`. The resulting driver state was
+`ReplicaSetNoPrimary`, and the route returned HTTP 500. This is a production
+Atlas connectivity/TLS failure, not evidence of a profile, authentication,
+discovery, proposal, or ownership regression. No API keys, credentials, or
+private user data were included in the diagnostic record.
+
+Per Directive 017 Phase F, the service was rolled back to the documented
+known-good production commit `70f8042550cfbf28b15bc5adbf969a9baa48bd40`.
+Render rollback deploy `dep-db8f5rcs728c7396ucjg` reported **Deploy succeeded**;
+its startup logs show Next.js ready on the service port. A real browser then
+loaded `https://source-9k1o.onrender.com/` and displayed the Source landing
+page. This verifies rollback availability only; it is not full public UAT.
+The rollback action disabled Render auto-deploy to prevent an accidental
+re-promotion, and that setting was left unchanged.
+
+### Production acceptance boundary
+
+Current status: **NOT FINISHED — PRODUCTION ROLLED BACK; PUBLIC UAT BLOCKED
+AT REGISTRATION BY MONGODB ATLAS TLS/CONNECTIVITY.**
+
+No public profile, discovery, proposal, persistence, recovery, or
+cross-account acceptance is claimed. The complete real workflow remains
+proven only against the local application: DeepSeek profile inference returned
+HTTP 200 with 5/5 grounded claims; local core acceptance proved category-
+dependent queries, source-linked opportunity evidence, proposal/profile
+persistence, malformed-input handling, and account isolation. The merged
+revision also passed local typecheck, lint, confined-cache tests, build,
+MongoDB, ownership, and DeepSeek probes before deployment.
+
+Required owner action before another production deploy: inspect and correct
+MongoDB Atlas network access, Render outbound connectivity, TLS compatibility,
+and cluster/replica-set health for the existing secure connection. Do not
+weaken Atlas access controls or publish credentials. After the correction,
+perform a controlled deploy of the verified GitHub revision (or a separately
+audited correction), record the new Render deploy ID and commit, and rerun the
+entire disposable-account desktop and 390px mobile journey:
+
+`register -> live frog.co analysis -> grounded/editable profile -> confirm ->
+each customer category -> category-dependent discovery -> source and
+classification evidence -> proposal generate/edit/save -> refresh ->
+logout/login -> profile and exact proposal recovery -> continue discovery ->
+second-account isolation -> malformed/loading/empty/save-failure recovery`.
+
+Owner manual-UAT gate after the infrastructure correction:
+
+1. Open `https://source-9k1o.onrender.com/` in Chromium at desktop width and
+   create a disposable account; do not use private owner data.
+2. Analyze `https://www.frog.co/`, confirm that claims show their evidence and
+   that edits remain distinguishable from verified facts.
+3. Run discovery separately for small businesses, startups, agencies, and
+   individuals; record changed query/policy behavior and inspect the source
+   URL plus classification evidence for each result.
+4. Generate a proposal, edit it with a unique marker, explicitly save it,
+   refresh, log out, log back in, and verify the exact marker is recovered.
+5. Repeat with a second disposable account and verify direct profile,
+   opportunity, and proposal access cannot cross the account boundary.
+6. Repeat the critical recovery and save checks at 390px, including visible
+   errors and preservation of entered input. Capture original Chromium
+   screenshots and retain the deploy ID, commit SHA, and sanitized response
+   evidence.
+
+Until that gate passes and the owner confirms acceptance, Source must not be
+called finished, submission-ready, or publicly accepted. DeepSeek is the
+proven inference provider; no Gemma category claim is made.
+

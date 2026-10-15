@@ -2,10 +2,11 @@
 
 Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to find source-linked opportunities for the customer types they choose.
 
-Source is hosted on [Render](https://source-9k1o.onrender.com). The controlled
-production promotion is still pending final public acceptance; the existing
-service remains the rollback target until the promoted revision passes its
-real-user workflow.
+Source is hosted on [Render](https://source-9k1o.onrender.com). A controlled
+promotion was attempted, but public acceptance stopped at disposable-account
+registration because the Render container could not complete its MongoDB Atlas
+TLS connection. The service was rolled back to the prior known-good commit;
+public acceptance remains pending an Atlas connectivity correction.
 
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)**
 
@@ -164,7 +165,7 @@ Source’s invariant is: **missing or unverified website evidence never becomes 
 - The system rejects private-network URL targets, credentials in URLs, unsafe redirects, oversized pages, and unsupported ports.
 - Discovery results are public signals, not guarantees of a client, contract, buyer, payment, or response.
 - Unconfirmed buyer signals must be treated as leads to investigate, not as confirmed work.
-- Local desktop and 390px mobile Chromium acceptance has passed, including URL analysis, grounded profile review, customer selection, live discovery, proposal saving, refresh recovery, and logout/login recovery. Public production acceptance remains pending until the controlled promotion is verified.
+- Local desktop and 390px mobile Chromium acceptance has passed, including URL analysis, grounded profile review, customer selection, live discovery, proposal saving, refresh recovery, and logout/login recovery. The public landing page is reachable after rollback, but production acceptance remains blocked at registration by the Atlas TLS failure.
 - The public repository is [Techkeyy/source](https://github.com/Techkeyy/source), and the existing Render service is [source-9k1o.onrender.com](https://source-9k1o.onrender.com).
 
 ## Verification and handoff
@@ -181,8 +182,8 @@ Read [director.md](director.md) for the authoritative claim ledger, provider evi
 
 ## Status
 
-**CONTROLLED PRODUCTION PROMOTION IN PROGRESS; LOCAL CORE AND DESKTOP/MOBILE CHROMIUM ACCEPTANCE PROVEN; PUBLIC ACCEPTANCE PENDING.**
+**CONTROLLED PRODUCTION PROMOTION ROLLED BACK; LOCAL CORE AND DESKTOP/MOBILE CHROMIUM ACCEPTANCE PROVEN; PUBLIC ACCEPTANCE BLOCKED BY ATLAS CONNECTIVITY.**
 
-No Gemma prize-category eligibility is claimed. The existing Render service is public, but the promoted release remains unaccepted until production UAT passes. The active provider is DeepSeek because the owner selected it after the OpenRouter free route returned HTTP 429.
+No Gemma prize-category eligibility is claimed. The existing Render service is public and currently serves the rollback commit; the promoted release remains unaccepted until production UAT passes. The active provider is DeepSeek because the owner selected it after the OpenRouter free route returned HTTP 429.
 
 License: not yet selected; this remains a private hackathon deployment candidate.
