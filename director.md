@@ -2761,6 +2761,9 @@ It completed the real backend journey with two disposable accounts and passed:
 - Profile confirmation, edit, retrieval, logout, login, and profile recovery.
 - Startup and small-business discovery with distinct selected customer types
   and different Hacker News queries.
+- The production automated run covered the startup and small-business
+  branches; agency and individual production-category checks remain part of
+  the owner’s final four-category UAT.
 - One source-linked relevant opportunity with six profile matches and the
   `freelance-or-contract` classification.
 - Proposal generation, exact edited draft save, refresh/recovery, and
@@ -2806,6 +2809,7 @@ journey at mobile widths before final acceptance. This is an evidence-boundary
 note, not a reported mobile defect.
 
 Current status: **PRODUCTION DEPLOYMENT AND API-LEVEL CORE JOURNEY PASS;
-DESKTOP PUBLIC SMOKE PASS; MOBILE PUBLIC UAT AND OWNER FINAL ACCEPTANCE
-PENDING.** The product is not yet marked finished or publicly accepted.
+DESKTOP PUBLIC SMOKE PASS; AGENCY/INDIVIDUAL AND MOBILE PUBLIC UAT PLUS OWNER
+FINAL ACCEPTANCE PENDING.** The product is not yet marked finished or publicly
+accepted.
 
