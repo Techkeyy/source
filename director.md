@@ -2216,3 +2216,139 @@ record screenshots at 1440px and 390px:
 3. If UAT finds a defect, keep production unchanged and fix only the reported
    persistence/recovery issue on this branch.
 
+## Directive 016B — resumed repair and verified local acceptance
+
+Updated: 2026-10-15 (Africa/Lagos). Work resumed from persistence commit
+`23b4962c9d018448857cf1591592f00a0449f7a5` without reset, rebuild, redesign,
+merge, or deployment. The approved UI and protected provider, discovery,
+authentication, database, and SSRF paths remained frozen.
+
+### Interruption root cause and repair
+
+The interrupted local server was not failing because of Source code or a stale
+application lock. Next.js reported an access-denied error while creating its
+`.next/dev/lock`; a harmless write probe confirmed that the execution sandbox
+also denied writes to the Desktop checkout. The Windows ACL itself granted the
+owner full access. A narrowly scoped workspace write permission restored the
+ability to create Next generated cache/lock files. The repaired dependency
+tree then resolved `next@16.4.0`, `@next/swc-win32-x64-msvc@16.4.0`, and
+`rolldown/parseAst` successfully. No `package.json` or `package-lock.json`
+change was made.
+
+Vitest initially attempted to clean a cache outside the project at
+`C:\Users\HomePC\node_modules\.vitest-cache`, which the sandbox rejected.
+The required test suite passed when its cache was explicitly confined to the
+project with `--fsModuleCachePath .vitest-cache`. This is an execution
+environment detail, not an application test failure.
+
+### Authorized JSON hardening
+
+The exact remaining code change is committed as
+`b512aed` (`fix: handle malformed profile JSON`). Both authenticated profile
+write routes now convert invalid JSON bodies into the existing truthful HTTP
+400 validation path instead of allowing `request.json()` to throw. The
+acceptance script adds malformed JSON checks for both `POST /api/profile/confirm`
+and `PUT /api/profile`. The correction is deliberately narrow: it does not
+truncate model output, change providers, alter persistence schemas, or weaken
+ownership checks.
+
+### Post-repair technical gates
+
+All gates below were rerun after dependency restoration and the JSON change:
+
+```text
+npm run typecheck                                      PASS
+npm run lint                                           PASS (0 errors, 0 warnings)
+npm test -- --run --testTimeout=15000                 ENV BLOCKED (Vitest tried to
+                                                         clean an external cache)
+npm test -- --run --testTimeout=15000 --fsModuleCachePath .vitest-cache
+                                                         PASS (3 files, 10 tests)
+npm run build                                          PASS (Next.js 16.4.0)
+npm run probe:mongodb                                 PASS
+npm run probe:ownership                               PASS; cleanup deleted 2 accounts
+npm run probe:gemma -- https://www.frog.co/           PASS; DeepSeek active path
+npm run probe:core                                    PASS; cleanup deleted 2 accounts
+```
+
+The first MongoDB rerun encountered a transient Atlas SRV DNS timeout. After
+network permission was available, the same probe passed with ping, insert,
+read, delete, and cleanup all true. The first ownership invocation was made
+while the app was stopped for the production build and therefore returned
+`fetch failed`; after the local server was restarted, the ownership probe
+passed. These transient orchestration outcomes were not counted as product
+passes.
+
+The final live profile probe returned safe redacted metadata only:
+
+```json
+{
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "sourceFetchHttpStatus": 200,
+  "responseHttpStatus": 200,
+  "sourceTitle": "frog | Your reinvention and experience partner",
+  "claimCount": 5,
+  "groundedClaimCount": 5,
+  "candidateCount": 1,
+  "finishReasons": ["stop"],
+  "jsonObjectCount": 1
+}
+```
+
+The final core acceptance proved 7 grounded profile claims with 37 extracted
+excerpts, changed startup versus small-business query strings, one relevant
+source-linked opportunity, proposal generation, exact proposal edit recovery,
+profile edit recovery, unauthenticated profile denial, second-account profile
+and saved-list isolation, cross-account proposal read/write denial, malformed
+shape rejection, and malformed JSON rejection. Test accounts were removed.
+
+### Real Chromium browser acceptance
+
+The full browser journey passed against the real local app at
+`http://localhost:3000/` using the installed Chrome executable. A temporary
+Playwright package cache was used only for this test and removed afterward;
+the application dependency graph was unchanged.
+
+Desktop 1440px passed:
+
+`landing -> registration -> URL onboarding -> invalid URL error with input
+preserved -> live frog.co analysis -> grounded evidence/profile review ->
+profile edit -> customer selection -> live discovery -> proposal generation ->
+refresh recovery -> logout/login recovery`.
+
+The run reported profile-analysis HTTP 200, discovery HTTP 200, visible
+evidence tray, visible editor, preserved invalid input, saved/drafted proposal,
+and cleanup of one generated account.
+
+The same journey passed at 390px. The run captured mobile profile review,
+customer selection, results, proposal editor, saved return, and logout/login
+recovery. The landing sweep captured 320px, 390px, 768px, 1280px, and 1440px.
+Visual inspection of the 390px profile and proposal captures found no
+horizontal overflow or clipped primary action. Original captures are stored
+under `docs/uiux-016b/source-screenshots/` and
+`docs/uiux-016b/mobile-screenshots/`; the evidence log is
+`docs/uiux-016b/browser-acceptance.md`.
+
+The in-app browser connector could not attach to localhost because of its
+browser URL policy. The local Chromium run is the accepted alternative. A
+diagnostic showed that `127.0.0.1` remained on the SSR `Opening Source...`
+shell because the Next development origin policy blocked its client/HMR path;
+the canonical `localhost` origin hydrated and passed. No production URL was
+used and no production data was changed.
+
+### Current release decision and replacement-director handoff
+
+Current HEAD after the repair commit: `b512aed`.
+
+Rollback point: `23b4962c9d018448857cf1591592f00a0449f7a5` (the complete
+profile/proposal persistence implementation before malformed-JSON hardening).
+
+Current status: **LOCAL CORE AND DESKTOP/MOBILE BROWSER ACCEPTANCE PROVEN;
+PRODUCTION UNCHANGED; MERGE/DEPLOYMENT NOT AUTHORIZED**.
+
+Remaining owner action is release review: inspect the changed three files,
+`docs/uiux-016b/browser-acceptance.md`, and the 390px captures; then authorize
+or reject a separate merge/deployment step. No new defect or blocker was found
+in the resumed functional workflow. Do not claim the product is deployed or
+finished until the authorized release path and public UAT are completed.
+
