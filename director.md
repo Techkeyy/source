@@ -2338,7 +2338,9 @@ used and no production data was changed.
 
 ### Current release decision and replacement-director handoff
 
-Current HEAD after the repair commit: `b512aed`.
+Code repair commit: `b512aed` (`fix: handle malformed profile JSON`). The
+follow-up Director/evidence commit contains this acceptance record and the
+original-resolution browser captures.
 
 Rollback point: `23b4962c9d018448857cf1591592f00a0449f7a5` (the complete
 profile/proposal persistence implementation before malformed-JSON hardening).
