@@ -102,6 +102,8 @@ try {
 
   const confirmedProfile = await request("/api/profile", {}, jars[0]);
   assert(confirmedProfile.response.ok && confirmedProfile.data?.profile?.summary === state.profile.summary, "confirmed profile could not be retrieved from the authenticated account");
+  const malformedConfirmJson = await request("/api/profile/confirm", { method: "POST", body: "{not-json" }, jars[0]);
+  assert(malformedConfirmJson.response.status === 400, `malformed confirm JSON returned HTTP ${malformedConfirmJson.response.status}`);
   state.profile = { ...state.profile, summary: `${state.profile.summary} Profile persistence edit.` };
   const profileUpdate = await request("/api/profile", { method: "PUT", body: JSON.stringify({ profile: state.profile }) }, jars[0]);
   assert(profileUpdate.response.ok && profileUpdate.data?.saved === true, `profile update returned HTTP ${profileUpdate.response.status}`);
@@ -165,6 +167,8 @@ try {
   assert(crossAccountProposalSave.response.status === 404, `cross-account proposal draft write returned HTTP ${crossAccountProposalSave.response.status}`);
   const malformedProfile = await request("/api/profile", { method: "PUT", body: JSON.stringify({ profile: {} }) }, jars[1]);
   assert(malformedProfile.response.status === 400, `malformed profile update returned HTTP ${malformedProfile.response.status}`);
+  const malformedProfileJson = await request("/api/profile", { method: "PUT", body: "{not-json" }, jars[1]);
+  assert(malformedProfileJson.response.status === 400, `malformed profile JSON returned HTTP ${malformedProfileJson.response.status}`);
   const malformedProposal = await request(`/api/opportunities/${state.savedId}/proposal`, { method: "PUT", body: JSON.stringify({ proposal: 42 }) }, jars[1]);
   assert(malformedProposal.response.status === 400, `malformed proposal update returned HTTP ${malformedProposal.response.status}`);
 
@@ -176,7 +180,7 @@ try {
     discovery: { startups: summarizeSearch(state.startupSearch), smallBusinesses: summarizeSearch(state.smallBusinessSearch), queryChanged: startupQuery !== smallBusinessQuery, selectedOpportunity: { source: relevant.source, sourceUrl: relevant.sourceUrl, classification: relevant.classification, profileMatches: relevant.profileMatches.length, categoryMatches: relevant.categoryMatches.length } },
     proposal: { generated: true, length: state.proposal.length, editedAndSaved: true, exactTextRecovered: true },
     persistence: { profileRetrieved: true, profileEditedAndRecovered: true, savedBeforeLogout: true, savedAfterLogin: true, unauthenticatedProfileDenied: true },
-    ownership: { secondAccountSavedListIsolated: true, secondAccountProfileIsolated: true, crossAccountProposalDenied: true, crossAccountProposalWriteDenied: true, malformedRequestsRejected: true },
+    ownership: { secondAccountSavedListIsolated: true, secondAccountProfileIsolated: true, crossAccountProposalDenied: true, crossAccountProposalWriteDenied: true, malformedRequestsRejected: true, malformedJsonRejected: true },
   }));
   process.exitCode = 0;
 } catch (error) {

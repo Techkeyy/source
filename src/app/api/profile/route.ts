@@ -19,7 +19,8 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const userId = await requireUserId();
-    const profile = cleanProfile((await request.json()).profile);
+    const body = await request.json().catch(() => null);
+    const profile = cleanProfile(body && typeof body === "object" ? (body as Record<string, unknown>).profile : null);
     requireCompleteProfile(profile);
     const now = new Date();
     await (await collection("profiles")).updateOne(
