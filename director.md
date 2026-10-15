@@ -2354,3 +2354,94 @@ or reject a separate merge/deployment step. No new defect or blocker was found
 in the resumed functional workflow. Do not claim the product is deployed or
 finished until the authorized release path and public UAT are completed.
 
+## Directive 017 — controlled production promotion
+
+Updated: 2026-10-15 (Africa/Lagos). The owner authorized a controlled
+promotion of the approved release candidate. This section records the
+predeployment gate and the current release boundary; it does not mark Source
+accepted or finished.
+
+### Release candidate and rollback target
+
+- Release branch: `codex/uiux-015-findor-reconstruction`.
+- Release-candidate code HEAD before the release-status documentation change:
+  `21d3aa5`.
+- `origin/main` was fetched and remained at `70f8042`; the candidate was seven
+  commits ahead of that base at the time of the audit.
+- The local working tree was clean before the README correction. The README
+  correction is currently an uncommitted documentation change and must be
+  committed before the normal merge.
+- Existing production last-successful commit: `70f8042550cfbf28b15bc5adbf969a9baa48bd40`.
+  This is the documented rollback target until a new deployment passes public
+  acceptance.
+- No force-push, merge, Render deploy, environment mutation, or production
+  database mutation has occurred during this promotion step.
+
+### Predeployment audit evidence
+
+- Remote: `https://github.com/Techkeyy/source.git`.
+- Render service: `source`, service ID `srv-db7rok8473hc739m4cvg`, connected to
+  `Techkeyy/source` on `main`, URL `https://source-9k1o.onrender.com`.
+- Render deploy history showed the live service on `70f8042` with a successful
+  deploy and an available rollback action. The service uses the existing
+  Blueprint and `0.5c-512mb` web-service plan. No new service or paid upgrade
+  was created by this directive.
+- Render Environment displayed the required server-side variable names:
+  `MONGODB_URI`, `MONGODB_DB`, `SESSION_SECRET`, `INFERENCE_PROVIDER`,
+  `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL`, `NEXT_PUBLIC_APP_URL`, and
+  `NODE_VERSION`. Secret values were masked and were not copied, revealed, or
+  logged. Nonempty production behavior still requires public UAT after the
+  candidate is deployed.
+- `render.yaml` matches the active application contract: `npm ci && npm run
+  build`, `npm run start`, health path `/`, `INFERENCE_PROVIDER=deepseek`,
+  `DEEPSEEK_MODEL=deepseek-flash`, and server-side MongoDB/session/DeepSeek
+  variables. Atlas security is not weakened.
+- Classification logic and regression coverage were inspected. A listing is
+  only labelled freelance/contract when explicit independent-work or contract
+  evidence exists; salaried listings remain full-time and untyped listings
+  remain unknown. The Vytalize-shaped regression is covered in
+  `tests/discovery.test.ts`.
+- The current Render dashboard log view did not expose a retained build log for
+  the old deployment (`Build not found`); this is a dashboard-retention
+  limitation, not evidence of a new deploy failure. The deploy history itself
+  reported the old deploy as successful.
+- Shell HTTPS probes from this environment could not establish TLS to GitHub or
+  the Render URL. This is an execution-network limitation; it is not counted
+  as a production health pass. The authenticated Render dashboard did confirm
+  the service URL and prior successful deployment. Public browser acceptance
+  remains outstanding.
+
+### README correction
+
+`README.md` was corrected to state the current verified local acceptance,
+active DeepSeek provider, GitHub/Render links, existing service rollback target,
+and the fact that public production acceptance is pending. It explicitly makes
+no Gemma prize-category claim and does not claim Source is finished. The change
+must be included in the normal merge and checked again at the merged revision.
+
+### Current acceptance status and next director actions
+
+Status: **CONTROLLED PROMOTION PREPARED; LOCAL CORE AND DESKTOP/MOBILE
+CHROMIUM ACCEPTANCE PROVEN; PUBLIC PRODUCTION ACCEPTANCE PENDING.**
+
+Next actions for the replacement director:
+
+1. Commit the README correction on the release branch and record its SHA.
+2. Run typecheck, lint, confined-cache tests, production build, MongoDB probe,
+   ownership probe, DeepSeek profile probe, and core acceptance against the
+   exact merged revision.
+3. Merge the release branch into local `main` with a normal non-force merge and
+   push `main` to the authorized GitHub repository only after all gates pass.
+4. Trigger the existing Render service to deploy exactly that merged SHA and
+   record the Render deploy ID and logs/status.
+5. Run the disposable-account public desktop and 390px Chromium journey,
+   including grounded profile claims, category-dependent discovery,
+   source-linked classification evidence, proposal edit persistence,
+   profile/proposal logout-login recovery, malformed/input-recovery states, and
+   cross-account isolation.
+6. If public auth, persistence, ownership, or startup fails, stop the release,
+   capture sanitized evidence, roll back to `70f8042` through Render, and verify
+   the old service before reporting the blocker.
+7. Do not call Source finished or submission-ready until public acceptance is
+   verified and the owner confirms final acceptance.
+

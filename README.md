@@ -2,6 +2,11 @@
 
 Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to find source-linked opportunities for the customer types they choose.
 
+Source is hosted on [Render](https://source-9k1o.onrender.com). The controlled
+production promotion is still pending final public acceptance; the existing
+service remains the rollback target until the promoted revision passes its
+real-user workflow.
+
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
@@ -111,14 +116,14 @@ The latest local integration run passed with:
 |---|---|
 | Active provider/model | DeepSeek, `deepseek-flash` |
 | Website analysis | `https://www.frog.co/`, HTTP 200 source fetch |
-| Profile grounding | 7 evidence-bearing claims in the application response |
+| Profile grounding | 7 evidence-bearing claims and 37 source excerpts in the application response |
 | Customer-type behavior | Startup and small-business Hacker News queries differed |
-| Discovery | 2 opportunities for each tested category selection |
-| Relevant result | Remote OK freelance/contract listing, 4 profile matches |
-| Proposal | Generated and persisted |
-| Recovery | Saved opportunity recovered after logout/login |
-| Ownership | Second account’s saved list isolated; cross-account proposal denied |
-| Test suite | 1 file, 4 tests passing |
+| Discovery | Category-dependent live queries; one relevant source-linked result |
+| Relevant result | Source-linked opportunity with profile overlap and explicit classification evidence |
+| Proposal | Generated, edited, saved exactly, and persisted |
+| Recovery | Confirmed profile and edited proposal recovered after refresh and logout/login |
+| Ownership | Second account’s profile/saved list isolated; cross-account proposal read/write denied |
+| Test suite | 3 files, 10 tests passing; malformed JSON regression covered |
 
 ## Architecture
 
@@ -159,8 +164,8 @@ Source’s invariant is: **missing or unverified website evidence never becomes 
 - The system rejects private-network URL targets, credentials in URLs, unsafe redirects, oversized pages, and unsupported ports.
 - Discovery results are public signals, not guarantees of a client, contract, buyer, payment, or response.
 - Unconfirmed buyer signals must be treated as leads to investigate, not as confirmed work.
-- The current browser connector refused the local `http://localhost:3000/` tab under its URL policy. The complete local HTTP integration passed, but visual browser UAT and deployed public UAT remain owner-led release steps.
-- The repository has local commits but no GitHub remote. Render configuration is prepared but no public service has been created.
+- Local desktop and 390px mobile Chromium acceptance has passed, including URL analysis, grounded profile review, customer selection, live discovery, proposal saving, refresh recovery, and logout/login recovery. Public production acceptance remains pending until the controlled promotion is verified.
+- The public repository is [Techkeyy/source](https://github.com/Techkeyy/source), and the existing Render service is [source-9k1o.onrender.com](https://source-9k1o.onrender.com).
 
 ## Verification and handoff
 
@@ -176,8 +181,8 @@ Read [director.md](director.md) for the authoritative claim ledger, provider evi
 
 ## Status
 
-**BUILDING, CORE LOCAL INTEGRATION PROVEN, PUBLIC DEPLOYMENT AND VISUAL UAT PENDING.**
+**CONTROLLED PRODUCTION PROMOTION IN PROGRESS; LOCAL CORE AND DESKTOP/MOBILE CHROMIUM ACCEPTANCE PROVEN; PUBLIC ACCEPTANCE PENDING.**
 
-No Gemma prize-category eligibility is claimed. No public deployment is claimed. The active provider is DeepSeek because the owner selected it after the OpenRouter free route returned HTTP 429.
+No Gemma prize-category eligibility is claimed. The existing Render service is public, but the promoted release remains unaccepted until production UAT passes. The active provider is DeepSeek because the owner selected it after the OpenRouter free route returned HTTP 429.
 
 License: not yet selected; this remains a private hackathon deployment candidate.
