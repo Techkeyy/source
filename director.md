@@ -2541,3 +2541,110 @@ Until that gate passes and the owner confirms acceptance, Source must not be
 called finished, submission-ready, or publicly accepted. DeepSeek is the
 proven inference provider; no Gemma category claim is made.
 
+## Directive 018 — Atlas connectivity diagnosis before redeployment
+
+Updated: 2026-10-15 (Africa/Lagos). The rollback was accepted and no release
+candidate was redeployed. Render auto-deploy remains disabled. No application
+code, authentication logic, discovery logic, profile/proposal persistence,
+production secret, Atlas rule, or application record was changed during this
+diagnostic.
+
+### Render outbound and Atlas boundary
+
+The existing Render service `source` (`srv-db7rok8473hc739m4cvg`) was inspected
+through Connect -> Outbound. Render displayed these shared outbound CIDR
+ranges:
+
+- `74.220.48.0/24`
+- `74.220.56.0/24`
+
+Atlas access-list matching is **not verified**. The Atlas browser session was
+redirected to the signed-out login page, and no Atlas credentials were entered
+or exposed. Therefore no missing range is asserted and no access-list change
+was made. The owner must sign in to Atlas and compare the two exact Render
+ranges above against the project access list, approving only the missing
+entries if required. Internet-wide access (`0.0.0.0/0`) must not be used.
+
+### Read-only Render-shell evidence
+
+At the existing rollback runtime, Render Web Shell instance `47c7n` executed a
+bounded diagnostic using the server-side `MONGODB_URI` and `MONGODB_DB`. The
+diagnostic emitted only redacted booleans, counts, protocol metadata and
+sanitized error fields. It performed no inserts, updates, deletes, or
+application-account operations.
+
+Verified output:
+
+```json
+{
+  "node": "v24.21.0",
+  "driver": "7.7.0",
+  "env": { "mongodbUriPresent": true, "mongodbDbPresent": true },
+  "srv": { "status": "pass", "count": 3 },
+  "tcp": { "status": "pass", "attempted": 3, "success": 3, "errors": [] },
+  "tls": {
+    "status": "pass",
+    "attempted": 3,
+    "success": 3,
+    "authorized": 3,
+    "protocols": ["TLSv1.3"],
+    "errors": []
+  },
+  "auth": { "status": "pass", "authenticatedUserCount": 1 },
+  "ping": { "status": "pass", "ok": true }
+}
+```
+
+A second read-only command using the URI's normal TLS configuration ran the
+MongoDB `hello` command with bounded timeouts and returned:
+
+```json
+{
+  "status": "pass",
+  "isWritablePrimary": true,
+  "secondary": false,
+  "setNamePresent": true,
+  "hostsCount": 3,
+  "primaryPresent": true
+}
+```
+
+This proves that the current Render shell can resolve the SRV records, reach
+all three replica-set endpoints, complete authorized TLS 1.3, authenticate,
+select a writable primary, and execute a read-only ping. The MongoDB driver
+was `7.7.0` under Node.js `v24.21.0`; TLS certificate verification was not
+disabled and no insecure TLS flags were used.
+
+The diagnostic wrapper itself had two corrected harness errors before the
+successful `hello` run: an initial top-level-await shell syntax error, then an
+unsupported client-option placement for `minVersion` and a nested `tls`
+option. These failed during local command construction before contacting
+MongoDB and are not connectivity results. The final successful check relied
+on the URI's application-compatible TLS configuration and bounded
+`serverSelectionTimeoutMS=8000`, `connectTimeoutMS=5000`, and
+`waitQueueTimeoutMS=5000` settings.
+
+### Root-cause interpretation and release gate
+
+The retained Render application log from the failed release still records a
+real application-process failure at 04:33:12: the MongoDB driver reported
+`ReplicaSetNoPrimary` with a nested `MongoNetworkError` and sanitized
+`ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR`. The container then started normally on
+rollback commit `70f8042` at 04:36:36. The independent, current shell
+diagnostic now passes every network/authentication stage and reports a
+writable primary. Consequently, the prior failure is not currently
+reproducible at the Render-to-Atlas boundary. The evidence is insufficient to
+claim an Atlas outage, an access-list mismatch, or a Source code regression.
+The remaining possibilities are a transient or deployment-instance-specific
+TLS/connection event, a time-varying network/access condition, or an
+application-process connection-lifecycle difference; an application-level
+registration recheck is required to distinguish those, but it is intentionally
+not run under this no-redeploy directive.
+
+Current release decision: **network shell gate PASS; Atlas access-list
+comparison NOT VERIFIED; application registration gate NOT RETESTED; release
+candidate redeployment NOT AUTHORIZED**. Keep the rollback and auto-deploy
+disabled. The next authorized action is for the owner to sign in to Atlas,
+compare/apply the exact missing Render ranges if any, and then authorize a
+controlled application-level registration probe before considering deployment.
+
