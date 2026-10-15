@@ -2648,3 +2648,24 @@ disabled. The next authorized action is for the owner to sign in to Atlas,
 compare/apply the exact missing Render ranges if any, and then authorize a
 controlled application-level registration probe before considering deployment.
 
+## Directive 019 — production database recovery gate
+
+Updated: 2026-10-15 (Africa/Lagos). The Render dashboard remains accessible
+and confirms that rollback `70f8042` is live for service `source`, with
+auto-deploy disabled. The release candidate `6cbe759` has not been redeployed.
+
+The required owner-controlled Atlas step is still pending. Opening
+`https://cloud.mongodb.com/` redirects to the MongoDB signed-out login page;
+no credentials were entered and no Atlas project or access-list entry was
+changed. The Render outbound ranges awaiting comparison remain
+`74.220.48.0/24` and `74.220.56.0/24`.
+
+Because the Atlas access-list comparison has not yet been confirmed, the
+one-time disposable-account registration test against rollback was not run.
+This preserves the directive's order of operations and avoids treating a
+successful direct shell ping as proof that the application registration path
+is ready. After the owner verifies or corrects the two scoped Atlas ranges,
+the next step is exactly one redacted rollback registration attempt, followed
+by cleanup of any account created successfully. No frontend, provider,
+schema, security protection, or deployment setting was changed.
+
