@@ -9,7 +9,7 @@ const runId = randomUUID();
 const emails = [`source-core-a-${runId}@example.test`, `source-core-b-${runId}@example.test`];
 const password = `Source-${runId}-Integration!`;
 const jars = [new Map(), new Map()];
-const state = { userIds: [], profile: null, startupSearch: null, smallBusinessSearch: null, savedId: null, proposal: null };
+const state = { userIds: [], profile: null, profileAfterLogin: null, startupSearch: null, smallBusinessSearch: null, savedId: null, proposal: null, editedProposal: null };
 
 function cookieHeader(jar) {
   return [...jar.entries()].map(([name, value]) => `${name}=${value}`).join("; ");
@@ -100,6 +100,16 @@ try {
   const confirmation = await request("/api/profile/confirm", { method: "POST", body: JSON.stringify({ profile: state.profile }) }, jars[0]);
   assert(confirmation.response.ok && confirmation.data?.saved === true, `profile confirmation returned HTTP ${confirmation.response.status}`);
 
+  const confirmedProfile = await request("/api/profile", {}, jars[0]);
+  assert(confirmedProfile.response.ok && confirmedProfile.data?.profile?.summary === state.profile.summary, "confirmed profile could not be retrieved from the authenticated account");
+  const malformedConfirmJson = await request("/api/profile/confirm", { method: "POST", body: "{not-json" }, jars[0]);
+  assert(malformedConfirmJson.response.status === 400, `malformed confirm JSON returned HTTP ${malformedConfirmJson.response.status}`);
+  state.profile = { ...state.profile, summary: `${state.profile.summary} Profile persistence edit.` };
+  const profileUpdate = await request("/api/profile", { method: "PUT", body: JSON.stringify({ profile: state.profile }) }, jars[0]);
+  assert(profileUpdate.response.ok && profileUpdate.data?.saved === true, `profile update returned HTTP ${profileUpdate.response.status}`);
+  const editedProfile = await request("/api/profile", {}, jars[0]);
+  assert(editedProfile.response.ok && editedProfile.data?.profile?.summary === state.profile.summary, "edited profile was not persisted");
+
   const startupSearch = await request("/api/opportunities/search", { method: "POST", body: JSON.stringify({ customerTypes: ["startups"], mode: "services" }) }, jars[0]);
   assert(startupSearch.response.ok, `startup discovery returned HTTP ${startupSearch.response.status}`);
   assert(JSON.stringify(startupSearch.data?.policy?.selectedCustomerTypes) === JSON.stringify(["startups"]), "startup customer selection was not preserved");
@@ -125,23 +135,42 @@ try {
   assert(proposal.response.ok && typeof proposal.data?.proposal === "string" && proposal.data.proposal.includes(relevant.title), `proposal generation returned HTTP ${proposal.response.status}`);
   state.proposal = proposal.data.proposal;
 
+  state.editedProposal = `${state.proposal}\n\nSaved draft edit: keep the first deliverable measurable.`;
+  const proposalSave = await request(`/api/opportunities/${state.savedId}/proposal`, { method: "PUT", body: JSON.stringify({ proposal: state.editedProposal }) }, jars[0]);
+  assert(proposalSave.response.ok && proposalSave.data?.saved === true && proposalSave.data.proposal === state.editedProposal, `proposal draft save returned HTTP ${proposalSave.response.status}`);
+
   const savedBeforeLogout = await request("/api/saved", {}, jars[0]);
-  assert(savedBeforeLogout.response.ok && savedBeforeLogout.data.opportunities.some((item) => item.id === state.savedId && item.proposalDraft), "saved opportunity or proposal was not persisted");
+  assert(savedBeforeLogout.response.ok && savedBeforeLogout.data.opportunities.some((item) => item.id === state.savedId && item.proposalDraft === state.editedProposal), "saved opportunity or edited proposal was not persisted");
 
   const logout = await request("/api/auth/logout", { method: "POST" }, jars[0]);
   assert(logout.response.ok, `logout returned HTTP ${logout.response.status}`);
+  const unauthenticatedProfile = await request("/api/profile", {}, jars[0]);
+  assert(unauthenticatedProfile.response.status === 401, `unauthenticated profile access returned HTTP ${unauthenticatedProfile.response.status}`);
   const login = await request("/api/auth/login", { method: "POST", body: JSON.stringify({ email: emails[0], password }) }, jars[0]);
   assert(login.response.ok, `login recovery returned HTTP ${login.response.status}`);
+  const profileAfterLogin = await request("/api/profile", {}, jars[0]);
+  assert(profileAfterLogin.response.ok && profileAfterLogin.data?.profile?.summary === state.profile.summary, "confirmed profile was not recovered after login");
+  state.profileAfterLogin = profileAfterLogin.data.profile;
   const savedAfterLogin = await request("/api/saved", {}, jars[0]);
-  assert(savedAfterLogin.response.ok && savedAfterLogin.data.opportunities.some((item) => item.id === state.savedId && item.proposalDraft), "saved work was not recovered after login");
+  assert(savedAfterLogin.response.ok && savedAfterLogin.data.opportunities.some((item) => item.id === state.savedId && item.proposalDraft === state.editedProposal), "edited proposal was not recovered after login");
 
   const secondRegistration = await request("/api/auth/register", { method: "POST", body: JSON.stringify({ email: emails[1], displayName: "Source Core Test B", password }) }, jars[1]);
   assert(secondRegistration.response.status === 201, `second registration returned HTTP ${secondRegistration.response.status}`);
   state.userIds.push(secondRegistration.data.user.id);
   const otherSaved = await request("/api/saved", {}, jars[1]);
   assert(otherSaved.response.ok && !otherSaved.data.opportunities.some((item) => item.id === state.savedId), "second account could read the first account's saved opportunity");
+  const otherProfile = await request("/api/profile", {}, jars[1]);
+  assert(otherProfile.response.ok && otherProfile.data?.profile === null, "second account could read the first account's profile");
   const crossAccountProposal = await request(`/api/opportunities/${state.savedId}/proposal`, { method: "POST", body: JSON.stringify({ note: "must be denied" }) }, jars[1]);
   assert(crossAccountProposal.response.status === 404, `cross-account proposal access returned HTTP ${crossAccountProposal.response.status}`);
+  const crossAccountProposalSave = await request(`/api/opportunities/${state.savedId}/proposal`, { method: "PUT", body: JSON.stringify({ proposal: "must be denied" }) }, jars[1]);
+  assert(crossAccountProposalSave.response.status === 404, `cross-account proposal draft write returned HTTP ${crossAccountProposalSave.response.status}`);
+  const malformedProfile = await request("/api/profile", { method: "PUT", body: JSON.stringify({ profile: {} }) }, jars[1]);
+  assert(malformedProfile.response.status === 400, `malformed profile update returned HTTP ${malformedProfile.response.status}`);
+  const malformedProfileJson = await request("/api/profile", { method: "PUT", body: "{not-json" }, jars[1]);
+  assert(malformedProfileJson.response.status === 400, `malformed profile JSON returned HTTP ${malformedProfileJson.response.status}`);
+  const malformedProposal = await request(`/api/opportunities/${state.savedId}/proposal`, { method: "PUT", body: JSON.stringify({ proposal: 42 }) }, jars[1]);
+  assert(malformedProposal.response.status === 400, `malformed proposal update returned HTTP ${malformedProposal.response.status}`);
 
   console.log(JSON.stringify({
     status: "pass",
@@ -149,13 +178,13 @@ try {
     model: analysis.data.analysis.model,
     profile: { businessNamePresent: true, sourceUrl: analysis.data.profile.sourceUrl, groundedClaimCount: groundedClaimCount(analysis.data.profile), extractedExcerptCount: analysis.data.analysis.extractedExcerptCount },
     discovery: { startups: summarizeSearch(state.startupSearch), smallBusinesses: summarizeSearch(state.smallBusinessSearch), queryChanged: startupQuery !== smallBusinessQuery, selectedOpportunity: { source: relevant.source, sourceUrl: relevant.sourceUrl, classification: relevant.classification, profileMatches: relevant.profileMatches.length, categoryMatches: relevant.categoryMatches.length } },
-    proposal: { generated: true, length: state.proposal.length },
-    persistence: { savedBeforeLogout: true, savedAfterLogin: true },
-    ownership: { secondAccountSavedListIsolated: true, crossAccountProposalDenied: true },
+    proposal: { generated: true, length: state.proposal.length, editedAndSaved: true, exactTextRecovered: true },
+    persistence: { profileRetrieved: true, profileEditedAndRecovered: true, savedBeforeLogout: true, savedAfterLogin: true, unauthenticatedProfileDenied: true },
+    ownership: { secondAccountSavedListIsolated: true, secondAccountProfileIsolated: true, crossAccountProposalDenied: true, crossAccountProposalWriteDenied: true, malformedRequestsRejected: true, malformedJsonRejected: true },
   }));
   process.exitCode = 0;
 } catch (error) {
-  console.log(JSON.stringify({ status: "fail", reason: "core-acceptance-check-failed", message: String(error?.message || error), completed: { provider: process.env.INFERENCE_PROVIDER || null, model: process.env.DEEPSEEK_MODEL || null, userRegistered: state.userIds.length > 0, profileAnalyzed: Boolean(state.profile), startupSearch: Boolean(state.startupSearch), smallBusinessSearch: Boolean(state.smallBusinessSearch), savedId: Boolean(state.savedId), proposalGenerated: Boolean(state.proposal) }, discoveryDiagnostics: { startups: summarizeSearch(state.startupSearch), smallBusinesses: summarizeSearch(state.smallBusinessSearch), candidates: [...(state.startupSearch?.opportunities || []), ...(state.smallBusinessSearch?.opportunities || [])].slice(0, 8).map((item) => ({ source: item.source, title: item.title, classification: item.classification, profileMatches: item.profileMatches?.length || 0, categoryMatches: item.categoryMatches?.length || 0, sourceUrlPresent: Boolean(item.sourceUrl) })) } }));
+  console.log(JSON.stringify({ status: "fail", reason: "core-acceptance-check-failed", message: String(error?.message || error), completed: { provider: process.env.INFERENCE_PROVIDER || null, model: process.env.DEEPSEEK_MODEL || null, userRegistered: state.userIds.length > 0, profileAnalyzed: Boolean(state.profile), profileEdited: Boolean(state.profileAfterLogin), startupSearch: Boolean(state.startupSearch), smallBusinessSearch: Boolean(state.smallBusinessSearch), savedId: Boolean(state.savedId), proposalGenerated: Boolean(state.proposal), proposalEdited: Boolean(state.editedProposal) }, discoveryDiagnostics: { startups: summarizeSearch(state.startupSearch), smallBusinesses: summarizeSearch(state.smallBusinessSearch), candidates: [...(state.startupSearch?.opportunities || []), ...(state.smallBusinessSearch?.opportunities || [])].slice(0, 8).map((item) => ({ source: item.source, title: item.title, classification: item.classification, profileMatches: item.profileMatches?.length || 0, categoryMatches: item.categoryMatches?.length || 0, sourceUrlPresent: Boolean(item.sourceUrl) })) } }));
   process.exitCode = 1;
 } finally {
   try {

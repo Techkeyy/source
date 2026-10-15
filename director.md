@@ -1875,3 +1875,573 @@ evidence here.
 Current status: **BUILDING, LOCAL CORE PROVEN, PUBLIC GITHUB PUBLISHED, PAID
 RENDER SERVICE LIVE, PRODUCTION SECRETS NOT YET POPULATED, CORE UAT BLOCKED**.
 
+## Directive 015 — Creative Director UI/UX reconstruction
+
+Updated: 2026-10-14 (Africa/Lagos). Mode: **REDESIGN with LAUNCH safeguards**.
+
+The owner rejected the earlier Evidence Desk 014A visual direction and supplied
+the Findor reference at `https://laudable-fly-396.convex.site/`. A new isolated
+branch was created from the pre-014A rollback point:
+
+- Branch: `codex/uiux-015-findor-reconstruction`
+- Base / rollback: `70f8042550cfbf28b15bc5adbf969a9baa48bd40` (`70f8042`)
+- Verified implementation commit: `80e8f248e767d0c625f4c1c5c18e732f74ce8f83`
+- Final handoff metadata commit: `38a19fa` (this branch remains local-only)
+- Production/GitHub/Render state: unchanged by this directive
+- Release status: local/preview review only; no merge, push or production
+  deployment from this branch
+
+### Product Truth Brief
+
+**Observed product promise:** For freelancers and independent professionals
+who need credible client leads, Source turns a public portfolio or project URL
+into an editable, evidence-backed profile and helps investigate relevant,
+source-linked opportunities without promising clients or payment.
+
+**First-time job:** Understand Source, create an account, provide public work,
+review what the page actually supports, choose desired customer types, inspect
+live opportunity evidence, and prepare a credible proposal.
+
+**Returning-user job:** Sign in and recover saved opportunities and proposal
+drafts without repeating the first task when the existing backend can provide
+those records.
+
+**Primary value moment:** A real profile is visible with grounded excerpts,
+then a live source-linked result explains why it matched.
+
+**Protected surfaces:** Authentication/session routes, SSRF-safe website
+fetching, DeepSeek profile generation, Mastra workflow boundary, MongoDB
+schemas and ownership, discovery adapters/ranking, proposal route, Render
+configuration and secrets. The UI branch did not alter these surfaces.
+
+### Reference inspection evidence
+
+The supplied reference was opened in real Chromium and audited at 320, 390,
+768, 1280 and 1440px. Evidence is in `docs/uiux-015/reference-inspection.json`
+and `reference-screenshots/`.
+
+Verified observations:
+
+- Warm canvas `rgb(250, 248, 245)` and primary ink `rgb(20, 32, 26)`.
+- Plus Jakarta Sans body, Newsreader/Playfair/Fraunces-style display type.
+- Reference h1 measured `67.2px / 70.56px`, weight 700, `-2.016px` tracking.
+- Reference h2 measured `26.4px / 31.68px`, weight 700, `-0.528px` tracking.
+- 14 headings, 20 buttons, 1 text input, 5 sections, and a real sign-up
+  interaction that added `Create your account` in place.
+- No horizontal overflow at any required width; reference reduced-motion probe
+  reported `0s`.
+
+The legacy Source “before” screenshot was not fabricated. A detached rollback
+worktree was attempted for a real baseline capture, but Next/Turbopack rejected
+the dependency link and the bounded offline dependency install did not finish.
+The evidence folder records this P1 gap explicitly in
+`reference-teardown.md` and `known-limitations.md`.
+
+### Implemented vertical slice
+
+Only `src/components/SourceApp.tsx` and `src/app/globals.css` were changed in
+the product UI. The reconstruction adds:
+
+- A direct landing promise and URL-first activation path.
+- Original Source inline SVG logo, icon system and public-work/evidence/fit
+  artwork; no Findor artwork, logo, copy or image was copied.
+- Accessible registration/sign-in with visible error and busy states.
+- Dominant URL onboarding with real label, manual alternative, invalid URL
+  alert, preserved input and loading feedback.
+- Profile review organized into identity, grounded page evidence, suggestions,
+  editable profile fields and explicit evidence limits.
+- Four customer categories retained as actual controls: small businesses,
+  startups, agencies and individuals.
+- Discovery UI with query-impact copy, live provider response, classification,
+  rationale, original-source link, empty state and honest unconfirmed signals.
+- Proposal, save, refresh recovery, saved-work rail and logout/login recovery.
+- Responsive composition at required widths, visible focus, touch-sized
+  controls and reduced-motion rules.
+
+### Real browser acceptance evidence
+
+The final corrected `scripts/uiux-015-after.mjs` run passed with a fresh test
+account and real `https://www.frog.co/` analysis:
+
+```json
+{
+  "status": "pass",
+  "stages": [
+    "landing", "account", "onboarding", "url-error", "analysis-loading",
+    "live-analysis", "profile-edit", "customer-selection", "discovery",
+    "proposal", "refresh-recovery", "logout-login-recovery"
+  ],
+  "profileAnalysisHttpStatus": 200,
+  "discoveryHttpStatus": 200,
+  "evidenceVisible": true,
+  "editorVisible": true,
+  "errorInputPreserved": true,
+  "savedAndDrafted": true,
+  "sourceUrl": "https://www.frog.co/"
+}
+```
+
+The harness selected all four customer types, used live backend routes, and
+reported cleanup pass with one temporary account deleted. Visual evidence is
+in `docs/uiux-015/source-screenshots/`, including landing at 320/390/768/1280/
+1440px, profile evidence, audience selection, results, proposal, saved return
+and logout/login recovery.
+
+### Skill usage
+
+The user-supplied `director-uiux-excellence` archive was inspected directly
+from `C:\Users\HomePC\Downloads\Telegram Desktop\Director_UIUX_Excellence_Skill_v1.0-2.zip`.
+Read and applied: `SKILL.md`, `references/product-fit-and-architecture.md`,
+`references/taste-and-visual-system.md`, `references/audit-and-release-gates.md`,
+`references/test-missions.md`, `templates/product-truth-brief.md`,
+`templates/review-scorecard.md`, and `templates/director-to-builder-task.md`.
+The skill changed the work by requiring product truth before styling, a
+protected-surface freeze, real Chromium evidence, explicit empty/loading/error/
+recovery states, a 100-point scorecard and an honest release boundary.
+
+The Sites skill was also used for the local-only site workflow: keep work in
+the existing checkout, use a real local browser preview, and do not register,
+publish or deploy without explicit release approval.
+
+### Scorecard and release decision
+
+The recorded local visual score is **91/100** with no P0 defect. Full detail is
+in `docs/uiux-015/review-scorecard.md`. The result is not a production release
+decision because these P1 limitations remain:
+
+1. The protected backend exposes no profile-read route, so fresh-session UI
+   recovery cannot truthfully repopulate the confirmed profile editor.
+2. Proposal edits remain local until copied because no proposal-edit persistence
+   route exists.
+3. The old Source before screenshot could not be captured from the rollback
+   worktree in this environment.
+4. One live external excerpt contained replacement glyphs; a data-layer
+   encoding correction requires separate approval.
+
+Current Directive 015 status: **IMPLEMENTED LOCALLY, REAL BROWSER JOURNEY
+PROVEN, PREVIEW-ONLY, DIRECTOR REVIEW REQUIRED**.
+
+### Exact next tasks for a replacement director
+
+1. Review the reference and Source screenshots under `docs/uiux-015/` and the
+   scorecard/defect ledger.
+2. Decide whether the 91/100 local slice is accepted with disclosed
+   limitations or held for a separately authorized profile-read/proposal-edit
+   backend phase.
+3. Run the remaining quality gates and append their results:
+   `npm run lint`, `npm test -- --run`, `npm run build`, and the existing
+   backend probes where owner-approved.
+4. If accepted, commit this isolated branch, record the final SHA and exact
+   diff, then request a separate merge/production authorization. Do not touch
+   production in this phase.
+
+### Directive 015 quality gates completed
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS, ESLint exit code 0.
+- `npm test -- --run`: PASS, 2 test files / 8 tests.
+- `npm run build`: PASS, Next.js 16.4.0 compiled and generated 12 routes.
+- `npm run probe:mongodb`: PASS, ping/insert/read/delete/cleanup true.
+- `npm run probe:ownership`: PASS, separate registrations, owner save,
+  cross-account denial and saved-list isolation; two temporary accounts
+  deleted.
+- `npm run probe:gemma -- https://www.frog.co/`: PASS using the existing
+  DeepSeek provider/model, source HTTP 200, inference HTTP 200, one JSON object,
+  five claims and five grounded claims, no key exposure.
+
+The isolated UI branch has now passed its local engineering gates. This does
+not override the preview-only release boundary or close the documented
+profile-read/proposal-edit persistence limitations.
+
+## Directive 016 / Authorization 016A — persistence and seamless return flow
+
+Updated: 2026-10-14 (Africa/Lagos). Owner authorization received for the two
+narrow backend changes described in Authorization 016A. The approved Directive
+015 visual system remains frozen. No provider, discovery-ranking,
+authentication-architecture, secret, infrastructure, merge, or production
+deployment change was made.
+
+### Root causes identified
+
+1. **Confirmed profile recovery:** `POST /api/profile/confirm` already wrote a
+   profile scoped by the authenticated `userId`, but there was no authenticated
+   read route. On a fresh session `SourceApp` called `/api/auth/me` and
+   `/api/saved`, then initialized the profile to an empty local object. The
+   sign-out path also intentionally cleared that local object. Consequently a
+   returning user could recover saved opportunities but not the confirmed
+   profile or its discovery context.
+2. **Proposal draft persistence:** `POST /api/opportunities/:id/proposal`
+   generated and stored the original proposal, but the UI textarea only changed
+   React state. There was no explicit draft-save route or UI save action; the
+   existing footer accurately said edits stayed local. Reloading therefore
+   recovered the generated text, not the user's edits. Reopening a saved item
+   could also regenerate and overwrite that stored draft.
+
+### Implemented authorized fix
+
+- Added authenticated `GET /api/profile`. It reads only `{ userId }` from the
+  session and returns the user's confirmed profile or `profile: null` for a new
+  account.
+- Added authenticated `PUT /api/profile`. It reuses the existing bounded
+  profile sanitizer, requires a source URL, business/project name and summary,
+  writes by session `userId`, and updates the same `profiles` document. It does
+  not accept a client-supplied owner id.
+- Refactored the existing confirm route to use the same validation boundary.
+- Added authenticated `PUT /api/opportunities/:id/proposal`. It accepts only a
+  string proposal up to 12,000 characters and updates by `{ _id, userId }`.
+  The response confirms `saved: true` only after MongoDB acknowledges the
+  update. The exact submitted text is preserved, including user edits.
+- Made proposal generation non-destructive by default: if a saved proposal
+  already exists, `POST` returns it instead of silently replacing it. Explicit
+  regeneration remains available only through a future explicit action with
+  `regenerate: true`.
+- On authenticated bootstrap, the UI now retrieves a confirmed profile and
+  opens the audience step. Users can edit and save the profile without
+  repeating website analysis, or intentionally use **Start over**.
+- The proposal editor now exposes **Save draft**, with saving, saved, unsaved,
+  and failed states. Failed saves retain the textarea content.
+
+### Changed files
+
+- `src/lib/profile-validation.ts` — shared server-side profile normalization
+  and completeness checks.
+- `src/app/api/profile/route.ts` — authenticated profile read/update contract.
+- `src/app/api/profile/confirm/route.ts` — uses the shared validation boundary.
+- `src/app/api/opportunities/[id]/proposal/route.ts` — idempotent generation and
+  ownership-scoped exact draft updates.
+- `src/components/SourceApp.tsx` — session profile recovery, edit/start-over
+  controls, and persistent proposal editor states.
+- `src/app/globals.css` — minimal layout treatment for the profile action row.
+- `scripts/core-acceptance-check.mjs` — profile/draft recovery, malformed
+  request and cross-account read/write assertions.
+- `tests/profile-persistence.test.ts` — focused profile validation regression
+  tests.
+
+### API and ownership boundaries
+
+All new operations require the existing HTTP-only session cookie. Profile reads
+and writes use the authenticated session's MongoDB `userId`; proposal reads,
+generation and writes use both the authenticated `userId` and opportunity
+`_id`. A client cannot select another account by passing an id. The existing
+SSRF guard, auth/session implementation, DeepSeek route, discovery adapters and
+ranking logic were not changed.
+
+### Verified evidence
+
+Engineering and live integration evidence from 2026-10-14:
+
+```text
+npm run typecheck                         PASS
+npm run lint -- --no-cache                PASS (0 errors, 0 warnings)
+npm test -- --run --testTimeout=15000     PASS (3 files, 10 tests)
+npm run build                             PASS (Next.js 16.4.0; /api/profile added)
+npm run probe:mongodb                     PASS (ping/insert/read/delete/cleanup)
+npm run probe:ownership                   PASS (isolation and cross-account denial)
+npm run probe:gemma -- https://www.frog.co/ PASS (DeepSeek active path)
+npm run probe:core                        PASS; cleanup PASS (2 accounts deleted)
+```
+
+The successful profile probe reported safe, redacted metadata only:
+
+```json
+{
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "sourceFetchHttpStatus": 200,
+  "responseHttpStatus": 200,
+  "sourceTitle": "frog | Your reinvention and experience partner",
+  "claimCount": 5,
+  "groundedClaimCount": 5,
+  "candidateCount": 1,
+  "finishReasons": ["stop"],
+  "jsonObjectCount": 1
+}
+```
+
+The updated core acceptance reached the real local frontend APIs and live
+external sources, then reported: DeepSeek `deepseek-flash`; Frog profile with
+8 grounded claims and 37 extracted excerpts; different startup and small-
+business query strings; one source-linked relevant result; generated proposal;
+exact edited proposal recovery after login; profile edit recovery after login;
+unauthenticated profile denial; second-account profile/saved-list isolation;
+cross-account proposal read and write denial; and malformed profile/proposal
+requests rejected. Test accounts were deleted after the pass.
+
+The earlier first run encountered transient Atlas SRV DNS timeouts during the
+probe and cleanup. After network permission was granted, the probes and cleanup
+passed. No credential or private profile content was printed.
+
+### Browser evidence and release boundary
+
+The existing Directive 015 Chromium evidence remains valid for the approved
+visual system and its pre-016 journey. A new 016 browser screenshot run was
+not completed in this environment: the in-app browser reported the localhost
+tab could not be reached and the CUA connector rejected a localhost tab
+attachment; Playwright was not installed in the project, and temporary no-save
+installation attempts were stopped after npm cache/network permission errors.
+No screenshot was fabricated or added as 016 evidence. The HTTP core probe is
+not a substitute for desktop/mobile visual acceptance.
+
+Therefore the branch status is:
+
+**FUNCTIONAL BACKEND AND HTTP ACCEPTANCE PROVEN; LOCAL BROWSER UAT PENDING;
+PREVIEW-ONLY; DO NOT MERGE OR DEPLOY.**
+
+### Owner manual UAT required before release
+
+On the running local app at `http://localhost:3000/`, use a fresh account and
+record screenshots at 1440px and 390px:
+
+1. Register, analyze `https://www.frog.co/`, edit the summary, and confirm.
+2. Sign out and sign back in; verify the confirmed profile is shown at the
+   audience step without re-analysis.
+3. Choose at least two customer types, search, and inspect the source link,
+   classification and evidence.
+4. Save/draft an opportunity. Edit the proposal, confirm **Unsaved edit**,
+   click **Save draft**, and confirm **Saved draft** only after the request
+   completes.
+5. Refresh, reopen the saved opportunity, and verify the exact edited text.
+6. Sign out/in again and repeat the saved proposal check.
+7. In a second account, verify no first-account profile or saved opportunity is
+   visible. Do not use production credentials or real private data.
+8. Check keyboard focus, 320/390px horizontal overflow, and failed-save/error
+   recovery before authorizing a merge.
+
+### Next director actions
+
+1. Complete the owner-led desktop/mobile browser UAT above and attach original
+   screenshots to the Director review.
+2. If UAT passes, commit this isolated change set, review the diff and release
+   plan, then request explicit merge/deployment authorization.
+3. If UAT finds a defect, keep production unchanged and fix only the reported
+   persistence/recovery issue on this branch.
+
+## Directive 016B — resumed repair and verified local acceptance
+
+Updated: 2026-10-15 (Africa/Lagos). Work resumed from persistence commit
+`23b4962c9d018448857cf1591592f00a0449f7a5` without reset, rebuild, redesign,
+merge, or deployment. The approved UI and protected provider, discovery,
+authentication, database, and SSRF paths remained frozen.
+
+### Interruption root cause and repair
+
+The interrupted local server was not failing because of Source code or a stale
+application lock. Next.js reported an access-denied error while creating its
+`.next/dev/lock`; a harmless write probe confirmed that the execution sandbox
+also denied writes to the Desktop checkout. The Windows ACL itself granted the
+owner full access. A narrowly scoped workspace write permission restored the
+ability to create Next generated cache/lock files. The repaired dependency
+tree then resolved `next@16.4.0`, `@next/swc-win32-x64-msvc@16.4.0`, and
+`rolldown/parseAst` successfully. No `package.json` or `package-lock.json`
+change was made.
+
+Vitest initially attempted to clean a cache outside the project at
+`C:\Users\HomePC\node_modules\.vitest-cache`, which the sandbox rejected.
+The required test suite passed when its cache was explicitly confined to the
+project with `--fsModuleCachePath .vitest-cache`. This is an execution
+environment detail, not an application test failure.
+
+### Authorized JSON hardening
+
+The exact remaining code change is committed as
+`b512aed` (`fix: handle malformed profile JSON`). Both authenticated profile
+write routes now convert invalid JSON bodies into the existing truthful HTTP
+400 validation path instead of allowing `request.json()` to throw. The
+acceptance script adds malformed JSON checks for both `POST /api/profile/confirm`
+and `PUT /api/profile`. The correction is deliberately narrow: it does not
+truncate model output, change providers, alter persistence schemas, or weaken
+ownership checks.
+
+### Post-repair technical gates
+
+All gates below were rerun after dependency restoration and the JSON change:
+
+```text
+npm run typecheck                                      PASS
+npm run lint                                           PASS (0 errors, 0 warnings)
+npm test -- --run --testTimeout=15000                 ENV BLOCKED (Vitest tried to
+                                                         clean an external cache)
+npm test -- --run --testTimeout=15000 --fsModuleCachePath .vitest-cache
+                                                         PASS (3 files, 10 tests)
+npm run build                                          PASS (Next.js 16.4.0)
+npm run probe:mongodb                                 PASS
+npm run probe:ownership                               PASS; cleanup deleted 2 accounts
+npm run probe:gemma -- https://www.frog.co/           PASS; DeepSeek active path
+npm run probe:core                                    PASS; cleanup deleted 2 accounts
+```
+
+The first MongoDB rerun encountered a transient Atlas SRV DNS timeout. After
+network permission was available, the same probe passed with ping, insert,
+read, delete, and cleanup all true. The first ownership invocation was made
+while the app was stopped for the production build and therefore returned
+`fetch failed`; after the local server was restarted, the ownership probe
+passed. These transient orchestration outcomes were not counted as product
+passes.
+
+The final live profile probe returned safe redacted metadata only:
+
+```json
+{
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "sourceFetchHttpStatus": 200,
+  "responseHttpStatus": 200,
+  "sourceTitle": "frog | Your reinvention and experience partner",
+  "claimCount": 5,
+  "groundedClaimCount": 5,
+  "candidateCount": 1,
+  "finishReasons": ["stop"],
+  "jsonObjectCount": 1
+}
+```
+
+The final core acceptance proved 7 grounded profile claims with 37 extracted
+excerpts, changed startup versus small-business query strings, one relevant
+source-linked opportunity, proposal generation, exact proposal edit recovery,
+profile edit recovery, unauthenticated profile denial, second-account profile
+and saved-list isolation, cross-account proposal read/write denial, malformed
+shape rejection, and malformed JSON rejection. Test accounts were removed.
+
+### Real Chromium browser acceptance
+
+The full browser journey passed against the real local app at
+`http://localhost:3000/` using the installed Chrome executable. A temporary
+Playwright package cache was used only for this test and removed afterward;
+the application dependency graph was unchanged.
+
+Desktop 1440px passed:
+
+`landing -> registration -> URL onboarding -> invalid URL error with input
+preserved -> live frog.co analysis -> grounded evidence/profile review ->
+profile edit -> customer selection -> live discovery -> proposal generation ->
+refresh recovery -> logout/login recovery`.
+
+The run reported profile-analysis HTTP 200, discovery HTTP 200, visible
+evidence tray, visible editor, preserved invalid input, saved/drafted proposal,
+and cleanup of one generated account.
+
+The same journey passed at 390px. The run captured mobile profile review,
+customer selection, results, proposal editor, saved return, and logout/login
+recovery. The landing sweep captured 320px, 390px, 768px, 1280px, and 1440px.
+Visual inspection of the 390px profile and proposal captures found no
+horizontal overflow or clipped primary action. Original captures are stored
+under `docs/uiux-016b/source-screenshots/` and
+`docs/uiux-016b/mobile-screenshots/`; the evidence log is
+`docs/uiux-016b/browser-acceptance.md`.
+
+The in-app browser connector could not attach to localhost because of its
+browser URL policy. The local Chromium run is the accepted alternative. A
+diagnostic showed that `127.0.0.1` remained on the SSR `Opening Source...`
+shell because the Next development origin policy blocked its client/HMR path;
+the canonical `localhost` origin hydrated and passed. No production URL was
+used and no production data was changed.
+
+### Current release decision and replacement-director handoff
+
+Code repair commit: `b512aed` (`fix: handle malformed profile JSON`). The
+follow-up Director/evidence commit contains this acceptance record and the
+original-resolution browser captures.
+
+Rollback point: `23b4962c9d018448857cf1591592f00a0449f7a5` (the complete
+profile/proposal persistence implementation before malformed-JSON hardening).
+
+Current status: **LOCAL CORE AND DESKTOP/MOBILE BROWSER ACCEPTANCE PROVEN;
+PRODUCTION UNCHANGED; MERGE/DEPLOYMENT NOT AUTHORIZED**.
+
+Remaining owner action is release review: inspect the changed three files,
+`docs/uiux-016b/browser-acceptance.md`, and the 390px captures; then authorize
+or reject a separate merge/deployment step. No new defect or blocker was found
+in the resumed functional workflow. Do not claim the product is deployed or
+finished until the authorized release path and public UAT are completed.
+
+## Directive 017 — controlled production promotion
+
+Updated: 2026-10-15 (Africa/Lagos). The owner authorized a controlled
+promotion of the approved release candidate. This section records the
+predeployment gate and the current release boundary; it does not mark Source
+accepted or finished.
+
+### Release candidate and rollback target
+
+- Release branch: `codex/uiux-015-findor-reconstruction`.
+- Release-candidate code HEAD before the release-status documentation change:
+  `21d3aa5`.
+- `origin/main` was fetched and remained at `70f8042`; the candidate was seven
+  commits ahead of that base at the time of the audit.
+- The local working tree was clean before the README correction. The README
+  correction is currently an uncommitted documentation change and must be
+  committed before the normal merge.
+- Existing production last-successful commit: `70f8042550cfbf28b15bc5adbf969a9baa48bd40`.
+  This is the documented rollback target until a new deployment passes public
+  acceptance.
+- No force-push, merge, Render deploy, environment mutation, or production
+  database mutation has occurred during this promotion step.
+
+### Predeployment audit evidence
+
+- Remote: `https://github.com/Techkeyy/source.git`.
+- Render service: `source`, service ID `srv-db7rok8473hc739m4cvg`, connected to
+  `Techkeyy/source` on `main`, URL `https://source-9k1o.onrender.com`.
+- Render deploy history showed the live service on `70f8042` with a successful
+  deploy and an available rollback action. The service uses the existing
+  Blueprint and `0.5c-512mb` web-service plan. No new service or paid upgrade
+  was created by this directive.
+- Render Environment displayed the required server-side variable names:
+  `MONGODB_URI`, `MONGODB_DB`, `SESSION_SECRET`, `INFERENCE_PROVIDER`,
+  `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL`, `NEXT_PUBLIC_APP_URL`, and
+  `NODE_VERSION`. Secret values were masked and were not copied, revealed, or
+  logged. Nonempty production behavior still requires public UAT after the
+  candidate is deployed.
+- `render.yaml` matches the active application contract: `npm ci && npm run
+  build`, `npm run start`, health path `/`, `INFERENCE_PROVIDER=deepseek`,
+  `DEEPSEEK_MODEL=deepseek-flash`, and server-side MongoDB/session/DeepSeek
+  variables. Atlas security is not weakened.
+- Classification logic and regression coverage were inspected. A listing is
+  only labelled freelance/contract when explicit independent-work or contract
+  evidence exists; salaried listings remain full-time and untyped listings
+  remain unknown. The Vytalize-shaped regression is covered in
+  `tests/discovery.test.ts`.
+- The current Render dashboard log view did not expose a retained build log for
+  the old deployment (`Build not found`); this is a dashboard-retention
+  limitation, not evidence of a new deploy failure. The deploy history itself
+  reported the old deploy as successful.
+- Shell HTTPS probes from this environment could not establish TLS to GitHub or
+  the Render URL. This is an execution-network limitation; it is not counted
+  as a production health pass. The authenticated Render dashboard did confirm
+  the service URL and prior successful deployment. Public browser acceptance
+  remains outstanding.
+
+### README correction
+
+`README.md` was corrected to state the current verified local acceptance,
+active DeepSeek provider, GitHub/Render links, existing service rollback target,
+and the fact that public production acceptance is pending. It explicitly makes
+no Gemma prize-category claim and does not claim Source is finished. The change
+must be included in the normal merge and checked again at the merged revision.
+
+### Current acceptance status and next director actions
+
+Status: **CONTROLLED PROMOTION PREPARED; LOCAL CORE AND DESKTOP/MOBILE
+CHROMIUM ACCEPTANCE PROVEN; PUBLIC PRODUCTION ACCEPTANCE PENDING.**
+
+Next actions for the replacement director:
+
+1. Commit the README correction on the release branch and record its SHA.
+2. Run typecheck, lint, confined-cache tests, production build, MongoDB probe,
+   ownership probe, DeepSeek profile probe, and core acceptance against the
+   exact merged revision.
+3. Merge the release branch into local `main` with a normal non-force merge and
+   push `main` to the authorized GitHub repository only after all gates pass.
+4. Trigger the existing Render service to deploy exactly that merged SHA and
+   record the Render deploy ID and logs/status.
+5. Run the disposable-account public desktop and 390px Chromium journey,
+   including grounded profile claims, category-dependent discovery,
+   source-linked classification evidence, proposal edit persistence,
+   profile/proposal logout-login recovery, malformed/input-recovery states, and
+   cross-account isolation.
+6. If public auth, persistence, ownership, or startup fails, stop the release,
+   capture sanitized evidence, roll back to `70f8042` through Render, and verify
+   the old service before reporting the blocker.
+7. Do not call Source finished or submission-ready until public acceptance is
+   verified and the owner confirms final acceptance.
+
