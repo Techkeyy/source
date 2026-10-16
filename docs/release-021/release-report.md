@@ -7,6 +7,7 @@ Date: 2026-10-16 (Africa/Lagos)
 - Branch: `codex/release-021-defect-correction`
 - Production remains on: `6cbe759b16ae775a13d122abb3d9686b69d73877`
 - Release-fix base before edits: `7f29a4ea7872c3337c8bb52b63383a9432401d20`
+- Tested release-fix commit: `054f966350d80d8e245bbda3baeafbc67de553a6`
 - Production deployment: unchanged; no Render action was taken.
 - Rollback point: the existing deployed commit `6cbe759b16ae775a13d122abb3d9686b69d73877`.
 

@@ -3013,6 +3013,9 @@ commit remains the rollback point. The branch was created from the actual
 deployed ancestry after a narrowly authorized Git metadata ACL correction;
 `.git/index.lock` was absent and no lock was deleted.
 
+The tested branch revision is
+`054f966350d80d8e245bbda3baeafbc67de553a6`.
+
 The complete evidence package is in [`docs/release-021/`](docs/release-021/),
 including canonical Chromium screenshots, measurements, text-boundary proof,
 eligibility evidence, test results, limitations, and the diff manifest.
