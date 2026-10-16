@@ -75,6 +75,12 @@ describe("opportunity employment classification", () => {
     expect(classifyOpportunity(record({ provider: "GitHub", title: "Brand + design pipeline", description: "Internal branding workflow with named project owners.", prospectType: "research-signal", organization: "federicomrod/Milton" }), "potential-customers")).toBe("research-signal-only");
   });
 
+  it("does not promote GitHub contract wording to an active request without external buying evidence", () => {
+    const issue = record({ provider: "GitHub", title: "New TV roles", description: "We need media work for a customer-facing project, with contract role requirements.", type: "contract", prospectType: "potential-customer", organization: "example/project" });
+    expect(classifyOpportunity(issue, "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(issue, "active-requests")).not.toBe("explicit-project-request");
+  });
+
   it("treats an official procurement notice as an active external request", () => {
     expect(classifyOpportunity(record({ provider: "Contracts Finder", title: "Website and digital services tender", description: "The buyer is seeking to appoint an experienced digital service provider.", prospectType: "active-request", buyerIntent: "confirmed", organization: "Public Buyer", contactUrl: "https://www.contractsfinder.service.gov.uk/Notice/example", deadline: new Date(Date.now() + 86_400_000).toISOString(), noticeStatus: "active" }), "potential-customers")).toBe("explicit-project-request");
   });

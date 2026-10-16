@@ -109,7 +109,6 @@ export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode)
   if (FULL_TIME_TYPE_PATTERN.test(record.type) || FULL_TIME_CONTEXT_PATTERN.test(combined)) return "full-time-employment";
   if (record.buyerIntent === "confirmed" || (record.provider === "Contracts Finder" && EXTERNAL_BUYING_PATTERN.test(combined)) || (record.provider === "GitHub" && GITHUB_EXTERNAL_BUYING_PATTERN.test(combined))) return "explicit-project-request";
   if (record.provider === "Hacker News" && /\b(?:looking for|need|seeking)\s+(?:a\s+)?freelancer\b/i.test(combined)) return "explicit-project-request";
-  if (CONTRACT_TYPE_PATTERN.test(record.type) || CONTRACT_CONTEXT_PATTERNS.some((pattern) => pattern.test(combined))) return "freelance-or-contract";
   if ((mode === "product" || mode === "potential-customers") && (record.prospectType === "research-signal" || record.provider === "GitHub")) {
     const hasNeed = POTENTIAL_SIGNAL_PATTERN.test(combined) || POTENTIAL_CUSTOMER_NEED_PATTERN.test(combined);
     const looksInternal = record.provider === "GitHub" && GITHUB_INTERNAL_PATTERN.test(combined);
@@ -117,6 +116,7 @@ export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode)
     if (potentialSignal) return "potential-buyer-signal-unconfirmed";
     if (hasNeed || looksInternal) return "research-signal-only";
   }
+  if (CONTRACT_TYPE_PATTERN.test(record.type) || CONTRACT_CONTEXT_PATTERNS.some((pattern) => pattern.test(combined))) return "freelance-or-contract";
   if ((mode === "product" || mode === "potential-customers") && record.prospectType === "potential-customer") {
     const potentialSignal = record.provider === "Hacker News" ? HN_POTENTIAL_SIGNAL_PATTERN : POTENTIAL_SIGNAL_PATTERN;
     return potentialSignal.test(combined) ? "potential-buyer-signal-unconfirmed" : record.provider === "Hacker News" ? "unknown-employment-type" : "research-signal-only";
