@@ -1,5 +1,6 @@
 import { SourceError } from "./errors";
 import { optionalEnv } from "./env";
+import { normalizeExternalText } from "./text";
 import { CUSTOMER_TYPES, type CustomerType, type DiscoveryMode, type Opportunity, type OpportunityClassification, type ProfileDraft } from "./types";
 
 const FRESHNESS_DAYS: Record<string, number> = { "Hacker News": 21, Jobicy: 30, "Remote OK": 21, Himalayas: 30, SerpApi: 14 };
@@ -43,7 +44,7 @@ const CONTRACT_CONTEXT_PATTERNS = [
 ];
 
 function text(value: unknown) {
-  return typeof value === "string" ? value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "";
+  return typeof value === "string" ? normalizeExternalText(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()) : "";
 }
 
 function dateValue(value: unknown) {

@@ -2813,3 +2813,423 @@ DESKTOP PUBLIC SMOKE PASS; AGENCY/INDIVIDUAL AND MOBILE PUBLIC UAT PLUS OWNER
 FINAL ACCEPTANCE PENDING.** The product is not yet marked finished or publicly
 accepted.
 
+## Directive 020 — final production UAT and release acceptance
+
+Updated: 2026-10-16 (Africa/Lagos). No application code, infrastructure,
+secrets, database schema, AI provider, deployment setting, or production
+revision was changed during this UAT. The public service remains on commit
+`6cbe759b16ae775a13d122abb3d9686b69d73877`, with Render auto-deploy disabled.
+
+### Public mobile Chromium evidence
+
+The deployed URL was exercised in the real Codex Chromium browser with an
+explicit viewport override, and the browser completed the URL-first workflow
+at 390px. Authentic landing screenshots were also captured by the installed
+Google Chrome binary at the exact requested viewport sizes:
+
+- [390px landing screenshot](docs/production-uat-020/landing-390.png)
+- [320px landing screenshot](docs/production-uat-020/landing-320.png)
+
+Observed responsive results:
+
+- **390px: PARTIAL / visual defect.** The public landing page loaded and the
+  registration controls were usable. The measured document/body width was
+  391px against a 390px viewport; the widest element was `.hero-art`, whose
+  right edge reached 391px. The saved screenshot shows the hero/header content
+  clipped at the right edge. This is a real one-pixel horizontal-overflow
+  defect, not a substituted HTTP result.
+- **320px: FAIL for visual acceptance.** The page loaded and the measured page
+  scroll width stayed within the viewport, but the hero heading's rendered
+  content width exceeded its client width and the original-resolution capture
+  visibly clips the right side of the headline and the header action. The
+  proposal surface remained usable at 320px in the interactive browser, but
+  the landing breakpoint is not acceptable as a clean final release.
+
+The local `kane-cli` browser skill was inspected as required for this browser
+task, but its installed service was not authenticated (`Not authenticated
+[prod]`). No owner credential was entered. The acceptance evidence therefore
+uses the available real Chromium browser and its Playwright-backed tab with
+viewport controls; no Playwright/Selenium simulation or local application was
+used.
+
+### Real public user journey
+
+A disposable production account was created through the public UI and then
+removed after the test. The browser journey completed these steps:
+
+1. Registration succeeded and the private Source workspace loaded.
+2. `https://www.frog.co/` was analyzed through the live DeepSeek route.
+3. The profile review showed the grounded business description, source URL,
+   five visibly grounded website claims, and the explicit boundary that
+   pricing, ownership, past clients, and years of experience were not verified.
+4. The profile was edited (user-added skills and search keywords) and
+   confirmed.
+5. Startup discovery returned a live Remote OK result with a source URL and
+   match explanation. Hacker News, Jobicy, and Remote OK were queried; SerpApi
+   was honestly shown as skipped.
+6. The BlueTuskr result was inspected, a proposal was generated, its text was
+   edited, and the edited draft was explicitly saved. The UI reported
+   `Proposal draft saved to your account.` only after the save response.
+7. Refresh recovered the confirmed profile, saved opportunity, and exact
+   edited proposal text. Logout followed by login recovered the same profile
+   and exact edited proposal without repeating website analysis.
+
+The redacted cleanup result for this browser account was:
+
+```json
+{
+  "status": "pass",
+  "matchedAccounts": 1,
+  "deleted": { "profiles": 1, "opportunities": 1, "users": 1 },
+  "remaining": 0
+}
+```
+
+The production browser captured no console warnings or errors. The browser's
+`document.cookie` surface exposed no cookie names; the existing auth contract
+sets the session cookie as `httpOnly`, `sameSite: "lax"`, and
+`secure: process.env.NODE_ENV === "production"` in `src/lib/auth.ts`. The
+previous public release probe also verified malformed requests, unauthenticated
+profile denial, cross-account proposal denial, exact profile/proposal
+recovery, and cleanup. The rerun of `npm run probe:ownership` against the
+public URL passed:
+
+```json
+{
+  "status": "pass",
+  "checks": {
+    "separateRegistrations": true,
+    "ownerCanSave": true,
+    "crossAccountDenied": true,
+    "savedListIsolated": true
+  },
+  "cleanup": { "status": "pass", "deletedTestAccounts": 2 }
+}
+```
+
+### Four customer-category comparison
+
+The same confirmed frog profile was used in the public browser for each
+category, one selection at a time. Every branch displayed the same live
+provider status line: `Hacker News: queried · Jobicy: queried · Remote OK:
+queried · SerpApi: skipped`.
+
+The actual provider-request contract in the deployed revision is recorded
+below. Hacker News receives the category-specific terms; Jobicy uses the first
+confirmed keyword as its tag; Remote OK uses its fixed `tag=dev` endpoint; and
+SerpApi is not called because its key is not configured.
+
+| Selected type | Hacker News query terms sent | Jobicy request | Remote OK request | UI result and classification |
+| --- | --- | --- | --- | --- |
+| Small businesses | `SEEKING FREELANCER reinvention partner transformative experiences eco-digital era small business small team` | `tag=reinvention partner` | `https://remoteok.com/api?tag=dev` | 1 result: BlueTuskr; `freelance-or-contract`; client type unknown; no explicit small-business evidence; score 23 |
+| Startups | `SEEKING FREELANCER reinvention partner transformative experiences eco-digital era startup founder` | `tag=reinvention partner` | `https://remoteok.com/api?tag=dev` | 1 result: BlueTuskr; `freelance-or-contract`; client type unknown; no explicit startup evidence; score 23 |
+| Agencies | `SEEKING FREELANCER reinvention partner transformative experiences eco-digital era agency studio` | `tag=reinvention partner` | `https://remoteok.com/api?tag=dev` | 1 result: BlueTuskr; `freelance-or-contract`; client type agencies; source evidence includes `agency`; score 25 |
+| Individuals | `SEEKING FREELANCER reinvention partner transformative experiences eco-digital era personal project creator` | `tag=reinvention partner` | `https://remoteok.com/api?tag=dev` | 1 result: BlueTuskr; `freelance-or-contract`; client type unknown; no explicit individual evidence; score 23 |
+
+The category selection materially changed the live HN request and the
+qualification/ranking evidence. It did **not** manufacture a customer type:
+the UI truthfully left the result as unknown when the source did not support
+that category. No generic full-time or unknown-employment listing was counted
+as a qualified opportunity by Source.
+
+### BlueTuskr accuracy and trust check
+
+The original source was opened directly at:
+`https://remoteok.com/remote-jobs/remote-graphic-designer-video-editor-bluetuskr-1137507`.
+The detail page states that the role is fully remote, part-time contractor,
+starts at 15 hours/week, requires availability between 9 a.m. and 6 p.m. EST,
+and describes a U.S.-based team. It also shows compensation of $20–25 USD/hour
+based on experience and portfolio. The board summary says “Probably
+worldwide,” which must not override the detailed availability and team
+requirements.
+
+Source currently labels the card `freelance-or-contract` and `Customer type
+unknown`, but its 360-character description excerpt does not surface the
+hours, EST availability, or U.S.-based team requirement. Therefore Source
+does **not** currently prove eligibility for a particular user and must not
+imply worldwide eligibility. This is a release-blocking accuracy/trust issue
+for final acceptance: the user is directed to inspect the original source, but
+the result should also visibly state that location/availability eligibility is
+unverified when those restrictions are outside the user's profile.
+
+The same live card exposed an upstream text-decoding defect: the browser
+rendered an em dash from the public description as `â`. This remains an
+outstanding encoding defect and was not altered under the release-freeze
+directive.
+
+### Acceptance status and owner handoff
+
+Current status: **CORE WORKFLOW PASS; PUBLIC MOBILE VISUAL ACCEPTANCE FAIL;
+BLUE TUSKR ELIGIBILITY ACCURACY BLOCKED; OWNER ACCEPTANCE PENDING.** The
+production service remains live and no redeployment is recommended until the
+Director reviews these two product-trust defects.
+
+Owner manual UAT requires no terminal commands:
+
+1. Open `https://source-9k1o.onrender.com` on a phone or desktop browser.
+2. Create an account with the owner's own email, or use Sign in if the account
+   already exists.
+3. Paste a public portfolio/project URL such as `https://www.frog.co/` and
+   choose **Analyze website**.
+4. Review page evidence and edit the profile; do not treat suggestions or
+   personal edits as externally verified. Confirm the profile.
+5. Select one customer type, choose **Projects and contracts**, and start the
+   live search.
+6. Open the original source link on a result and verify its employment,
+   location, schedule, and application restrictions before acting.
+7. Use **Save and draft**, edit the proposal, choose **Save draft**, refresh,
+   sign out, sign back in, and reopen the saved opportunity to confirm the
+   exact edit is still present.
+8. Report any mismatch in evidence, eligibility, mobile layout, or recovery to
+   the Director. Owner approval has not been claimed.
+
+### Replacement-director next steps
+
+1. Keep Render auto-deploy disabled and retain commit `6cbe759` as the rollback
+   point.
+2. Obtain Director approval for a narrow, separately reviewed fix for the
+   replacement-character decoding and the visible eligibility/restriction
+   boundary. Do not change providers, schemas, auth, or discovery architecture
+   as part of that fix.
+3. Re-run the public 390px and 320px Chromium journey after the approved fix,
+   including the four-category comparison, BlueTuskr source inspection,
+   ownership probe, and disposable-data cleanup.
+4. Only after those checks pass should the owner perform manual UAT and decide
+   whether a controlled deployment is warranted.
+
+## Directive 021 — Production Defect Correction Release Candidate
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Phase and release boundary
+
+Active phase: **RELEASE-FIX CANDIDATE — DIRECTOR REVIEW REQUIRED**.
+
+Work is isolated on `codex/release-021-defect-correction`. The existing
+production deployment remains unchanged at
+`6cbe759b16ae775a13d122abb3d9686b69d73877`; no Render deployment, merge,
+secret change, Atlas change, or auto-deploy change was made. That deployed
+commit remains the rollback point. The branch was created from the actual
+deployed ancestry after a narrowly authorized Git metadata ACL correction;
+`.git/index.lock` was absent and no lock was deleted.
+
+The tested branch revision is
+`054f966350d80d8e245bbda3baeafbc67de553a6`.
+
+The complete evidence package is in [`docs/release-021/`](docs/release-021/),
+including exact 390px Chrome screenshots, viewport measurements, retained
+historical shell artifacts, text-boundary proof, eligibility evidence, test
+results, limitations, and the diff manifest.
+
+### Proven defects and corrections
+
+1. **Mobile landing clipping.** The root cause was a missing device-width
+   viewport declaration in `src/app/layout.tsx`, compounded by intentional
+   108%/116% hero-art expansion and headline growth at narrow widths. The fix
+   adds Next.js `Viewport` metadata (`width: device-width`, `initialScale: 1`),
+   constrains the hero art to its content box, reduces narrow headline growth,
+   and tightens only the mobile navigation spacing. No blanket overflow rule
+   was added. The exact Chrome target reported `innerWidth: 390`, document
+   `clientWidth: 390`, document `scrollWidth: 390`, visual viewport `390`,
+   and device pixel ratio `1`. Hero width was `351`, headline width was `351`,
+   public header width was `390`, and the primary header CTA ended at x=`374`;
+   all remained inside the 390px horizontal viewport. Full measurements and
+   exact screenshots are in `docs/release-021/viewport-390.md`.
+
+2. **Eligibility/availability visibility.** Source already required explicit
+   contract or freelance evidence for `freelance-or-contract`; this fix does
+   not alter that classification logic. Opportunity cards now show a truthful
+   reminder: “Eligibility is not verified by Source. Check the original
+   listing for location, schedule, and availability requirements before
+   acting.” The BlueTuskr card kept its original-source link and did not claim
+   worldwide or user-specific eligibility. No eligibility engine or new
+   profile field was introduced.
+
+3. **External text corruption.** Remote OK returned HTTP 200 and valid JSON,
+   but the parsed BlueTuskr description already contained the code points
+   `U+00E2 U+0080 U+0094` (`â`) for an em dash. This is an external feed
+   encoding defect, not JSON parsing, website extraction, or React rendering.
+   `src/lib/text.ts` now repairs only recognizable UTF-8-as-Latin-1 clusters
+   at the discovery ingestion boundary and leaves ordinary accents/curly
+   punctuation unchanged. The live card displayed `—` after normalization.
+
+### Real local browser journey
+
+Using installed Chrome with an exact 390x844 mobile target and a disposable
+account, the tested path passed: registration → live `https://www.frog.co/`
+analysis → grounded profile review → profile confirmation → selection of
+startups, small businesses, agencies, and individuals → live discovery →
+BlueTuskr source-linked match inspection → eligibility boundary → proposal
+generation → exact proposal edit/save → saved-work navigation. The browser
+reported no alert errors, and the result source was
+`https://remoteok.com/remote-jobs/remote-graphic-designer-video-editor-bluetuskr-1137507`.
+The earlier 319px connector run also covered logout/login recovery and exact
+edited-proposal recovery. The exact screenshots and endpoint evidence are in
+`docs/release-021/viewport-390.md`. All disposable records were cleaned up.
+
+Kane CLI was attempted as required by the browser skill but its Bash service
+returned `E_ACCESSDENIED` before launch; direct Kane authentication was also
+expired and no owner credential was entered. The installed Chrome CDP target
+provided the exact 390px evidence instead. The connector limitation and the
+historical shell-artifact boundary remain recorded in
+`docs/release-021/limitations.md`.
+
+### Technical evidence
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm test`: PASS — 4 files, 13 tests.
+- `npm run build`: PASS — Next.js 16.4.0 production build.
+- `npm run probe:mongodb`: PASS — ping, insert, read, delete, cleanup.
+- `npm run probe:ownership`: PASS — separate registrations, saved-list
+  isolation, cross-account denial; 2 test accounts deleted.
+- `npm run probe:gemma -- https://www.frog.co/`: PASS with the configured
+  provider `deepseek`, model `deepseek-flash`, response HTTP 200, one JSON
+  object, and 3/3 grounded claims. No Gemma category claim is made.
+- `npm run probe:discovery`: PASS — Hacker News, Jobicy, and Remote OK
+  queried; SerpApi skipped without a key; Vytalize regression remained
+  `full-time-employment`.
+- `npm run probe:core`: PASS — grounded profile, category-dependent query
+  change, proposal persistence, profile recovery, exact proposal recovery,
+  malformed-request rejection, and cross-account ownership checks.
+
+### Claim → mechanism → boundary → proof ledger
+
+| Claim | Mechanism | Boundary | Proof |
+| --- | --- | --- | --- |
+| Narrow landing content fits | Device-width viewport metadata plus scoped mobile sizing | Only the tested responsive surfaces are claimed | Exact 390px Chrome geometry and screenshots in `viewport-390.md` |
+| Contract labels remain honest | Existing explicit-context classifier | Unknown employment type remains unknown; no eligibility engine | Discovery probe and Vytalize regression |
+| External punctuation is readable | Targeted mojibake-cluster normalization | Legitimate Unicode and invalid repair candidates are preserved | `tests/text.test.ts` plus live BlueTuskr card |
+| Eligibility is not overstated | Visible reminder plus original-source link | Source does not determine user-specific location/schedule eligibility | BlueTuskr browser card and `docs/release-021/eligibility.md` |
+| Returning work persists | Existing authenticated profile/saved/proposal contracts | Account ownership remains server-enforced | Core probe and browser logout/login recovery |
+
+### Changed files and protected paths
+
+Changed files are `src/app/layout.tsx`, `src/app/globals.css`,
+`src/components/SourceApp.tsx`, `src/lib/discovery.ts`, new
+`src/lib/text.ts`, new `tests/text.test.ts`, this handoff, and
+`docs/release-021/*`. Protected API routes, `auth.ts`, `db.ts`, `ssrf.ts`,
+`gemma.ts`, profile workflow, Render configuration, secrets, and database
+settings were not changed.
+
+### Current acceptance status and replacement-director next steps
+
+Current status: **LOCAL CORE JOURNEY PASS; EXACT 390PX LIVE CHROME PASS;
+PRODUCTION UNCHANGED; DIRECTOR APPROVAL PENDING**.
+
+1. Review the exact 390px evidence package and the isolated branch commit.
+2. Approve or reject the candidate for controlled deployment. Do not merge or
+   deploy automatically.
+3. If approved, deploy only this reviewed revision with auto-deploy still
+   disabled, then run production registration first and the full production
+   journey before any release acceptance claim.
+4. If any production gate fails, roll back to
+   `6cbe759b16ae775a13d122abb3d9686b69d73877` and record sanitized evidence.
+5. Owner manual UAT is still required; owner approval has not been claimed.
+
+## Directive 022 — Final controlled deployment preflight
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The Director authorized the controlled merge and production deployment in
+Directive 022. The approved branch is
+`codex/release-021-defect-correction`; the verified code commit is
+`054f966350d80d8e245bbda3baeafbc67de553a6`; the evidence HEAD before this
+preflight is `e17a0d4bb6e1461a42c3e8d4e08d925a18417684`; and the rollback
+point remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Predeployment checks completed
+
+- The working tree was clean before the deployment preflight.
+- The branch contained the approved defect corrections and exact 390px
+  evidence package.
+- No protected authentication, MongoDB, DeepSeek, Render configuration, or
+  secret files were changed by Directive 021A.
+- Typecheck, lint, unit tests, production build, MongoDB probe, and ownership
+  probe passed.
+- No `.env` or credential-looking files are tracked.
+- Render auto-deploy was not changed, and no production request was sent.
+
+### Release blocker before merge
+
+The merge and deployment could not begin because the current host has no valid
+GitHub credential for `Techkeyy`:
+
+- `gh auth status` reports the stored GitHub token is invalid.
+- `git ls-remote` reaches GitHub but fails with sanitized
+  `SEC_E_NO_CREDENTIALS`.
+- The authenticated Render dashboard/CLI is not available through the current
+  browser connector; the connector fails before exposing an authenticated
+  page, and no Render API credential is configured locally.
+
+Consequently, no remote `main` state could be fetched or safely compared, no
+merge SHA can be reported, and no Render deployment ID or deployed SHA exists
+for this directive. Production remains on the known-good rollback revision.
+
+### Required owner action
+
+The owner must re-authenticate the approved GitHub account in the GitHub CLI
+or use the authenticated GitHub web session to merge the reviewed branch, and
+must provide an authenticated Render dashboard session for the existing
+`source` service. After authentication is available, the replacement director
+must fetch `origin/main`, perform a normal non-force merge, record the new merge
+SHA, manually deploy that exact SHA with auto-deploy disabled, record the
+Render deployment ID, and run the production acceptance gates before claiming
+technical acceptance.
+
+Current Directive 022 status: **PREDEPLOYMENT BLOCKED BY MISSING GITHUB AND
+RENDER AUTHENTICATION; PRODUCTION UNCHANGED; ROLLBACK READY**.
+
+## Directive 022A — authentication recheck
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The authorized retry was performed after the owner was asked to restore
+GitHub access. The result is unchanged:
+
+- `gh auth status` still reports the active `Techkeyy` token as invalid and
+  directs re-authentication.
+- `git ls-remote origin refs/heads/main` reaches the configured GitHub remote
+  but fails with sanitized `SEC_E_NO_CREDENTIALS`.
+- The actual remote `main` could not be fetched or compared.
+- No merge, push, force push, Render deployment, or production UAT was
+  performed.
+
+The local approved branch and evidence remain intact. The next owner action is
+to re-authenticate GitHub with `gh auth login -h github.com` or use the signed-in
+GitHub web session to perform the reviewed merge. If Render authentication is
+still unavailable after the GitHub merge, the owner should use Render's
+dashboard **Deploy a specific commit** action for the exact merged SHA. No
+Render API credential is requested.
+
+Current Directive 022A status: **BLOCKED BEFORE REMOTE MAIN FETCH; INVALID
+GITHUB AUTHENTICATION; PRODUCTION UNCHANGED; ROLLBACK READY**.
+
+## Directive 022B — builder authentication recheck
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The replacement builder rechecked the authorized release preflight before
+attempting any merge or deployment. The blocker remains unresolved:
+
+- `gh auth status` reports that the active `Techkeyy` token is invalid and
+  directs re-authentication.
+- `gh auth setup-git` could not update the global Git configuration because
+  `C:/Users/HomePC/.gitconfig` was locked by the host permission boundary.
+- `git ls-remote origin refs/heads/main` did not obtain the remote `main`
+  revision; this session could not connect to GitHub over HTTPS.
+- No fetch, merge, push, force push, Render deployment, secret change, or
+  production UAT was performed.
+
+The local approved branch and evidence remain intact. The owner must complete
+GitHub CLI device authorization for the `Techkeyy` account in an authenticated
+browser session, then rerun the controlled release. If the CLI still cannot
+write its credential helper, the owner may use the authenticated GitHub web
+session to perform the reviewed normal merge and then deploy the exact merge
+SHA through Render's authenticated **Deploy a specific commit** action. Keep
+Render auto-deploy disabled and retain `6cbe759b16ae775a13d122abb3d9686b69d73877`
+as the rollback target.
+
+Current Directive 022B status: **BLOCKED BEFORE REMOTE MAIN FETCH; OWNER
+GITHUB DEVICE AUTHORIZATION REQUIRED; PRODUCTION UNCHANGED; ROLLBACK READY**.
+
