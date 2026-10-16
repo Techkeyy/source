@@ -3692,6 +3692,7 @@ Date: 2026-10-16 (Africa/Lagos)
 
 This correction remains on `codex/directive-024-customer-discovery`, based on
 the accepted implementation `0240698ec4e245a495e927b275f5443e5aa696d1`.
+The tested implementation commit is `43ce98d60dbe3d4a22f79873f597771bf7bcf475`.
 No GitHub merge, push, Render deployment, production secret change,
 infrastructure change, model/provider switch, or Reddit activation was made.
 Production remains at [source-9k1o.onrender.com](https://source-9k1o.onrender.com)
