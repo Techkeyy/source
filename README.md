@@ -2,13 +2,13 @@
 
 Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to investigate public customer signals. It keeps explicit supplier requests separate from potential customers and research-only project signals.
 
-The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the deployed production commit is [`64807d1ce7da0c036949d430a0627c9878770323`](https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323). Render automatic deployment remains disabled; the prior production revision `6cbe759b16ae775a13d122abb3d9686b69d73877` is retained as the rollback target.
+The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the deployed production merge commit is [`53a24e72543f6ed300996a62d711b93b7f48ce4c`](https://github.com/Techkeyy/source/commit/53a24e72543f6ed300996a62d711b93b7f48ce4c). Render automatic deployment remains disabled; the prior production revision `6cbe759b16ae775a13d122abb3d9686b69d73877` is retained as the rollback target.
 
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)** · **[Security audit triage](docs/audit-triage-2026-10-16.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
-Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The public deployment is the approved production release; the buyer-quality correction in this branch remains a separately reviewed change and is not deployed until owner approval.
+Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The public deployment is the approved production release from merge SHA `53a24e72543f6ed300996a62d711b93b7f48ce4c`; owner sign-off and hackathon submission authorization remain pending.
 
 ## Why this exists
 
@@ -89,7 +89,7 @@ The historical script name `probe:gemma` is retained for compatibility with the 
 
 ## The accepted production path and current pivot boundary
 
-The existing production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup. Production remains unchanged while the customer-discovery pivot is reviewed on `codex/directive-024-customer-discovery`.
+The existing production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup. The customer-discovery pivot is now merged and deployed from `53a24e72543f6ed300996a62d711b93b7f48ce4c`; this documentation preserves the production evidence and remaining owner-submission boundary.
 
 The production path is:
 
@@ -102,7 +102,7 @@ The production path is:
 7. Generate, edit, and save an application proposal for an active request, or a cautious outreach draft for an inferred signal. Source never sends it.
 8. Refresh, log out, and log back in to recover the confirmed profile, saved prospect, and edited draft.
 
-The buyer-quality correction is deliberately not described as production acceptance yet because it has not been promoted. Local evidence is the release gate for this branch; the existing public deployment remains unchanged until owner approval. No GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
+The buyer-quality correction is included in the production acceptance path from merge SHA `53a24e72543f6ed300996a62d711b93b7f48ce4c`; the controlled deployment remains unchanged unless an owner-approved release is made. No GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
 
 There is no offline fixture path in the current release. Source’s core acceptance intentionally requires a real public website, a real model response, permitted live sources, and real persistence. The product does not substitute fixtures when those dependencies are missing.
 
