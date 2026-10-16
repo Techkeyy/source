@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { classifyOpportunity, type RawOpportunity } from "@/lib/discovery";
+import { classifyOpportunity, dedupeAndRankOpportunities, qualifyOpportunity, type RawOpportunity } from "@/lib/discovery";
+import type { ProfileDraft } from "@/lib/types";
 
 function record(overrides: Partial<RawOpportunity> = {}): RawOpportunity {
   return {
@@ -12,6 +13,25 @@ function record(overrides: Partial<RawOpportunity> = {}): RawOpportunity {
     ...overrides,
   };
 }
+
+const profile: ProfileDraft = {
+  businessName: "Example Studio",
+  summary: "A product design studio.",
+  productsAndServices: [{ text: "Product design", evidence: ["We design products."] }],
+  problemsSolved: [],
+  skillsAndTechnologies: [{ text: "Research", evidence: ["Our research practice."] }],
+  valueProposition: [],
+  differentiators: [],
+  portfolioEvidence: [],
+  customerSegments: [],
+  searchKeywords: ["product design", "research"],
+  buyerIntentSignals: [],
+  inferenceNotes: [],
+  sourceUrl: "https://example.com/",
+  analyzedAt: new Date().toISOString(),
+  model: "test",
+  grounding: { sourceTitle: "Example", sourceExcerptCount: 2, unsupportedFields: [] },
+};
 
 describe("opportunity employment classification", () => {
   it("does not mistake technical API contracts for a contract job", () => {
@@ -32,5 +52,44 @@ describe("opportunity employment classification", () => {
 
   it("keeps an untyped listing unknown instead of implying a contract", () => {
     expect(classifyOpportunity(record({ type: "", description: "Build a useful product with a small engineering team." }), "services")).toBe("unknown-employment-type");
+    expect(classifyOpportunity(record({ provider: "Hacker News", description: "SEEKING FREELANCE WORK in UX and web design." }), "active-requests")).not.toBe("explicit-project-request");
+  });
+
+  it("keeps inferred potential-customer signals separate from active requests", () => {
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Feature request: improve product design workflow", description: "We need product design help to replace this manual process.", type: "enhancement", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Responsive Product Catalogue Design", description: "As a visitor, I want to browse a visually clear and responsive catalogue.", type: "must-have", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Build support for a product workflow", description: "Acceptance criteria cover the public project behavior.", type: "enhancement", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "Hacker News", title: "Show HN: A new website tool", description: "I built a website tool and shared the launch.", prospectType: "potential-customer" }), "potential-customers")).toBe("unknown-employment-type");
+    expect(classifyOpportunity(record({ provider: "Hacker News", title: "Ask HN: Looking for a website designer", description: "Could someone recommend a designer for this project?", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "Hacker News", title: "Looking for a freelancer", description: "We need a freelancer for a product design project." }), "active-requests")).toBe("explicit-project-request");
+  });
+
+  it("does not promote unsupported intent or stale content", () => {
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Project update", description: "We shipped a new release.", prospectType: "potential-customer" }), "potential-customers")).toBe("research-signal-only");
+    expect(classifyOpportunity(record({ publishedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() }), "active-requests")).toBe("expired-or-stale");
+  });
+
+  it("keeps internal GitHub work as research signals instead of buyers", () => {
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Device Website Development", description: "Objective: develop a browser-based interface for device monitoring and control.", prospectType: "potential-customer", organization: "edwardschmitz/sigcore-uc" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Branding backlog", description: "Internal project backlog with an existing blocker and assigned task.", prospectType: "research-signal", organization: "Transf-ORM/Transf-ORM-CLI" }), "potential-customers")).toBe("research-signal-only");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Brand + design pipeline", description: "Internal branding workflow with named project owners.", prospectType: "research-signal", organization: "federicomrod/Milton" }), "potential-customers")).toBe("research-signal-only");
+  });
+
+  it("does not promote GitHub contract wording to an active request without external buying evidence", () => {
+    const issue = record({ provider: "GitHub", title: "New TV roles", description: "We need media work for a customer-facing project, with contract role requirements.", type: "contract", prospectType: "potential-customer", organization: "example/project" });
+    expect(classifyOpportunity(issue, "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(issue, "active-requests")).not.toBe("explicit-project-request");
+  });
+
+  it("treats an official procurement notice as an active external request", () => {
+    expect(classifyOpportunity(record({ provider: "Contracts Finder", title: "Website and digital services tender", description: "The buyer is seeking to appoint an experienced digital service provider.", prospectType: "active-request", buyerIntent: "confirmed", organization: "Public Buyer", contactUrl: "https://www.contractsfinder.service.gov.uk/Notice/example", deadline: new Date(Date.now() + 86_400_000).toISOString(), noticeStatus: "active" }), "potential-customers")).toBe("explicit-project-request");
+  });
+
+  it("filters irrelevant prospects and removes duplicate source records", () => {
+    const relevant = record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer", organization: "example/project" });
+    const duplicate = { ...relevant, title: "Duplicate title" };
+    expect(qualifyOpportunity(record({ provider: "GitHub", title: "Unrelated gardening issue", description: "We need a garden hose.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
+    expect(qualifyOpportunity(record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
+    expect(dedupeAndRankOpportunities([relevant, duplicate], profile, ["startups"], "potential-customers")).toHaveLength(1);
   });
 });

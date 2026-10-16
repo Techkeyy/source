@@ -1,20 +1,20 @@
 # Source
 
-Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to find source-linked opportunities for the customer types they choose.
+Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to investigate public customer signals. It keeps explicit supplier requests separate from potential customers and research-only project signals.
 
-The approved release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is deployed from the verified merge commit [`64807d1ce7da0c036949d430a0627c9878770323`](https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323) in the [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source). Render automatic deployment remains disabled; the prior production revision `6cbe759b16ae775a13d122abb3d9686b69d73877` is retained as the rollback target.
+The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the deployed production commit is [`64807d1ce7da0c036949d430a0627c9878770323`](https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323). Render automatic deployment remains disabled; the prior production revision `6cbe759b16ae775a13d122abb3d9686b69d73877` is retained as the rollback target.
 
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)** · **[Security audit triage](docs/audit-triage-2026-10-16.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
-Source is for freelancers and small independent businesses that need a faster path from their existing work to credible client-opportunity research. It does not guarantee clients, payments, hiring outcomes, or responses.
+Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The public deployment is the approved production release; the buyer-quality correction in this branch remains a separately reviewed change and is not deployed until owner approval.
 
 ## Why this exists
 
-Most opportunity search starts with a blank keyword box. That leaves the freelancer to translate their own work into search terms, judge whether a listing is real, and write a proposal without a grounded account of what they can support.
+Most customer discovery starts with a blank keyword box or an unverified assumption about who needs help. That leaves the freelancer to translate their own work into search terms, judge whether a public signal is meaningful, and write outreach without a grounded account of what they can support.
 
-Source starts with the user’s own public project, portfolio, agency, or business URL. It extracts a reviewable profile, keeps evidence quotes attached to claims, lets the user choose small businesses, startups, agencies, and individuals, then changes discovery queries and ranking signals according to those choices.
+Source starts with the user’s own public project, portfolio, agency, or business URL. It extracts a reviewable profile, keeps evidence quotes attached to claims, lets the user choose small businesses, startups, agencies, and individuals, then separates explicit active requests from potential customers inferred from public project signals.
 
 ```text
 Public project URL
@@ -29,13 +29,13 @@ DeepSeek JSON profile + evidence validation
 User edits and confirms profile
        |
        v
-Customer-type query planning
+Customer discovery query planning
        |
        v
-Live permitted sources -> classified, source-linked opportunities
+Live permitted sources -> active requests, potential customers, and research signals
        |
        v
-Proposal -> save -> logout/login recovery
+Proposal or cautious outreach draft -> pipeline -> recovery
 ```
 
 ## What it does
@@ -46,10 +46,11 @@ Proposal -> save -> logout/login recovery
 4. **Validates** the response with Zod-compatible schema checks and deterministic evidence matching. Claims without matching source quotes are not accepted as verified facts.
 5. **Lets the user edit and confirm** the generated profile before it is persisted.
 6. **Plans** discovery queries from confirmed services, skills, keywords, and one or more selected customer categories: small businesses, startups, agencies, or individuals.
-7. **Queries** public Hacker News, Jobicy, and Remote OK sources, with optional SerpApi coverage when an owner-configured key exists.
-8. **Classifies and ranks** fresh freelance or contract signals, retains original URLs, explains profile/category matches, and labels unconfirmed buyer signals honestly.
-9. **Drafts** an editable proposal from the saved opportunity and confirmed profile evidence.
-10. **Persists** profiles, opportunities, and proposal drafts so the same account can recover them after refresh or logout/login.
+7. **Finds active requests** from public Hacker News, Jobicy, Remote OK, and the official UK Contracts Finder published-notice OCDS endpoint, with optional SerpApi coverage when an owner-configured key exists.
+8. **Finds potential customers and research signals** from public Hacker News and GitHub project evidence. An observed need is not upgraded to a buyer when external purchasing is unsupported. Reddit is deliberately disabled until authorized commercial API access exists.
+9. **Classifies** fresh source-backed records as Active Request, Potential Customer, or Research Signal, retains original URLs and dates, explains profile/category matches, and states whether external buying intent is confirmed, possible, or unsupported. It does not manufacture commercial confidence percentages.
+10. **Drafts** an editable application only when a public contact/application route exists. Potential-customer drafts are cautious and non-assumptive; research signals receive guidance only. Source never sends messages or performs bulk outreach.
+11. **Persists** profiles, opportunities, statuses, next steps, and proposal/outreach drafts so the same account can recover them after refresh or logout/login.
 
 ## Quickstart
 
@@ -86,19 +87,22 @@ npm run probe:core
 
 The historical script name `probe:gemma` is retained for compatibility with the handoff. It reports the active provider and model, and currently exercises DeepSeek when `INFERENCE_PROVIDER=deepseek`.
 
-## The accepted production path
+## The accepted production path and current pivot boundary
 
-The production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup.
+The existing production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup. Production remains unchanged while the customer-discovery pivot is reviewed on `codex/directive-024-customer-discovery`.
 
 The production path is:
 
 1. Register an account.
 2. Analyze a public website such as `https://www.frog.co/`.
 3. Review the DeepSeek-generated claims and evidence, then confirm and edit the profile.
-4. Search each selected customer category: small businesses, startups, agencies, and individuals.
-5. Open the original source for a source-linked opportunity and review its restrictions.
-6. Generate, edit, and save a proposal.
-7. Refresh, log out, and log back in to recover the confirmed profile and edited proposal.
+4. Select one or more customer categories: small businesses, startups, agencies, and individuals.
+5. Choose **Active requests** for explicit public supplier requests or **Potential customers + research** to inspect possible demand and research-only project signals.
+6. Inspect the original source, publication date, observed need, profile fit, and eligibility limitations before acting.
+7. Generate, edit, and save an application proposal for an active request, or a cautious outreach draft for an inferred signal. Source never sends it.
+8. Refresh, log out, and log back in to recover the confirmed profile, saved prospect, and edited draft.
+
+The buyer-quality correction is deliberately not described as production acceptance yet because it has not been promoted. Local evidence is the release gate for this branch; the existing public deployment remains unchanged until owner approval. No GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
 
 There is no offline fixture path in the current release. Source’s core acceptance intentionally requires a real public website, a real model response, permitted live sources, and real persistence. The product does not substitute fixtures when those dependencies are missing.
 
@@ -115,16 +119,32 @@ The verified public release produced the following results:
 | Profile persistence | Confirmed profile and edits recovered after refresh and logout/login |
 | Four customer categories | Small businesses, startups, agencies, and individuals all preserved the selected category and produced distinct Hacker News query terms |
 | Category evidence | The agencies branch surfaced an evidence-backed `agency` match; the other branches truthfully left customer type unknown when the source did not support it |
-| Discovery | Live Hacker News, Jobicy, and Remote OK sources returned a qualified source-linked contract result |
+| Discovery | Live Hacker News, Jobicy, and Remote OK sources returned a qualified source-linked contract result in the accepted release; the pivot also adds GitHub potential-signal querying behind a separate mode |
 | Eligibility warning | The UI correctly warned that Source does not verify user-specific location, schedule, or availability eligibility |
 | Proposal persistence | Proposal was generated, edited, saved exactly, and recovered after refresh and logout/login |
 | Account isolation | A second account could not read or draft against the first account’s opportunity; saved lists remained isolated |
 | Desktop acceptance | Public Chromium browser UAT passed the core user journey and cleanup |
 | Mobile acceptance | Exact 390px and 320px checks passed with no horizontal overflow |
-| Unit suite | 4 test files, 13 tests passing |
-| Build and static checks | Typecheck, ESLint, and production build passed on the verified merge commit |
+| Unit suite | Existing production merge: 4 files, 13 tests; Directive 026 branch: 4 files, 18 tests passing |
+| Build and static checks | Typecheck, ESLint, and production build passed on the verified merge and again on the customer-discovery branch |
 
 The corrected public result rendered the em dash (`—`) correctly, retained original source links, and did not claim user-specific eligibility or worldwide availability.
+
+## Buyer-quality boundary in the current branch
+
+Source now distinguishes three different public outcomes:
+
+| Label | Evidence required | Action available |
+|---|---|---|
+| **Active Request** | The source explicitly seeks a supplier, contractor, vendor, agency, tender response, or other external service. | Open the official route and draft only when a public contact/application route is present. |
+| **Potential Customer** | An identifiable organization or project has an observed business/service need and there is a defensible reason the user’s service may help. Commercial intent is possible, not confirmed. | Save, inspect the original evidence, and use a cautious draft only when a legitimate public route exists. |
+| **Research Signal** | The source shows that work needs doing, but does not support the conclusion that an external provider is being considered. | Save for investigation and receive research guidance; no unsolicited outreach draft is offered. |
+
+Issue creation, a missing assignee, a `help wanted` label, or technical compatibility alone is not treated as outsourcing evidence. In the reviewed GitHub examples, SigCore is a potential customer signal with external buying unverified; Transf-ORM is an internal backlog signal; Milton is an internal branding workflow. None is a confirmed buyer.
+
+The official [Contracts Finder API documentation](https://www.contractsfinder.service.gov.uk/apidocumentation) and its public [OCDS notice search](https://www.contractsfinder.service.gov.uk/apidocumentation/Notices/1/GET-Published-Notice-OCDS-Search) are feasible for stronger procurement evidence. A bounded live probe returned 100 recent tender releases and 59 current digital/design/marketing-related matches with status, buyer, deadline, scope, procurement method, SME suitability, and official notice links. Detailed selection criteria may still require opening the notice documents, and a tender is not a guarantee of eligibility or award. The production adapter uses the public endpoint only; it does not scrape or bypass access controls.
+
+The Directive 026 correction is implemented on `codex/directive-024-customer-discovery`, tested locally, and not deployed. It must receive owner approval before promotion.
 
 ## Architecture
 
@@ -135,13 +155,15 @@ The corrected public result rendered the em dash (`—`) correctly, retained ori
 | `src/lib/gemma.ts` | DeepSeek request, disabled thinking, JSON parsing, schema validation, and grounding |
 | `src/lib/profile-workflow.ts` | Mastra workflow boundary around profile analysis |
 | `src/lib/discovery.ts` | Category-aware source queries, classification, deduplication, and ranking |
+| `scripts/contracts-finder-check.mjs` | Bounded official Contracts Finder OCDS feasibility probe |
+| `src/app/api/opportunities/[id]/route.ts` | Owned pipeline status and next-step updates |
 | `src/lib/auth.ts` | Password hashing, session cookies, and user identity |
 | `src/lib/db.ts` | MongoDB connection and collection access |
 | `scripts/core-acceptance-check.mjs` | Reproducible full local integration and cleanup harness |
 
 ## Why URL-first matching matters
 
-The differentiator is not a generic job search. Source uses the user’s own public work as the starting evidence, then requires the user to confirm the resulting profile before discovery. In the production acceptance, changing the selection among startups, small businesses, agencies, and individuals changed the live Hacker News query while each returned opportunity retained its original source URL and profile-match explanation.
+The differentiator is not a generic job search. Source uses the user’s own public work as the starting evidence, then requires the user to confirm the resulting profile before discovery. Active requests remain explicit and application-oriented. Potential customers are hypotheses based on public evidence, not confirmed buyers. Research signals are kept below them when a source only proves that an internal or public project needs work. Every result keeps its original URL, publication date, observed need, source type, profile-match explanation, buyer-intent level, and limitation close to the action.
 
 ## How I tried to break it
 
@@ -166,6 +188,8 @@ Source’s invariant is: **missing or unverified website evidence never becomes 
 - Discovery results are public signals, not guarantees of a client, contract, buyer, payment, or response.
 - Unconfirmed buyer signals must be treated as leads to investigate, not as confirmed work.
 - Source does not determine whether a particular user is eligible for a listing’s location, schedule, employment, geographic, or availability requirements. Users must inspect the original listing before acting.
+- Source only shows a contact or application route when the public source provides one. It does not send messages, scrape private areas, or perform bulk outreach.
+- Reddit is an explicit disabled adapter boundary until authorized commercial API access exists; Source does not scrape Reddit or bypass its restrictions.
 - SerpApi is optional and is honestly skipped when no key is configured.
 - The production-only npm audit found 5 moderate and 0 high or critical findings. The full development-inclusive audit found 5 high and 5 moderate findings. The high findings are in the development-only ESLint chain; the moderate findings are a transitive Mastra parser chain with residual production risk. No forced audit fix or dependency change was made under this release boundary. See the [full audit triage](docs/audit-triage-2026-10-16.md).
 
@@ -182,14 +206,18 @@ npm test -- --run
 npm run build
 npm audit --omit=dev
 node --check scripts/gemma-check.mjs
+npm run probe:discovery
+npm run probe:ownership
+npm run probe:core
+npm run probe:contracts
 ```
 
 Read [director.md](director.md) for the authoritative claim ledger, provider evidence, deployment gates, production acceptance, and owner sign-off state. See [docs/manual-acceptance.md](docs/manual-acceptance.md) for the browser procedure when controlled browser automation is unavailable.
 
 ## Status
 
-**PRODUCTION TECHNICAL ACCEPTANCE PASSED; OWNER SIGN-OFF PENDING.**
+**PRODUCTION TECHNICAL AND DESKTOP/MOBILE ACCEPTANCE PASSED; DIRECTIVE 027 CONTROLLED CUSTOMER-DISCOVERY GATES LOCALLY VERIFIED; MERGE, CONTROLLED PROMOTION, PRODUCTION UAT, AND OWNER SIGN-OFF PENDING.**
 
-The public release is deployed and the production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The remaining release blockers are owner sign-off and a separately controlled follow-up for the moderate Mastra transitive dependency risk. This documentation commit does not change the deployed application or production infrastructure.
+The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 027 branch now passes a normal browser flow that surfaces Northampton College’s active Contracts Finder media-buying notice, keeps potential customers separate from research signals, blocks unsupported research drafts, and rejects a branding-only profile from that specialized notice. The branch has not yet been merged, pushed, or deployed. Remaining blockers are the controlled promotion itself, fresh production UAT after promotion, owner sign-off, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
 
 License: not yet selected; this remains a private hackathon deployment candidate.

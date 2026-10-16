@@ -24,9 +24,15 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       return Response.json({ proposal: saved.proposalDraft, generated: false, saved: true });
     }
     const evidence = verifiedLines(profileRecord.profile);
-    const proposal = `Hello,\n\nI saw your request, “${saved.title},” and it connects with the work I describe in my public profile.\n\n${profileRecord.profile.summary}\n\nRelevant evidence from my confirmed profile:\n${evidence.length ? evidence.map((line) => `• ${line}`).join("\n") : "• My confirmed profile does not yet contain a specific evidence line for this request."}\n\nA useful next step would be to compare the outcome you need, the current constraints, and the first deliverable. ${body.note?.trim() ? `\n\nContext I would add: ${body.note.trim().slice(0, 500)}` : ""}\n\nBest,\n${profileRecord.profile.businessName}`;
+    const isResearch = saved.prospectType === "research-signal" || saved.classification === "research-signal-only";
+    if (isResearch) throw new SourceError("Research signals are saved for investigation only; Source does not prepare unsolicited outreach.", 422, "RESEARCH_SIGNAL_ONLY");
+    if (!saved.contactUrl) throw new SourceError("This source did not provide a legitimate public contact or application route.", 422, "CONTACT_ROUTE_REQUIRED");
+    const isPotential = saved.prospectType === "potential-customer" || saved.classification === "potential-buyer-signal-unconfirmed";
+    const proposal = isPotential
+      ? `Hello,\n\nI came across “${saved.title}” while learning about public work in this area. I may be able to help with the kind of work I describe in my profile, but I do not want to assume that you are currently looking for a provider.\n\n${profileRecord.profile.summary}\n\nRelevant evidence from my confirmed profile:\n${evidence.length ? evidence.map((line) => `• ${line}`).join("\n") : "• My confirmed profile does not yet contain a specific evidence line for this signal."}\n\nIf this is relevant, I would be glad to understand the problem, current constraints, and whether a small first step would be useful. Please ignore this note if the public signal is not an active need. ${body.note?.trim() ? `\n\nContext I would add: ${body.note.trim().slice(0, 500)}` : ""}\n\nBest,\n${profileRecord.profile.businessName}`
+      : `Hello,\n\nI saw your request, “${saved.title},” and it connects with the work I describe in my public profile.\n\n${profileRecord.profile.summary}\n\nRelevant evidence from my confirmed profile:\n${evidence.length ? evidence.map((line) => `• ${line}`).join("\n") : "• My confirmed profile does not yet contain a specific evidence line for this request."}\n\nA useful next step would be to compare the outcome you need, the current constraints, and the first deliverable. ${body.note?.trim() ? `\n\nContext I would add: ${body.note.trim().slice(0, 500)}` : ""}\n\nBest,\n${profileRecord.profile.businessName}`;
     await (await collection("opportunities")).updateOne({ _id: new ObjectId(id), userId }, { $set: { proposalDraft: proposal, updatedAt: new Date() } });
-    return Response.json({ proposal, generated: true, saved: true });
+    return Response.json({ proposal, generated: true, saved: true, draftType: isPotential ? "cautious-outreach" : "application-proposal" });
   } catch (error) {
     return errorResponse(error);
   }

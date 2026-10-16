@@ -6,11 +6,14 @@ export const CUSTOMER_TYPES = [
 ] as const;
 
 export type CustomerType = (typeof CUSTOMER_TYPES)[number];
-export type DiscoveryMode = "services" | "product";
+export type DiscoveryMode = "services" | "product" | "active-requests" | "potential-customers";
+export type ProspectType = "active-request" | "potential-customer" | "research-signal";
+export type BuyerIntent = "confirmed" | "possible" | "unsupported";
 export type OpportunityClassification =
   | "explicit-project-request"
   | "freelance-or-contract"
   | "potential-buyer-signal-unconfirmed"
+  | "research-signal-only"
   | "full-time-employment"
   | "unknown-employment-type"
   | "irrelevant"
@@ -52,6 +55,16 @@ export interface Opportunity {
   description: string;
   publishedAt: string | null;
   classification: OpportunityClassification;
+  prospectType?: ProspectType;
+  buyerIntent?: BuyerIntent;
+  organization?: string;
+  buyerName?: string;
+  observedNeed?: string;
+  nextStep?: string;
+  contactUrl?: string | null;
+  noticeStatus?: string;
+  deadline?: string | null;
+  qualificationSummary?: string | null;
   clientType: CustomerType | "unknown";
   score: number;
   profileMatches: string[];

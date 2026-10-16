@@ -1,11 +1,11 @@
 # npm audit triage — 2026-10-16
 
-This record documents the dependency review requested by Director Directive 023. It is evidence for the existing approved release; it does not authorize a dependency upgrade, framework change, or production code change.
+This record documents the dependency review requested by Director Directive 023 and rechecked during Directive 024. It is evidence for the existing approved release and the unchanged dependency tree on the customer-discovery branch; it does not authorize a dependency upgrade, framework change, or production code change.
 
 ## Scope and commands
 
 Repository: `Techkeyy/source`
-Release under review: `64807d1ce7da0c036949d430a0627c9878770323`
+Release under review: deployed `64807d1ce7da0c036949d430a0627c9878770323`; pivot branch `codex/directive-024-customer-discovery`
 Production: [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com)
 Audit date: 2026-10-16 (Africa/Lagos)
 

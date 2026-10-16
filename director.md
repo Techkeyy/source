@@ -3437,3 +3437,470 @@ Current Directive 023 status: **README CORRECTED; AUDIT TRIAGED; NO FORCE FIX;
 NO PRODUCTION CODE OR INFRASTRUCTURE CHANGE; MODERATE TRANSITIVE FOLLOW-UP
 OPEN; OWNER SIGN-OFF PENDING**.
 
+## Directive 024 — three-hour customer-discovery pivot
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Release boundary
+
+The customer-discovery pivot is isolated on branch
+`codex/directive-024-customer-discovery`. The existing public deployment at
+`https://source-9k1o.onrender.com` remains unchanged at deployed commit
+`64807d1ce7da0c036949d430a0627c9878770323`; Render auto-deploy remains
+disabled. No production secrets, hosting plan, infrastructure, or existing
+data were changed. The preserved rollback target remains
+`6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Implemented product boundary
+
+Source now presents the narrow pivot promise: **Find customers who need what
+you do.** The existing public-page, DeepSeek, evidence-grounding, MongoDB,
+ownership, persistence, SSRF, and proposal foundations were preserved.
+
+- **Active requests** remain explicit public requests or source-advertised
+  freelance/contract needs from Hacker News, Jobicy, and Remote OK. SerpApi is
+  still optional and is skipped without an owner-configured key.
+- **Potential customers** are separate, cautious signals inferred from public
+  Hacker News discussion and GitHub project issues. Buying intent is never
+  presented as confirmed. Jobicy, Remote OK, and SerpApi are explicitly
+  skipped in this mode.
+- GitHub uses its public issues API with local signal-label filtering for
+  `help wanted`, `enhancement`, and `feature request`; the optional
+  `GITHUB_TOKEN` is server-only when configured.
+- Reddit has a clean disabled adapter boundary. Source does not scrape Reddit
+  or bypass Reddit access restrictions.
+- Each opportunity keeps the organization when the source provides one, the
+  original URL, publication date, source type, observed need/evidence, profile
+  fit, explicit-versus-inferred intent, and eligibility limitation.
+- Active requests offer an editable application proposal. Potential signals
+  offer a cautious, non-assumptive outreach draft. Source never sends messages
+  or performs bulk outreach.
+- My Pipeline now persists status (`saved`, `contacted`, `closed`) and a
+  user-owned next-step note through `PATCH /api/opportunities/[id]`.
+- The existing owned proposal route now generates a cautious outreach draft
+  for potential signals and retains the application-proposal behavior for
+  active requests.
+
+### Local acceptance evidence
+
+A disposable local account was created against the local preview only. It was
+not a production account. The controlled browser journey completed:
+
+- Registration succeeded.
+- `https://www.frog.co/` was analyzed through the active DeepSeek integration;
+  the review UI displayed grounded excerpts and kept editable suggestions
+  visibly separate.
+- The profile was confirmed and persisted.
+- All four customer-category controls were selected successfully: small
+  businesses, startups, agencies, and individuals.
+- Active-request search returned a source-linked Remote OK result for
+  `Graphic Designer & Video Editor` from BlueTuskr, with source date, source
+  link, evidence excerpt, profile fit, contract classification, and the
+  eligibility warning visible.
+- The result was saved to My Pipeline. An editable application proposal was
+  generated, changed to `Edited proposal test.`, saved, and shown as persisted.
+- Potential-customer mode was corrected and rechecked. The provider boundary
+  reported `Hacker News: queried`, `Jobicy: skipped`, `Remote OK: skipped`,
+  `GitHub: queried`, `Reddit: skipped`, and `SerpApi: skipped`. The current
+  frog profile returned no qualifying potential signal, and the UI displayed
+  the honest empty state rather than relabeling an active job as a potential
+  customer.
+
+During source investigation, a direct public GitHub issue search produced the
+public example
+`https://github.com/elasticpath/plasmic/issues/662` (created 2026-10-05), an
+open product-design/build issue with public acceptance criteria. It is usable
+only as an inferred project signal; it does not prove that the organization is
+buying services. Hacker News broad “seeking freelancer” results were also
+reviewed and are intentionally excluded when they advertise the freelancer’s
+availability rather than a customer request.
+
+### Checks on the pivot branch
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 16 tests.
+- `npm run build`: PASS — Next.js 16.4.0 production build; 13 static pages
+  generated and the new owned opportunity route included.
+- `npm run probe:discovery`: PASS. The live probe queried Hacker News, Jobicy,
+  Remote OK, and GitHub; SerpApi was skipped without a key. The Remote OK
+  Vytalize regression remained classified as full-time employment rather than
+  freelance/contract. The probe reports source signals, not verified buyers.
+- `npm audit --omit=dev --json`: 0 high, 5 moderate, 0 critical.
+- `npm audit --json`: 5 high, 5 moderate, 0 critical. The high chain is
+  development-only ESLint tooling; the moderate Mastra parser chain is the
+  same limited residual production risk documented in
+  `docs/audit-triage-2026-10-16.md`.
+- No `npm audit fix --force` was run. No dependency or framework upgrade was
+  made.
+
+### Outstanding blockers and owner action
+
+The pivot is not a production release yet. Before promotion, the owner must
+review the branch, run the new journey against the public service, and approve
+a controlled exact-commit Render deployment with auto-deploy still disabled.
+The public production release remains the rollback baseline while that review
+is pending. A separate security correction is required before changing the
+Mastra dependency chain; the current audit did not justify changing the
+approved application.
+
+Current Directive 024 status: **PIVOT IMPLEMENTED ON ISOLATED BRANCH; LOCAL
+ACCEPTANCE AND STATIC CHECKS PASS; PRODUCTION UNCHANGED; RENDER DEPLOYMENT NOT
+REQUESTED; OWNER REVIEW AND CONTROLLED PROMOTION PENDING**.
+
+## Directive 025 — make potential-customer discovery work
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Release boundary
+
+This correction remains on `codex/directive-024-customer-discovery`, based on
+the accepted pivot commit `3af7c4e527da298f1ad4ee6b574c27c558384224`. No Render
+deployment, GitHub `main` update, production secret change, infrastructure
+change, model/provider change, or Reddit integration was performed. Production
+remains at `https://source-9k1o.onrender.com` on the existing deployed release;
+the exact final local commit is recorded by Git after this section is committed.
+
+### Phase A — diagnosed empty potential-customer pipeline
+
+The empty result was not caused by the database, profile persistence, or the
+pipeline. It was caused by source-adapter and qualification gates:
+
+- Hacker News searched one highly restrictive, comment-only, AND-style query.
+  Realistic customer-discovery material is primarily in fresh Ask HN / Show HN
+  stories, so the adapter was searching the wrong object type and vocabulary.
+- GitHub limited collection to `help wanted`, `enhancement`, and `feature
+  request` labels. Real public project needs were also unlabeled or used
+  `must-have` / `ready-for-human` labels. The old exact-overlap gate then
+  discarded otherwise compatible project descriptions.
+- The old result path had no provider-stage accounting, so a zero list did not
+  distinguish source retrieval, extraction, local adapter filtering, stale
+  records, unsupported intent, missing organization, or weak profile fit.
+
+The correction adds provider diagnostics with raw, extracted, adapter-rejected,
+qualified, and reasoned-rejection counts. Potential signals now require a
+fresh organization/project identity, a public-need signal, a compatible
+profile match, and an explicit unconfirmed-intent boundary. Generic HN launch
+posts and generic GitHub promotional/course/portfolio issues are not accepted
+merely because they contain words such as “website” or “design”.
+
+### Phase B/C/D — live public-source evidence
+
+The bounded probe in `scripts/discovery-check.mjs` used two transparent manual
+profiles, without claiming website-grounded qualifications:
+
+1. Freelance developer / small website-development agency — web development,
+   website development, JavaScript, and React.
+2. Branding, design, and marketing provider — branding, product design,
+   marketing, brand design, and design.
+
+Final live probe counts on 2026-10-16:
+
+| Profile / source | Raw | Extracted | Adapter rejected | Qualified | Local rejection reasons |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Developer / Hacker News stories | 185 | 159 | 26 | 0 | 157 stale; 2 unsupported intent |
+| Developer / GitHub open issues | 30 | 2 | 28 | 1 | 1 unsupported intent |
+| Brand / design / marketing / Hacker News stories | 174 | 163 | 11 | 0 | 160 stale; 1 weak profile; 2 unsupported intent |
+| Brand / design / marketing / GitHub open issues | 30 | 13 | 17 | 13 | none after adapter filtering |
+
+The probe found four representative accepted records in its capped evidence
+set, with provider-level qualification counts of one developer GitHub result
+and thirteen brand/design/marketing GitHub results. The credible examples
+selected for review are:
+
+- [Device Website Development](https://github.com/edwardschmitz/sigcore-uc/issues/6)
+  — `edwardschmitz/sigcore-uc`, observed 2026-10-10; the public issue has an
+  objective and concrete browser-interface requirements compatible with web and
+  website development.
+- [[DESIGN] Branding: logo, favicon, marketing landing page](https://github.com/Transf-ORM/Transf-ORM-CLI/issues/149)
+  — `Transf-ORM/Transf-ORM-CLI`, observed 2026-09-08; the public issue is a
+  branding/design work signal compatible with branding services.
+- [Brand + design pipeline for client-facing content](https://github.com/federicomrod/Milton/issues/59)
+  — `federicomrod/Milton`, observed 2026-10-05; the public issue describes a
+  client-facing brand-kit/template workflow compatible with branding and
+  design services.
+
+All accepted records display the original URL, source date, organization or
+project identity, observed need excerpt, compatible profile terms, and the next
+step to inspect a legitimate contact route. None invents an email or claims a
+confirmed buyer. Buying intent is explicitly `unconfirmed`.
+
+The Hacker News stage was deliberately allowed to return zero qualified
+prospects after the stricter source-specific request gate. Its 185/174 raw
+records were not silently relabeled as customers. GitHub supplied the usable
+signals in this run; the source mix is reported honestly rather than padded to
+meet a target.
+
+Negative overclaiming guard: [elasticpath/plasmic#662](https://github.com/elasticpath/plasmic/issues/662)
+was found and remains classified as `potential-buyer-signal-unconfirmed`, with
+`buyingIntentConfirmed: false`. It is not classified as an active buyer or a
+confirmed commercial request. Reddit remains disabled by policy.
+
+### Phase E — local customer journey
+
+A synthetic local account was used only against the local preview and then
+deleted. The controlled browser journey passed:
+
+- Manual developer profile entered transparently as user-edited, with
+  `https://example.com/` retained as a supporting URL rather than claimed as
+  portfolio evidence.
+- All four customer categories selected: small businesses, startups,
+  agencies, and individuals.
+- Potential-customer mode returned the GitHub `Device Website Development`
+  signal. The card displayed **Potential customer**, source/date/project
+  identity, public evidence, profile fit, and the warning that intent is
+  inferred rather than confirmed.
+- The record was saved to My Pipeline; cautious outreach was generated,
+  edited to `Edited cautious outreach for acceptance.`, saved, and visibly
+  recovered in the pipeline.
+- Logout/login recovery restored the confirmed profile, the saved potential
+  record, and its saved draft.
+- Existing ownership probe passed: separate registrations, owner save,
+  cross-account denial, and isolated saved lists. Two probe accounts were
+  deleted by the probe. The Directive 025 synthetic account cleanup removed
+  one opportunity, one profile, and one user document.
+- The Remote OK Vytalize regression remained excluded from freelance/contract
+  reclassification.
+
+### Checks
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 16 tests.
+- `npm run build`: PASS — Next.js 16.4.0 compiled, TypeScript completed, 13
+  static pages generated, and the dynamic API routes were included.
+- `npm run probe:discovery`: PASS — live HN/GitHub diagnostics, two manual
+  profiles, plasmic overclaiming guard, and Remote OK regression.
+- `npm run probe:ownership`: PASS — owner save, cross-account denial, and
+  saved-list isolation; cleanup PASS.
+- `git diff --check`: PASS.
+- No production browser account, production data, Render deployment, or
+  production infrastructure was touched.
+
+### Directive 025 status
+
+**POTENTIAL-CUSTOMER DISCOVERY CORRECTED AND LOCALLY ACCEPTED; GITHUB PUBLIC
+PROJECT SIGNALS NOW RECOVER; HACKER NEWS EMPTY RESULT IS HONEST AFTER STRICT
+INTENT FILTERING; ACCOUNT/PERSISTENCE/OUTREACH JOURNEY PASS; PRODUCTION
+UNCHANGED; OWNER REVIEW AND CONTROLLED PROMOTION REQUIRED.**
+
+## Directive 026 — buyer-quality distinction and procurement feasibility
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Release boundary
+
+This correction remains on `codex/directive-024-customer-discovery`, based on
+the accepted implementation `0240698ec4e245a495e927b275f5443e5aa696d1`.
+The tested implementation commit is `43ce98d60dbe3d4a22f79873f597771bf7bcf475`.
+No GitHub merge, push, Render deployment, production secret change,
+infrastructure change, model/provider switch, or Reddit activation was made.
+Production remains at [source-9k1o.onrender.com](https://source-9k1o.onrender.com)
+on deployed commit `64807d1ce7da0c036949d430a0627c9878770323`; the rollback
+target remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Implemented buyer-quality boundary
+
+The discovery model now carries a three-way `prospectType` and an explicit
+buyer-intent level:
+
+- **Active Request** (`active-request`, confirmed): the source explicitly seeks
+  a supplier, contractor, vendor, tender response, or other external service.
+- **Potential Customer** (`potential-customer`, possible): an identifiable
+  organization/project has an observed business or service need and a
+  defensible service fit, but commercial intent is unknown.
+- **Research Signal** (`research-signal`, unsupported): work needs doing, but
+  the source does not support the conclusion that an external provider is
+  being considered.
+
+The card, pipeline, evidence list, next-step guidance, and saved-record
+compatibility path now expose the tier and uncertainty. No commercial
+confidence percentage or buyer score is presented. Numeric ranking remains an
+internal service-fit ordering only. Research signals cannot create a new
+proposal/outreach draft, and potential/active records require a public
+`contactUrl` before a new draft is generated. Existing saved drafts continue
+to load and remain editable for compatibility.
+
+The GitHub adapter no longer silently drops internal or blocked work. It
+records blocker/dependency/owner metadata as research evidence, while
+external-service language can qualify an issue as an active request. Issue
+creation, an unassigned issue, a `help wanted` label, or technical fit alone
+does not imply outsourcing.
+
+### Named GitHub examples
+
+The live public bodies were re-read from the GitHub API and classified as
+follows:
+
+| Example | Evidence | Final classification | Intent |
+| --- | --- | --- | --- |
+| [SigCore — Device Website Development](https://github.com/edwardschmitz/sigcore-uc/issues/6) | Concrete website/device-interface objective and requirements; no supplier, contractor, proposal, or external-provider language | Potential Customer | Possible; external buying unverified |
+| [Transf-ORM — Branding: logo, favicon, marketing landing page](https://github.com/Transf-ORM/Transf-ORM-CLI/issues/149) | Internal product visual-identity backlog, blocked by another issue, acceptance criteria | Research Signal | Unsupported |
+| [Milton — Brand + design pipeline for client-facing content](https://github.com/federicomrod/Milton/issues/59) | Internal status/owner/horizon, named Miles/Sofia/Federico owners, Canva workflow and client dependency metadata | Research Signal | Unsupported |
+
+None of these three is presented as a confirmed buyer. No unsolicited GitHub
+issue comment or invented contact detail is produced.
+
+### Live discovery evidence
+
+The updated two-profile live probe passed and returned the following bounded
+counts on 2026-10-16:
+
+| Profile / provider | Raw | Extracted | Adapter rejected | Accepted | Active | Potential | Research | Local rejection reasons |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Developer / Hacker News | 185 | 159 | 26 | 0 | 0 | 0 | 0 | 157 stale; 2 unsupported |
+| Developer / GitHub | 30 | 6 | 24 | 5 | 0 | 2 | 3 | 1 stale |
+| Brand/design / Hacker News | 165 | 152 | 13 | 0 | 0 | 0 | 0 | 149 stale; 3 unsupported |
+| Brand/design / GitHub | 30 | 15 | 15 | 15 | 0 | 8 | 7 | none after adapter filtering |
+
+The source mix therefore produced **20 accepted GitHub candidates** across
+the two profiles: **10 Potential Customer**, **10 Research Signal**, and **0
+confirmed Active Request** in that GitHub/HN sample. Hacker News returned no
+fresh qualified record in this run. The acceptance is honest: the real
+confirmed external requests came from the procurement source below, not from
+relabeling GitHub project issues.
+
+### Stronger source feasibility — official UK Contracts Finder
+
+The official public OCDS endpoint
+`https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search`
+was queried for 2026-09-01 through 2026-10-16 with `stages=tender&limit=100`.
+It returned HTTP 200 without credentials. The result contained 100 tender
+releases, 59 broad digital/design/marketing-related matches, and 59 records
+with buyer identity, deadline, and official notice links. The response also
+exposed notice status, publication date, scope, procurement method, SME
+suitability, and CPV classification. The [Contracts Finder feasibility
+note](docs/contracts-finder-feasibility-2026-10-16.md) records the exact
+probe and limitations.
+
+One actionable public request reviewed was [CA18543 — Northampton College
+Media planning & Buying Services](https://www.contractsfinder.service.gov.uk/Notice/d2301388-4ca6-48fc-805d-eb2e5793377e): active/open procurement, deadline
+2026-11-04 12:00 UTC, buyer Northampton College, advertising/marketing CPV
+classification, SME suitability, and a supplier-portal route in the public
+notice. It is an Active Request, not a promise of eligibility, award, or
+payment. The adapter preserves the existing HN, GitHub, Jobicy, Remote OK,
+optional SerpApi, and disabled Reddit boundaries.
+
+### UI, persistence, and security evidence
+
+- Discovery cards show Active Request, Potential Customer, or Research Signal;
+  each card includes source, date, organization/project, observed need,
+  service fit, buyer-intent level, evidence, limitations, and next step.
+- Research cards offer save/research guidance only. No outreach draft is
+  offered without a legitimate public contact/application route.
+- Existing profile, saved opportunity, proposal edit, refresh, logout/login,
+  account-isolation, and cleanup paths remain compatible.
+- `npm run probe:core`: PASS — real `https://www.frog.co/` DeepSeek profile,
+  9 grounded claims, live discovery including Contracts Finder, save/edit/
+  recovery, ownership, malformed-request guards, and cleanup.
+- `npm run probe:ownership`: PASS — separate registrations, owner save,
+  cross-account denial, isolated saved list, and cleanup.
+- Updated browser journey: PASS — public page analysis, profile confirmation,
+  discovery, save, proposal-route behavior, refresh recovery, logout/login
+  recovery, and exact 390px/320px checks with no horizontal overflow. Updated
+  screenshots are retained under `docs/uiux-015/source-screenshots/`.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 18 tests.
+- `npm run build`: PASS — Next.js 16.4.0 production build, 13 static pages,
+  all dynamic API routes included.
+- `npm run probe:discovery`: PASS — two realistic profiles, HN/GitHub live
+  evidence, tier counts, overclaiming guard, and Remote OK full-time
+  regression.
+- `npm run probe:contracts`: PASS — official public endpoint, 100 releases,
+  59 complete current matches.
+- `npm audit --omit=dev --json`: PASS for high/critical exposure — 0 high,
+  0 critical, 5 moderate. The previously documented high findings remain in
+  the development-only audit chain; no `npm audit fix --force` or speculative
+  framework/core upgrade was run.
+
+### Directive 026 status
+
+**BUYER-QUALITY DISTINCTION IMPLEMENTED AND LOCALLY ACCEPTED; OFFICIAL
+PROCUREMENT SOURCE FEASIBLE AND INTEGRATED CONSERVATIVELY; PRODUCTION
+UNCHANGED; NO MERGE/PUSH/DEPLOYMENT; DIRECTOR APPROVAL REQUIRED.**
+
+## Directive 027 — controlled customer-discovery release verification
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The final buyer-quality correction is tested on branch
+`codex/directive-024-customer-discovery` at code commit
+`8fe019da74cae1682d1d95b896fa47e9cca09ae2` (`fix: keep inferred GitHub work
+out of active requests`). The
+previous evidence HEAD was `d699ce0a0e92fa58ba8a84275dc2c21bfa7abeb9`;
+the new commit adds the explicit GitHub contract-wording regression guard and
+the disposable browser acceptance harness. No merge, GitHub push, Render
+deployment, production-secret change, or infrastructure change has occurred.
+Production remains on `64807d1ce7da0c036949d430a0627c9878770323`; rollback
+target remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Browser acceptance — normal Source flow
+
+The rebuilt production server was exercised through the real browser UI using
+a disposable account and the public media-services page
+`https://www.mindshareworld.com/services`. The profile was analyzed, reviewed,
+edited honestly to media planning/media buying/marketing communications, and
+confirmed through the normal workflow. The browser then ran both Active
+Requests and Potential Customers + Research searches.
+
+- **Active Request surfaced:** `CA18543 - Northampton College - Media planning
+  & Buying Services` from Contracts Finder.
+- **Buyer:** Northampton College.
+- **Status/deadline:** `active`; `2026-11-04T12:00:00.000Z`.
+- **Official notice and application route:**
+  `https://www.contractsfinder.service.gov.uk/Notice/d2301388-4ca6-48fc-805d-eb2e5793377e`.
+- **Qualification boundary:** the card showed SME suitability and open
+  procedure, while explicitly directing the user to inspect the official
+  notice for detailed selection criteria; no eligibility, award, budget, or
+  payment was inferred.
+- **Potential/research results:** browser response tier counts were
+  `active-request: 1`, `potential-customer: 7`, and `research-signal: 9` in
+  the potential-customer view. GitHub issues with contract/job wording were
+  kept out of Active Request unless explicit external-buying language was
+  present. The regression test now protects this boundary.
+- **Research protection:** research cards showed “Research guidance only” and
+  exposed no draft action. Potential cards showed possible, not confirmed,
+  buying intent.
+- **Service compatibility guard:** after the same account was edited to a
+  branding-only profile, the specialized Northampton media-buying notice was
+  not returned. Mentioning “marketing” alone did not qualify the profile.
+- **Cleanup:** the disposable test account and its records were deleted after
+  the run.
+
+### Final verification for controlled promotion
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 19 tests.
+- `npm run build`: PASS — Next.js 16.4.0, TypeScript, 13 static pages, and
+  all dynamic API routes.
+- `npm run probe:discovery`: PASS — live Developer and Brand/design profiles;
+  GitHub accepted candidates were separated into potential/research tiers and
+  no confirmed GitHub/HN buyer was manufactured.
+- `npm run probe:contracts`: PASS — official public OCDS endpoint returned
+  HTTP 200 without credentials; 100 releases and 59 complete service-related
+  evidence records were observed.
+- `npm run probe:core`: PASS — DeepSeek `deepseek-flash`, grounded profile,
+  live discovery including Contracts Finder, profile/save/draft persistence,
+  logout/login recovery, malformed-request guards, account isolation, and
+  cleanup.
+- `npm run probe:ownership`: PASS — separate registrations, owner save,
+  cross-account denial, isolated saved list, and cleanup.
+- `node scripts/directive-027-browser-check.mjs`: PASS — active procurement
+  card, original notice link, future deadline, potential/research separation,
+  research draft block, branding mismatch rejection, and cleanup.
+- `npm audit --omit=dev --json`: 0 high, 0 critical, 5 moderate. The five
+  moderate findings remain the documented production-transitive Mastra parser
+  chain (`@mastra/core` → `gray-matter` → `js-yaml` → `argparse` →
+  `sprintf-js`). No `npm audit fix --force` or speculative dependency change
+  was made. This is residual risk requiring a separately approved correction;
+  it is not claimed as remediated.
+
+### Directive 027 status
+
+**LOCAL CONTROLLED-RELEASE GATES PASS; NORTHAMPTON PROCUREMENT NOTICE
+SURFACED THROUGH THE NORMAL BROWSER FLOW; GITHUB BUYER-QUALITY BOUNDARY
+CORRECTED; MERGE, PUSH, RENDER PROMOTION, AND PRODUCTION UAT MAY PROCEED
+UNDER THE DIRECTOR’S EXPLICIT RELEASE AUTHORIZATION.**
+

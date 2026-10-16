@@ -26,7 +26,12 @@ async function shot(name, width = 1440) {
 try {
   await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
   await page.waitForTimeout(700);
-  for (const width of [1440, 1280, 768, 390, 320]) await shot("landing", width);
+  const mobileLayout = {};
+  for (const width of [1440, 1280, 768, 390, 320]) {
+    await shot("landing", width);
+    mobileLayout[width] = await page.evaluate(() => ({ viewport: window.innerWidth, scrollWidth: document.documentElement.scrollWidth, horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 1 }));
+  }
+  if (mobileLayout[390].horizontalOverflow || mobileLayout[320].horizontalOverflow) throw new Error(`mobile horizontal overflow at 390px or 320px: ${JSON.stringify(mobileLayout)}`);
   await shot("landing-auth", 1440);
 
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -59,7 +64,7 @@ try {
   const keywordBox = page.getByRole("textbox", { name: "Search keywords" });
   await keywordBox.fill(`${await keywordBox.inputValue()}, evidence review`);
   await page.locator(".editor-card button.button-primary").click();
-  await page.getByRole("heading", { name: "Who should Source look for?" }).waitFor({ state: "visible", timeout: 30_000 });
+  await page.getByRole("heading", { name: "Find customers who need what you do." }).waitFor({ state: "visible", timeout: 30_000 });
   await shot("customer-selection", 1440);
 
   const checkboxes = page.getByRole("checkbox");
@@ -67,26 +72,27 @@ try {
   await page.screenshot({ path: `${screenshotDir}/customer-selection-all-1440.png`, fullPage: true });
 
   const searchResponsePromise = page.waitForResponse((response) => response.url().includes("/api/opportunities/search"), { timeout: 90_000 });
-  await page.getByRole("button", { name: "Find opportunities", exact: true }).click();
+  await page.getByRole("button", { name: "Find customer signals", exact: true }).click();
   const searchResponse = await searchResponsePromise;
   if (!searchResponse.ok()) throw new Error(`opportunity search returned HTTP ${searchResponse.status()}`);
-  await page.getByRole("heading", { name: "Investigate the right next step." }).waitFor({ state: "visible", timeout: 90_000 });
+  await page.getByRole("heading", { name: "Inspect the evidence before you act." }).waitFor({ state: "visible", timeout: 90_000 });
   await shot("results", 1440);
 
   const opportunityCards = page.locator(".opportunity-card");
   let savedAndDrafted = false;
   if (await opportunityCards.count()) {
-    await opportunityCards.first().getByRole("button", { name: /Save and draft|Draft proposal/ }).click();
-    await page.getByRole("heading", { name: "Editable proposal draft" }).waitFor({ state: "visible", timeout: 90_000 });
+    await opportunityCards.first().getByRole("button", { name: /Save and draft proposal|Draft proposal|Save and draft outreach|Draft outreach/ }).click();
+    await page.getByRole("heading", { name: /Editable application draft|Saved proposal draft|Cautious outreach draft/ }).waitFor({ state: "visible", timeout: 90_000 });
     savedAndDrafted = true;
     await page.screenshot({ path: `${screenshotDir}/proposal-1440.png`, fullPage: true });
     await page.reload({ waitUntil: "networkidle" });
-    await page.getByText("Saved work", { exact: true }).waitFor({ state: "visible", timeout: 30_000 });
+    await page.getByRole("button", { name: /My pipeline/ }).click();
+    await page.getByRole("heading", { name: "Keep the next step visible." }).waitFor({ state: "visible", timeout: 30_000 });
     await page.screenshot({ path: `${screenshotDir}/saved-return-1440.png`, fullPage: true });
     const savedLink = page.locator(".saved-link").first();
     if (await savedLink.count()) {
       await savedLink.click();
-      await page.getByRole("heading", { name: "Investigate the right next step." }).waitFor({ state: "visible", timeout: 30_000 });
+      await page.getByRole("heading", { name: /Editable application draft|Saved proposal draft|Cautious outreach draft/ }).waitFor({ state: "visible", timeout: 30_000 });
       await page.screenshot({ path: `${screenshotDir}/recovered-opportunity-1440.png`, fullPage: true });
     }
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
@@ -94,12 +100,14 @@ try {
     await page.getByRole("textbox", { name: "Email" }).fill(email);
     await page.getByRole("textbox", { name: "Password" }).fill(password);
     await page.locator(".auth-switch button").click();
+    await page.getByRole("heading", { name: "Pick up where your work left off." }).waitFor({ state: "visible", timeout: 15_000 });
     await page.locator(".auth-card form button.button-primary").click();
-    await page.getByText("Saved work", { exact: true }).waitFor({ state: "visible", timeout: 30_000 });
+    await page.getByRole("button", { name: /My pipeline/ }).click();
+    await page.getByRole("heading", { name: "Keep the next step visible." }).waitFor({ state: "visible", timeout: 30_000 });
     await page.screenshot({ path: `${screenshotDir}/logout-login-recovery-1440.png`, fullPage: true });
   }
 
-  console.log(JSON.stringify({ status: "pass", stages: ["landing", "account", "onboarding", "url-error", "analysis-loading", "live-analysis", "profile-edit", "customer-selection", "discovery"].concat(savedAndDrafted ? ["proposal", "refresh-recovery", "logout-login-recovery"] : []), profileAnalysisHttpStatus: analysisResponse.status(), discoveryHttpStatus: searchResponse.status(), evidenceVisible, editorVisible, errorInputPreserved, savedAndDrafted, sourceUrl: "https://www.frog.co/" }));
+  console.log(JSON.stringify({ status: "pass", stages: ["landing", "account", "onboarding", "url-error", "analysis-loading", "live-analysis", "profile-edit", "customer-selection", "discovery"].concat(savedAndDrafted ? ["proposal", "refresh-recovery", "logout-login-recovery"] : []), profileAnalysisHttpStatus: analysisResponse.status(), discoveryHttpStatus: searchResponse.status(), evidenceVisible, editorVisible, errorInputPreserved, savedAndDrafted, mobileLayout, sourceUrl: "https://www.frog.co/" }));
 } catch (error) {
   await page.screenshot({ path: `${screenshotDir}/flow-error-1440.png`, fullPage: true }).catch(() => undefined);
   console.log(JSON.stringify({ status: "fail", reason: error instanceof Error ? error.message : String(error) }));

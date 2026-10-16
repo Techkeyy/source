@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const selected = Array.isArray(body.customerTypes) ? body.customerTypes : [];
     const allowed = new Set(["small-businesses", "startups", "agencies", "individuals"]);
     if (!selected.length || selected.some((item) => !allowed.has(item))) throw new SourceError("Select at least one valid customer type.");
-    const mode = body.mode === "product" ? "product" : "services";
+    const mode: DiscoveryMode = body.mode === "potential-customers" || body.mode === "product" ? body.mode : "active-requests";
     const result = await discoverOpportunities(profileRecord.profile, selected, mode);
     return Response.json(result);
   } catch (error) {
