@@ -3180,3 +3180,28 @@ technical acceptance.
 Current Directive 022 status: **PREDEPLOYMENT BLOCKED BY MISSING GITHUB AND
 RENDER AUTHENTICATION; PRODUCTION UNCHANGED; ROLLBACK READY**.
 
+## Directive 022A — authentication recheck
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The authorized retry was performed after the owner was asked to restore
+GitHub access. The result is unchanged:
+
+- `gh auth status` still reports the active `Techkeyy` token as invalid and
+  directs re-authentication.
+- `git ls-remote origin refs/heads/main` reaches the configured GitHub remote
+  but fails with sanitized `SEC_E_NO_CREDENTIALS`.
+- The actual remote `main` could not be fetched or compared.
+- No merge, push, force push, Render deployment, or production UAT was
+  performed.
+
+The local approved branch and evidence remain intact. The next owner action is
+to re-authenticate GitHub with `gh auth login -h github.com` or use the signed-in
+GitHub web session to perform the reviewed merge. If Render authentication is
+still unavailable after the GitHub merge, the owner should use Render's
+dashboard **Deploy a specific commit** action for the exact merged SHA. No
+Render API credential is requested.
+
+Current Directive 022A status: **BLOCKED BEFORE REMOTE MAIN FETCH; INVALID
+GITHUB AUTHENTICATION; PRODUCTION UNCHANGED; ROLLBACK READY**.
+
