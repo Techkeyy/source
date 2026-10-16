@@ -3205,3 +3205,31 @@ Render API credential is requested.
 Current Directive 022A status: **BLOCKED BEFORE REMOTE MAIN FETCH; INVALID
 GITHUB AUTHENTICATION; PRODUCTION UNCHANGED; ROLLBACK READY**.
 
+## Directive 022B — builder authentication recheck
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The replacement builder rechecked the authorized release preflight before
+attempting any merge or deployment. The blocker remains unresolved:
+
+- `gh auth status` reports that the active `Techkeyy` token is invalid and
+  directs re-authentication.
+- `gh auth setup-git` could not update the global Git configuration because
+  `C:/Users/HomePC/.gitconfig` was locked by the host permission boundary.
+- `git ls-remote origin refs/heads/main` did not obtain the remote `main`
+  revision; this session could not connect to GitHub over HTTPS.
+- No fetch, merge, push, force push, Render deployment, secret change, or
+  production UAT was performed.
+
+The local approved branch and evidence remain intact. The owner must complete
+GitHub CLI device authorization for the `Techkeyy` account in an authenticated
+browser session, then rerun the controlled release. If the CLI still cannot
+write its credential helper, the owner may use the authenticated GitHub web
+session to perform the reviewed normal merge and then deploy the exact merge
+SHA through Render's authenticated **Deploy a specific commit** action. Keep
+Render auto-deploy disabled and retain `6cbe759b16ae775a13d122abb3d9686b69d73877`
+as the rollback target.
+
+Current Directive 022B status: **BLOCKED BEFORE REMOTE MAIN FETCH; OWNER
+GITHUB DEVICE AUTHORIZATION REQUIRED; PRODUCTION UNCHANGED; ROLLBACK READY**.
+
