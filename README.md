@@ -112,20 +112,21 @@ The verified public release produced the following results:
 
 | Check | Result |
 |---|---|
-| Public deployment | Render service `source`, deployed commit `64807d1ce7da0c036949d430a0627c9878770323`, deployment `dep-db8tm949v7es73drf4tg` |
+| Public deployment | Render service `source`, deployed merge commit `53a24e72543f6ed300996a62d711b93b7f48ce4c`, deployment `dep-db918lmq1p3s739n88dg`; auto-deploy disabled |
 | Active provider/model | DeepSeek, `deepseek-flash` |
 | Website analysis | `https://www.frog.co/`, live HTTP 200 source fetch |
 | Profile grounding | 8 grounded claims from 37 extracted source excerpts in the production response |
 | Profile persistence | Confirmed profile and edits recovered after refresh and logout/login |
 | Four customer categories | Small businesses, startups, agencies, and individuals all preserved the selected category and produced distinct Hacker News query terms |
 | Category evidence | The agencies branch surfaced an evidence-backed `agency` match; the other branches truthfully left customer type unknown when the source did not support it |
-| Discovery | Live Hacker News, Jobicy, and Remote OK sources returned a qualified source-linked contract result in the accepted release; the pivot also adds GitHub potential-signal querying behind a separate mode |
+| Discovery | Live Hacker News, GitHub, Jobicy, Remote OK, and official Contracts Finder adapters; Northampton College’s active media-buying tender surfaced through the normal browser flow |
+| Buyer-quality tiers | Active Request, Potential Customer, and Research Signal were all verified in production; GitHub contract/job wording without external-buying evidence stayed out of Active Request |
 | Eligibility warning | The UI correctly warned that Source does not verify user-specific location, schedule, or availability eligibility |
 | Proposal persistence | Proposal was generated, edited, saved exactly, and recovered after refresh and logout/login |
 | Account isolation | A second account could not read or draft against the first account’s opportunity; saved lists remained isolated |
 | Desktop acceptance | Public Chromium browser UAT passed the core user journey and cleanup |
 | Mobile acceptance | Exact 390px and 320px checks passed with no horizontal overflow |
-| Unit suite | Existing production merge: 4 files, 13 tests; Directive 026 branch: 4 files, 18 tests passing |
+| Unit suite | Final merged release: 4 files, 19 tests passing |
 | Build and static checks | Typecheck, ESLint, and production build passed on the verified merge and again on the customer-discovery branch |
 
 The corrected public result rendered the em dash (`—`) correctly, retained original source links, and did not claim user-specific eligibility or worldwide availability.
@@ -144,7 +145,7 @@ Issue creation, a missing assignee, a `help wanted` label, or technical compatib
 
 The official [Contracts Finder API documentation](https://www.contractsfinder.service.gov.uk/apidocumentation) and its public [OCDS notice search](https://www.contractsfinder.service.gov.uk/apidocumentation/Notices/1/GET-Published-Notice-OCDS-Search) are feasible for stronger procurement evidence. A bounded live probe returned 100 recent tender releases and 59 current digital/design/marketing-related matches with status, buyer, deadline, scope, procurement method, SME suitability, and official notice links. Detailed selection criteria may still require opening the notice documents, and a tender is not a guarantee of eligibility or award. The production adapter uses the public endpoint only; it does not scrape or bypass access controls.
 
-The Directive 026 correction is implemented on `codex/directive-024-customer-discovery`, tested locally, and not deployed. It must receive owner approval before promotion.
+The Directive 027 correction is merged and deployed from `53a24e72543f6ed300996a62d711b93b7f48ce4c`. Production UAT passed with disposable accounts and cleanup. Owner sign-off and hackathon-submission authorization are still required; the moderate Mastra transitive dependency risk remains documented and unremediated.
 
 ## Architecture
 
@@ -216,8 +217,8 @@ Read [director.md](director.md) for the authoritative claim ledger, provider evi
 
 ## Status
 
-**PRODUCTION TECHNICAL AND DESKTOP/MOBILE ACCEPTANCE PASSED; DIRECTIVE 027 CONTROLLED CUSTOMER-DISCOVERY GATES LOCALLY VERIFIED; MERGE, CONTROLLED PROMOTION, PRODUCTION UAT, AND OWNER SIGN-OFF PENDING.**
+**PRODUCTION TECHNICAL, DESKTOP/MOBILE, AND DIRECTIVE 027 CUSTOMER-DISCOVERY ACCEPTANCE PASSED; OWNER SIGN-OFF AND HACKATHON SUBMISSION AUTHORIZATION PENDING.**
 
-The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 027 branch now passes a normal browser flow that surfaces Northampton College’s active Contracts Finder media-buying notice, keeps potential customers separate from research signals, blocks unsupported research drafts, and rejects a branding-only profile from that specialized notice. The branch has not yet been merged, pushed, or deployed. Remaining blockers are the controlled promotion itself, fresh production UAT after promotion, owner sign-off, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
+The public release is deployed at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) from merge SHA `53a24e72543f6ed300996a62d711b93b7f48ce4c`; Render deployment `dep-db918lmq1p3s739n88dg` is live and auto-deploy remains disabled. Production browser and API acceptance passed: the normal workflow surfaced Northampton College’s active Contracts Finder media-buying notice, kept potential customers separate from research signals, blocked unsupported research drafts, rejected a branding-only profile from that specialized notice, recovered saved work after logout/login, preserved account isolation, and passed 390px/320px overflow checks. Remaining blockers are owner sign-off, hackathon submission authorization, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
 
 License: not yet selected; this remains a private hackathon deployment candidate.

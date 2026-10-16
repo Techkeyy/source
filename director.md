@@ -3824,16 +3824,18 @@ UNCHANGED; NO MERGE/PUSH/DEPLOYMENT; DIRECTOR APPROVAL REQUIRED.**
 
 Date: 2026-10-16 (Africa/Lagos)
 
-The final buyer-quality correction is tested on branch
+The final buyer-quality correction was tested on branch
 `codex/directive-024-customer-discovery` at code commit
 `8fe019da74cae1682d1d95b896fa47e9cca09ae2` (`fix: keep inferred GitHub work
-out of active requests`). The
-previous evidence HEAD was `d699ce0a0e92fa58ba8a84275dc2c21bfa7abeb9`;
-the new commit adds the explicit GitHub contract-wording regression guard and
-the disposable browser acceptance harness. No merge, GitHub push, Render
-deployment, production-secret change, or infrastructure change has occurred.
-Production remains on `64807d1ce7da0c036949d430a0627c9878770323`; rollback
-target remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+out of active requests`). The normal no-fast-forward merge into `main`
+produced `53a24e72543f6ed300996a62d711b93b7f48ce4c` and was pushed to
+`https://github.com/Techkeyy/source`. Render manually deployed that exact
+merge SHA as deployment `dep-db918lmq1p3s739n88dg`; the dashboard verified
+`Deploy succeeded | Live`. Auto-deploy remains disabled, no production
+secrets, infrastructure, plan, MongoDB configuration, or AI provider was
+changed. The previous production commit `64807d1ce7da0c036949d430a0627c9878770323`
+remains the rollback target alongside the preserved emergency rollback commit
+`6cbe759b16ae775a13d122abb3d9686b69d73877`.
 
 ### Browser acceptance — normal Source flow
 
@@ -3868,6 +3870,36 @@ Requests and Potential Customers + Research searches.
 - **Cleanup:** the disposable test account and its records were deleted after
   the run.
 
+### Production acceptance after controlled promotion
+
+The public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com)
+was then exercised with disposable accounts. The production browser harness
+passed profile analysis, profile confirmation, both buyer-discovery views,
+Northampton notice inspection, the branding-versus-media mismatch guard,
+research-only draft blocking, and cleanup. The existing production UI
+regression also passed registration, DeepSeek profile analysis, all four
+customer categories, save, proposal generation and edit, refresh recovery,
+logout/login recovery, and exact 390px and 320px no-horizontal-overflow checks.
+
+- `node scripts/directive-027-browser-check.mjs`: PASS against the public URL;
+  Northampton active request visible, official link verified, potential and
+  research tiers visible, research draft action absent, branding-only mismatch
+  rejected, cleanup PASS.
+- `node scripts/uiux-015-after.mjs`: PASS against the public URL;
+  analysis HTTP 200, discovery HTTP 200, grounded evidence and editor visible,
+  saved/drafted recovery PASS, logout/login recovery PASS, and mobile layout
+  `{320: {scrollWidth: 320, horizontalOverflow: false}, 390: {scrollWidth:
+  390, horizontalOverflow: false}}`.
+- Production `npm run probe:core`: PASS — DeepSeek `deepseek-flash`, profile
+  and proposal persistence, recovery, malformed-request guards, cross-account
+  denial, isolated saved lists, and cleanup.
+- Production `npm run probe:ownership`: PASS — separate registrations,
+  owner save, cross-account denial, saved-list isolation, and cleanup.
+
+No real customer data, personal credentials, unsolicited messages, or public
+GitHub comments were sent. The only created records were disposable test
+records and each production run reported cleanup PASS.
+
 ### Final verification for controlled promotion
 
 - `npm run typecheck`: PASS.
@@ -3899,8 +3931,8 @@ Requests and Potential Customers + Research searches.
 
 ### Directive 027 status
 
-**LOCAL CONTROLLED-RELEASE GATES PASS; NORTHAMPTON PROCUREMENT NOTICE
-SURFACED THROUGH THE NORMAL BROWSER FLOW; GITHUB BUYER-QUALITY BOUNDARY
-CORRECTED; MERGE, PUSH, RENDER PROMOTION, AND PRODUCTION UAT MAY PROCEED
-UNDER THE DIRECTOR’S EXPLICIT RELEASE AUTHORIZATION.**
+**CONTROLLED MERGE, GITHUB PUSH, RENDER DEPLOYMENT, AND PRODUCTION
+CUSTOMER-DISCOVERY UAT PASS; NORTHAMPTON PROCUREMENT NOTICE SURFACED; GITHUB
+BUYER-QUALITY BOUNDARY CORRECTED; OWNER SIGN-OFF AND HACKATHON SUBMISSION
+AUTHORIZATION REMAIN REQUIRED.**
 
