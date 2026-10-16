@@ -75,8 +75,10 @@ const POTENTIAL_CUSTOMER_NEED_PATTERN = /\b(?:business|company|organisation|orga
 const GITHUB_SIGNAL_LABEL_PATTERN = /\b(?:help wanted|enhancement|feature request|must-have|ready-for-human|client request|external)\b/i;
 const GITHUB_NEED_PATTERN = /\b(?:i want to|we want to|we need|need a|looking for|build(?:ing)?|objective|develop(?:ing)?|implement(?:ation|ing)?|product catalogue|design direction|product brief|customer-facing|user story|acceptance criteria|why this needs a human)\b/i;
 const GITHUB_INTERNAL_PATTERN = /\b(?:fix typo|refactor|unit tests?|test coverage|ci\/cd|dependency|dependencies|npm audit|lint|internal|assigned task|database migration|api endpoint|blocked by|client dependency|owner\s*:|horizon\s*:|gates?\s+client|verification guide)\b/i;
-const GITHUB_PROMOTION_PATTERN = /\b(?:best .* company in|advertising production company|graphic design course|learn .* career|support small business marketing|seo services?|past websites?|portfolio|showcase my work)\b/i;
+const GITHUB_PROMOTION_PATTERN = /\b(?:best .* company in|advertising production company|graphic design course|learn .* career|support small business marketing|seo services?|past websites?|portfolio|showcase my work|key services|best for:|final thoughts|before hiring|companies? helping .* businesses|businesses looking for .* (?:company|partner|provider)|top .* companies?|leading .* companies?)\b/i;
 const GITHUB_EXTERNAL_BUYING_PATTERN = /\b(?:looking for|seeking|need|want to hire|hire)\s+(?:an?\s+)?(?:freelancer|contractor|agency|vendor|supplier|service provider|developer|designer)|\b(?:request(?:ing)?|invite)\s+(?:for\s+)?(?:proposal|quotation|tender)s?\b|\b(?:external|outsourc(?:e|ing))\s+(?:developer|designer|agency|provider|support)\b/i;
+const GENERIC_MATCH_TERMS = new Set(["about", "account", "after", "again", "also", "and", "app", "available", "batch", "between", "business", "calmer", "clear", "company", "customers", "develop", "development", "doing", "fast", "from", "fund", "have", "help", "human", "into", "made", "move", "need", "open", "people", "private", "product", "project", "projects", "protected", "record", "right", "service", "services", "settle", "share", "simple", "sends", "send", "sending", "test", "that", "the", "this", "their", "token", "tokens", "using", "value", "want", "way", "what", "with", "work", "works"]);
+const PRODUCT_NEED_PATTERN = /\b(?:adopt|buy|buying|customer(?:s)?|integrat(?:e|ion|ing)|need(?:s)?|pilot|procure|replace|roll ?out|seeking|solution|use case|user(?:s)?|vendor|workflow|(?:payment|payout|wallet|checkout|remittance|settlement|claim|passkey|token|finance|money|transaction)s?)\b/i;
 
 function text(value: unknown) {
   return typeof value === "string" ? normalizeExternalText(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()) : "";
@@ -124,15 +126,27 @@ export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode)
   return "unknown-employment-type";
 }
 
-function profileTerms(profile: ProfileDraft) {
-  const stopWords = new Set(["about", "after", "again", "also", "and", "with", "from", "into", "that", "this", "their", "your", "have", "help", "more", "most", "only", "page", "project", "projects", "service", "services", "work", "works"]);
+export function profileTerms(profile: ProfileDraft) {
   const phrases = [
     ...profile.searchKeywords,
     ...profile.skillsAndTechnologies.map((claim) => claim.text),
     ...profile.productsAndServices.map((claim) => claim.text),
   ].map((item) => item.toLowerCase().replace(/[^a-z0-9+#. -]/g, " ").replace(/\s+/g, " ").trim()).filter((item) => item.length >= 3);
-  const terms = phrases.flatMap((phrase) => [phrase, ...phrase.split(" ").filter((token) => token.length >= 4 && !stopWords.has(token))]);
-  return [...new Set(terms)].slice(0, 36);
+  const terms = phrases.flatMap((phrase) => {
+    const tokens = phrase.split(" ").filter((token) => token.length >= 4 && !GENERIC_MATCH_TERMS.has(token));
+    const ngrams = tokens.length > 1 ? tokens.flatMap((_, index) => index < tokens.length - 1 ? [`${tokens[index]} ${tokens[index + 1]}`] : []) : [];
+    return [tokens.length > 1 ? tokens.join(" ") : "", ...ngrams, ...tokens];
+  });
+  const uniqueTerms = [...new Set(terms)].filter(Boolean);
+  return [...new Set(uniqueTerms.flatMap((term) => term.endsWith("s") && term.length > 4 ? [term, term.slice(0, -1)] : [term]))].slice(0, 36);
+}
+
+function termInText(term: string, value: string) {
+  return new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(value);
+}
+
+function profileMatchesFor(profile: ProfileDraft, combined: string) {
+  return profileTerms(profile).filter((term) => termInText(term, combined)).slice(0, 6);
 }
 
 function budgetSignal(value: string) {
@@ -148,17 +162,19 @@ function inferClientType(value: string, selected: CustomerType[]) {
 
 function evaluateOpportunity(record: RawOpportunity, profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): { opportunity: Opportunity | null; reason?: DiscoveryRejectionReason } {
   const combined = `${record.title} ${record.description}`.toLowerCase();
+  const productOwner = profile.discoveryObjective === "product-users" || profile.offeringType === "product-owner";
+  if (productOwner && ["Jobicy", "Remote OK", "SerpApi"].includes(record.provider)) return { opportunity: null, reason: "unsupported-customer-intent" };
   const classification = classifyOpportunity(record, mode);
   if (classification === "expired-or-stale") return { opportunity: null, reason: "expired-or-stale" };
   if (classification === "full-time-employment") return { opportunity: null, reason: "full-time-employment" };
   if (!["explicit-project-request", "freelance-or-contract", "potential-buyer-signal-unconfirmed", "research-signal-only"].includes(classification)) return { opportunity: null, reason: "unsupported-customer-intent" };
   if (classification === "research-signal-only" && mode !== "product" && mode !== "potential-customers") return { opportunity: null, reason: "unsupported-customer-intent" };
   if ((classification === "potential-buyer-signal-unconfirmed" || classification === "research-signal-only") && !record.organization) return { opportunity: null, reason: "missing-organization" };
-  const terms = profileTerms(profile);
-  const profileMatches = terms.filter((term) => combined.includes(term) || term.split(" ").filter(Boolean).every((token) => combined.includes(token))).slice(0, 6);
+  const profileMatches = profileMatchesFor(profile, combined);
   const categoryMatches = selected.flatMap((category) => CATEGORY_TERMS[category].filter((term) => combined.includes(term))).slice(0, 6);
+  if (productOwner && !PRODUCT_NEED_PATTERN.test(combined)) return { opportunity: null, reason: "weak-profile-match" };
   if (["potential-buyer-signal-unconfirmed", "research-signal-only"].includes(classification) && !profileMatches.length) return { opportunity: null, reason: "weak-profile-match" };
-  if (!profileMatches.length && !categoryMatches.length) return { opportunity: null, reason: "weak-profile-match" };
+  if (!profileMatches.length) return { opportunity: null, reason: "weak-profile-match" };
   const score = (classification === "explicit-project-request" ? 30 : classification === "freelance-or-contract" ? 20 : classification === "potential-buyer-signal-unconfirmed" ? 10 : 0) + Math.min(profileMatches.length * 2, 12) + Math.min(categoryMatches.length * 2, 8) + (isFresh(record.provider, record.publishedAt) ? 3 : 0);
   const excerpt = record.description.slice(0, 360).trim();
   const prospectType: ProspectType = classification === "potential-buyer-signal-unconfirmed" ? "potential-customer" : classification === "research-signal-only" ? "research-signal" : "active-request";
@@ -200,8 +216,8 @@ function evaluateOpportunity(record: RawOpportunity, profile: ProfileDraft, sele
       categoryMatches,
       evidence: [
         `Public evidence: “${excerpt || "The source did not provide a usable excerpt."}”`,
-        profileMatches.length ? `Profile terms found in source text: ${profileMatches.join(", ")}.` : "No direct profile keyword overlap was found.",
-        categoryMatches.length ? `Customer category language found in source text: ${categoryMatches.join(", ")}.` : "The source does not explicitly identify a selected customer category.",
+        profileMatches.length ? `Meaningful offering terms found in source text: ${profileMatches.join(", ")}.` : "No meaningful offering-term overlap was found.",
+        categoryMatches.length ? `Customer category language found in source text: ${categoryMatches.join(", ")}.` : "The source does not explicitly identify a selected customer category; category language is never enough by itself.",
         intentEvidence,
         record.buyerName ? `Buyer identity from the source: ${record.buyerName}.` : "The source identifies a project or organization, not necessarily a buyer.",
         record.noticeStatus ? `Notice status: ${record.noticeStatus}.` : "The source did not expose a notice status in the retrieved record.",
@@ -328,8 +344,10 @@ async function queryJobicy(profile: ProfileDraft): Promise<{ records: RawOpportu
   return { records, status: { provider: "Jobicy", status: "queried", detail: `${records.length} public records returned. Contract status is rechecked from source fields.`, query } };
 }
 
-async function queryRemoteOk(): Promise<{ records: RawOpportunity[]; status: ProviderStatus }> {
-  const payload = (await fetchJson("https://remoteok.com/api?tag=dev")) as Array<Record<string, unknown>>;
+async function queryRemoteOk(profile: ProfileDraft): Promise<{ records: RawOpportunity[]; status: ProviderStatus }> {
+  const tag = profileTerms(profile).find((term) => term.length >= 4)?.replace(/\s+/g, "-");
+  if (!tag) return { records: [], status: { provider: "Remote OK", status: "skipped", detail: "No meaningful confirmed service term was available for a Remote OK query." } };
+  const payload = (await fetchJson(`https://remoteok.com/api?tag=${encodeURIComponent(tag)}`)) as Array<Record<string, unknown>>;
   const records = payload.filter((item) => item && typeof item === "object").flatMap((job) => {
     const url = text(job.url || (job.id ? `https://remoteok.com/remote-jobs/${text(job.id)}` : ""));
     const title = text(job.position || job.title);
@@ -402,12 +420,14 @@ export function dedupeAndRankOpportunities(raw: RawOpportunity[], profile: Profi
 
 export async function discoverOpportunities(profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode) {
   if (!selected.length) throw new SourceError("Select at least one customer type before searching.");
-  const activeMode = mode === "services" || mode === "active-requests";
+  const productOwner = profile.discoveryObjective === "product-users" || profile.offeringType === "product-owner";
+  const effectiveMode: DiscoveryMode = productOwner ? "potential-customers" : mode;
+  const activeMode = !productOwner && (effectiveMode === "services" || effectiveMode === "active-requests");
   const results = await Promise.allSettled([
-    queryHackerNews(profile, selected, mode),
+    queryHackerNews(profile, selected, effectiveMode),
     queryContractsFinder(profile),
     activeMode ? queryJobicy(profile) : Promise.resolve({ records: [], status: { provider: "Jobicy", status: "skipped" as const, detail: "Jobicy job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
-    activeMode ? queryRemoteOk() : Promise.resolve({ records: [], status: { provider: "Remote OK", status: "skipped" as const, detail: "Remote OK job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
+    activeMode ? queryRemoteOk(profile) : Promise.resolve({ records: [], status: { provider: "Remote OK", status: "skipped" as const, detail: "Remote OK job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
     queryGithub(profile),
     queryReddit(),
     activeMode ? querySerpApi(profile, selected[0]) : Promise.resolve({ records: [], status: { provider: "SerpApi", status: "skipped" as const, detail: "SerpApi job search is an active-request source and was skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
@@ -422,7 +442,7 @@ export async function discoverOpportunities(profile: ProfileDraft, selected: Cus
       const rejected: Partial<Record<DiscoveryRejectionReason, number>> = {};
       let qualified = 0;
       for (const record of result.value.records) {
-        const evaluation = evaluateOpportunity(record, profile, selected, mode);
+        const evaluation = evaluateOpportunity(record, profile, selected, effectiveMode);
         if (evaluation.opportunity) qualified += 1;
         else if (evaluation.reason) rejected[evaluation.reason] = (rejected[evaluation.reason] || 0) + 1;
       }
@@ -437,11 +457,11 @@ export async function discoverOpportunities(profile: ProfileDraft, selected: Cus
       statuses.push({ provider: "Unknown provider", status: "failed", detail: "The provider could not be reached. Other sources were kept separate." });
     }
   }
-  const opportunities = dedupeAndRankOpportunities(raw, profile, selected, mode);
+  const opportunities = dedupeAndRankOpportunities(raw, profile, selected, effectiveMode);
   const tierCounts = opportunities.reduce((counts, opportunity) => {
     const tier = opportunity.prospectType || (opportunity.classification === "potential-buyer-signal-unconfirmed" ? "potential-customer" : opportunity.classification === "research-signal-only" ? "research-signal" : "active-request");
     counts[tier] += 1;
     return counts;
   }, { "active-request": 0, "potential-customer": 0, "research-signal": 0 } as Record<ProspectType, number>);
-  return { opportunities, providers: statuses, diagnostics, tierCounts, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale"], mode, selectedCustomerTypes: selected, sourceBoundary: "Active requests have explicit supplier intent; potential customers have observed need with buying intent possible; research signals show work without defensible external-buying evidence." } };
+  return { opportunities, providers: statuses, diagnostics, tierCounts, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale", "unrelated job feeds for product owners"], mode: effectiveMode, selectedCustomerTypes: selected, sourceBoundary: "Active requests have explicit supplier intent; potential customers have observed need with buying intent possible; research signals show work without defensible external-buying evidence." } };
 }

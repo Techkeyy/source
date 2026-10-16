@@ -88,14 +88,14 @@ try {
   const meAfterRegistration = await request("/api/auth/me", {}, jars[0]);
   assert(meAfterRegistration.response.ok && meAfterRegistration.data?.user?.id === state.userIds[0], "authenticated session was not recovered");
 
-  const analysis = await request("/api/profile/analyze", { method: "POST", body: JSON.stringify({ url: "https://www.frog.co/" }) }, jars[0]);
+  const analysis = await request("/api/profile/analyze", { method: "POST", body: JSON.stringify({ url: "https://www.netguru.com/" }) }, jars[0]);
   assert(analysis.response.ok, `profile analysis returned HTTP ${analysis.response.status}`);
   assert(analysis.data?.analysis?.provider === "deepseek", `profile analysis provider was ${analysis.data?.analysis?.provider || "missing"}`);
   assert(analysis.data?.analysis?.model === "deepseek-flash", `profile analysis model was ${analysis.data?.analysis?.model || "missing"}`);
   assert(typeof analysis.data?.profile?.businessName === "string" && analysis.data.profile.businessName.length > 0, "profile has no business name");
   assert(typeof analysis.data?.profile?.summary === "string" && analysis.data.profile.summary.length > 0, "profile has no summary");
   assert(groundedClaimCount(analysis.data.profile) >= 1, "profile contains no grounded claims");
-  state.profile = { ...analysis.data.profile, summary: `${analysis.data.profile.summary} Integration review confirmed.` };
+  state.profile = { ...analysis.data.profile, summary: `${analysis.data.profile.summary} Integration review confirmed.`, offeringType: "service-provider", discoveryObjective: "external-services" };
 
   const confirmation = await request("/api/profile/confirm", { method: "POST", body: JSON.stringify({ profile: state.profile }) }, jars[0]);
   assert(confirmation.response.ok && confirmation.data?.saved === true, `profile confirmation returned HTTP ${confirmation.response.status}`);

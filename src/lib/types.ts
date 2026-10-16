@@ -9,6 +9,8 @@ export type CustomerType = (typeof CUSTOMER_TYPES)[number];
 export type DiscoveryMode = "services" | "product" | "active-requests" | "potential-customers";
 export type ProspectType = "active-request" | "potential-customer" | "research-signal";
 export type BuyerIntent = "confirmed" | "possible" | "unsupported";
+export type OfferingType = "service-provider" | "product-owner" | "unclear";
+export type DiscoveryObjective = "external-services" | "product-users";
 export type OpportunityClassification =
   | "explicit-project-request"
   | "freelance-or-contract"
@@ -46,6 +48,10 @@ export interface ProfileDraft {
     sourceExcerptCount: number;
     unsupportedFields: string[];
   };
+  offeringTypeSuggestion?: OfferingType;
+  offeringTypeSuggestionReason?: string;
+  offeringType?: OfferingType;
+  discoveryObjective?: DiscoveryObjective;
 }
 
 export interface Opportunity {
