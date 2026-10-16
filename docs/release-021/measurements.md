@@ -20,12 +20,20 @@ The 319px surface is the connector's scrollbar-adjusted rendering of the
 320px mobile class viewport. Its heading and document scroll widths are equal
 to their containing widths, so no horizontal overflow is present.
 
-## Canonical screenshots
+## Screenshot artifacts and acceptance boundary
 
-- `landing-320.png`: Chromium CSS viewport requested at 320px; high-DPI PNG
-  preserves the browser's original output resolution.
-- `landing-390.png`: Chromium CSS viewport requested at 390px; high-DPI PNG
-  preserves the browser's original output resolution.
+The retained files `landing-320.png` and `landing-390.png` are original,
+unaltered outputs from the standalone Chromium screenshot process. Their
+bitmap dimensions are 980x3675 and 1194x3675 respectively. That process
+applied a platform CSS viewport floor of about 490px despite the requested
+320px and 390px sizes, so these files are useful shell visual artifacts but
+are not proof of exact 320px or 390px CSS viewport behavior.
+
+The valid interactive narrow-width evidence in this package is the live
+connector measurement above: a 319px scrollbar-adjusted surface with equal
+heading client and scroll widths and no horizontal overflow. Exact 390px
+visual acceptance remains pending a real Chromium/Kane run with a verified
+390px CSS viewport.
 
 The desktop/full-width browser path was also opened in Chromium during the
 same task. No production page was used for screenshot generation.

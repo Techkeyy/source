@@ -3,9 +3,12 @@
 - The Kane CLI browser runner was unavailable because its Bash service
   returned `E_ACCESSDENIED`. Real Chromium fallback evidence was captured and
   the limitation is recorded rather than hidden.
-- The high-DPI screenshots preserve Chromium's original output dimensions;
-  their CSS viewport sizes are the requested 320px and 390px. The live
-  connector's measured narrow surface was 319px after scrollbar allocation.
+- The retained high-DPI screenshots preserve the standalone Chromium output
+  dimensions, but that process applied a platform CSS viewport floor of about
+  490px despite the requested 320px and 390px sizes. The 980x3675 and
+  1194x3675 PNGs are therefore unaltered shell artifacts, not exact CSS
+  viewport proof. The live connector's measured narrow surface was 319px
+  after scrollbar allocation; exact 390px visual acceptance remains open.
 - No production deployment or public post-fix UAT was performed. Production
   remains on the previously accepted commit until Director approval.
 - Source displays a general eligibility reminder but does not implement a
