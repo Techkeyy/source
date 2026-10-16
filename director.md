@@ -3548,3 +3548,139 @@ Current Directive 024 status: **PIVOT IMPLEMENTED ON ISOLATED BRANCH; LOCAL
 ACCEPTANCE AND STATIC CHECKS PASS; PRODUCTION UNCHANGED; RENDER DEPLOYMENT NOT
 REQUESTED; OWNER REVIEW AND CONTROLLED PROMOTION PENDING**.
 
+## Directive 025 — make potential-customer discovery work
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Release boundary
+
+This correction remains on `codex/directive-024-customer-discovery`, based on
+the accepted pivot commit `3af7c4e527da298f1ad4ee6b574c27c558384224`. No Render
+deployment, GitHub `main` update, production secret change, infrastructure
+change, model/provider change, or Reddit integration was performed. Production
+remains at `https://source-9k1o.onrender.com` on the existing deployed release;
+the exact final local commit is recorded by Git after this section is committed.
+
+### Phase A — diagnosed empty potential-customer pipeline
+
+The empty result was not caused by the database, profile persistence, or the
+pipeline. It was caused by source-adapter and qualification gates:
+
+- Hacker News searched one highly restrictive, comment-only, AND-style query.
+  Realistic customer-discovery material is primarily in fresh Ask HN / Show HN
+  stories, so the adapter was searching the wrong object type and vocabulary.
+- GitHub limited collection to `help wanted`, `enhancement`, and `feature
+  request` labels. Real public project needs were also unlabeled or used
+  `must-have` / `ready-for-human` labels. The old exact-overlap gate then
+  discarded otherwise compatible project descriptions.
+- The old result path had no provider-stage accounting, so a zero list did not
+  distinguish source retrieval, extraction, local adapter filtering, stale
+  records, unsupported intent, missing organization, or weak profile fit.
+
+The correction adds provider diagnostics with raw, extracted, adapter-rejected,
+qualified, and reasoned-rejection counts. Potential signals now require a
+fresh organization/project identity, a public-need signal, a compatible
+profile match, and an explicit unconfirmed-intent boundary. Generic HN launch
+posts and generic GitHub promotional/course/portfolio issues are not accepted
+merely because they contain words such as “website” or “design”.
+
+### Phase B/C/D — live public-source evidence
+
+The bounded probe in `scripts/discovery-check.mjs` used two transparent manual
+profiles, without claiming website-grounded qualifications:
+
+1. Freelance developer / small website-development agency — web development,
+   website development, JavaScript, and React.
+2. Branding, design, and marketing provider — branding, product design,
+   marketing, brand design, and design.
+
+Final live probe counts on 2026-10-16:
+
+| Profile / source | Raw | Extracted | Adapter rejected | Qualified | Local rejection reasons |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Developer / Hacker News stories | 185 | 159 | 26 | 0 | 157 stale; 2 unsupported intent |
+| Developer / GitHub open issues | 30 | 2 | 28 | 1 | 1 unsupported intent |
+| Brand / design / marketing / Hacker News stories | 174 | 163 | 11 | 0 | 160 stale; 1 weak profile; 2 unsupported intent |
+| Brand / design / marketing / GitHub open issues | 30 | 13 | 17 | 13 | none after adapter filtering |
+
+The probe found four representative accepted records in its capped evidence
+set, with provider-level qualification counts of one developer GitHub result
+and thirteen brand/design/marketing GitHub results. The credible examples
+selected for review are:
+
+- [Device Website Development](https://github.com/edwardschmitz/sigcore-uc/issues/6)
+  — `edwardschmitz/sigcore-uc`, observed 2026-10-10; the public issue has an
+  objective and concrete browser-interface requirements compatible with web and
+  website development.
+- [[DESIGN] Branding: logo, favicon, marketing landing page](https://github.com/Transf-ORM/Transf-ORM-CLI/issues/149)
+  — `Transf-ORM/Transf-ORM-CLI`, observed 2026-09-08; the public issue is a
+  branding/design work signal compatible with branding services.
+- [Brand + design pipeline for client-facing content](https://github.com/federicomrod/Milton/issues/59)
+  — `federicomrod/Milton`, observed 2026-10-05; the public issue describes a
+  client-facing brand-kit/template workflow compatible with branding and
+  design services.
+
+All accepted records display the original URL, source date, organization or
+project identity, observed need excerpt, compatible profile terms, and the next
+step to inspect a legitimate contact route. None invents an email or claims a
+confirmed buyer. Buying intent is explicitly `unconfirmed`.
+
+The Hacker News stage was deliberately allowed to return zero qualified
+prospects after the stricter source-specific request gate. Its 185/174 raw
+records were not silently relabeled as customers. GitHub supplied the usable
+signals in this run; the source mix is reported honestly rather than padded to
+meet a target.
+
+Negative overclaiming guard: [elasticpath/plasmic#662](https://github.com/elasticpath/plasmic/issues/662)
+was found and remains classified as `potential-buyer-signal-unconfirmed`, with
+`buyingIntentConfirmed: false`. It is not classified as an active buyer or a
+confirmed commercial request. Reddit remains disabled by policy.
+
+### Phase E — local customer journey
+
+A synthetic local account was used only against the local preview and then
+deleted. The controlled browser journey passed:
+
+- Manual developer profile entered transparently as user-edited, with
+  `https://example.com/` retained as a supporting URL rather than claimed as
+  portfolio evidence.
+- All four customer categories selected: small businesses, startups,
+  agencies, and individuals.
+- Potential-customer mode returned the GitHub `Device Website Development`
+  signal. The card displayed **Potential customer**, source/date/project
+  identity, public evidence, profile fit, and the warning that intent is
+  inferred rather than confirmed.
+- The record was saved to My Pipeline; cautious outreach was generated,
+  edited to `Edited cautious outreach for acceptance.`, saved, and visibly
+  recovered in the pipeline.
+- Logout/login recovery restored the confirmed profile, the saved potential
+  record, and its saved draft.
+- Existing ownership probe passed: separate registrations, owner save,
+  cross-account denial, and isolated saved lists. Two probe accounts were
+  deleted by the probe. The Directive 025 synthetic account cleanup removed
+  one opportunity, one profile, and one user document.
+- The Remote OK Vytalize regression remained excluded from freelance/contract
+  reclassification.
+
+### Checks
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 16 tests.
+- `npm run build`: PASS — Next.js 16.4.0 compiled, TypeScript completed, 13
+  static pages generated, and the dynamic API routes were included.
+- `npm run probe:discovery`: PASS — live HN/GitHub diagnostics, two manual
+  profiles, plasmic overclaiming guard, and Remote OK regression.
+- `npm run probe:ownership`: PASS — owner save, cross-account denial, and
+  saved-list isolation; cleanup PASS.
+- `git diff --check`: PASS.
+- No production browser account, production data, Render deployment, or
+  production infrastructure was touched.
+
+### Directive 025 status
+
+**POTENTIAL-CUSTOMER DISCOVERY CORRECTED AND LOCALLY ACCEPTED; GITHUB PUBLIC
+PROJECT SIGNALS NOW RECOVER; HACKER NEWS EMPTY RESULT IS HONEST AFTER STRICT
+INTENT FILTERING; ACCOUNT/PERSISTENCE/OUTREACH JOURNEY PASS; PRODUCTION
+UNCHANGED; OWNER REVIEW AND CONTROLLED PROMOTION REQUIRED.**
+

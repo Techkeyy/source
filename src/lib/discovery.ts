@@ -16,6 +16,24 @@ interface ProviderStatus {
   status: "queried" | "skipped" | "failed";
   detail: string;
   query?: string;
+  rawCount?: number;
+  adapterRejected?: number;
+}
+
+export type DiscoveryRejectionReason =
+  | "expired-or-stale"
+  | "full-time-employment"
+  | "unsupported-customer-intent"
+  | "missing-organization"
+  | "weak-profile-match"
+  | "weak-category-match";
+
+export interface DiscoveryProviderDiagnostics {
+  rawCandidates: number;
+  extractedCandidates: number;
+  adapterRejected: number;
+  qualified: number;
+  rejected: Partial<Record<DiscoveryRejectionReason, number>>;
 }
 
 export interface RawOpportunity {
@@ -45,7 +63,12 @@ const CONTRACT_CONTEXT_PATTERNS = [
   /\b(?:1099|c2c|corp[- ]to[- ]corp)\b/i,
   /\bproject[- ]based\s+(?:role|work|engagement)\b/i,
 ];
-const POTENTIAL_SIGNAL_PATTERN = /\b(?:feature request|enhancement|help wanted|looking for|seeking|need(?:s)?|recommend(?:ation|ations)?|struggl(?:e|ing)|problem with|how do i|migrat(?:e|ion)|replac(?:e|ing)|launch(?:ed|ing)?|workflow gap|manual process)\b/i;
+const POTENTIAL_SIGNAL_PATTERN = /\b(?:feature request|enhancement|help wanted|must-have|ready-for-human|client request|external|looking for|seeking|need(?:s)?|recommend(?:ation|ations)?|struggl(?:e|ing)|problem with|how do i|migrat(?:e|ion)|replac(?:e|ing)|want to hire|freelance(?:r|rs)?|workflow gap|manual process|customer-facing|user story|acceptance criteria|why this needs a human)\b/i;
+const HN_POTENTIAL_SIGNAL_PATTERN = /\b(?:looking for|seeking)\s+(?:a|an|the|some)\s+(?:freelancer|developer|designer|agency|help|recommendation|solution)|\bneed\s+(?:help|a\s+(?:freelancer|developer|designer|agency|website|solution))\b|\b(?:want to hire|freelance(?:r|rs)?|could someone recommend|anyone recommend)\b|\b(?:customer-facing|user story|acceptance criteria)\b/i;
+const GITHUB_SIGNAL_LABEL_PATTERN = /\b(?:help wanted|enhancement|feature request|must-have|ready-for-human|client request|external)\b/i;
+const GITHUB_NEED_PATTERN = /\b(?:i want to|we want to|we need|need a|looking for|build(?:ing)?|objective|develop(?:ing)?|implement(?:ation|ing)?|product catalogue|design direction|product brief|customer-facing|user story|acceptance criteria|why this needs a human)\b/i;
+const GITHUB_INTERNAL_PATTERN = /\b(?:fix typo|refactor|unit tests?|test coverage|ci\/cd|dependency|npm audit|lint|internal|assigned task|database migration|api endpoint)\b/i;
+const GITHUB_PROMOTION_PATTERN = /\b(?:best .* company in|advertising production company|graphic design course|learn .* career|support small business marketing|seo services?|past websites?|portfolio|showcase my work)\b/i;
 
 function text(value: unknown) {
   return typeof value === "string" ? normalizeExternalText(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()) : "";
@@ -76,9 +99,12 @@ export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode)
   const combined = `${record.title} ${record.description} ${record.type}`;
   if (!isFresh(record.provider, record.publishedAt)) return "expired-or-stale";
   if (FULL_TIME_TYPE_PATTERN.test(record.type) || FULL_TIME_CONTEXT_PATTERN.test(combined)) return "full-time-employment";
+  if ((mode === "product" || mode === "potential-customers") && record.prospectType === "potential-customer") {
+    const potentialSignal = record.provider === "Hacker News" ? HN_POTENTIAL_SIGNAL_PATTERN : POTENTIAL_SIGNAL_PATTERN;
+    return potentialSignal.test(combined) ? "potential-buyer-signal-unconfirmed" : "unknown-employment-type";
+  }
   if (record.provider === "Hacker News" && /\b(?:looking for|need|seeking)\s+(?:a\s+)?freelancer\b/i.test(combined)) return "explicit-project-request";
   if (CONTRACT_TYPE_PATTERN.test(record.type) || CONTRACT_CONTEXT_PATTERNS.some((pattern) => pattern.test(combined))) return "freelance-or-contract";
-  if ((mode === "product" || mode === "potential-customers") && record.prospectType === "potential-customer" && POTENTIAL_SIGNAL_PATTERN.test(combined)) return "potential-buyer-signal-unconfirmed";
   return "unknown-employment-type";
 }
 
@@ -104,61 +130,91 @@ function inferClientType(value: string, selected: CustomerType[]) {
   return matched || "unknown";
 }
 
-export function qualifyOpportunity(record: RawOpportunity, profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): Opportunity | null {
+function evaluateOpportunity(record: RawOpportunity, profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): { opportunity: Opportunity | null; reason?: DiscoveryRejectionReason } {
   const combined = `${record.title} ${record.description}`.toLowerCase();
   const classification = classifyOpportunity(record, mode);
-  if (!["explicit-project-request", "freelance-or-contract", "potential-buyer-signal-unconfirmed"].includes(classification)) return null;
+  if (classification === "expired-or-stale") return { opportunity: null, reason: "expired-or-stale" };
+  if (classification === "full-time-employment") return { opportunity: null, reason: "full-time-employment" };
+  if (!["explicit-project-request", "freelance-or-contract", "potential-buyer-signal-unconfirmed"].includes(classification)) return { opportunity: null, reason: "unsupported-customer-intent" };
+  if (classification === "potential-buyer-signal-unconfirmed" && !record.organization) return { opportunity: null, reason: "missing-organization" };
   const terms = profileTerms(profile);
-  const profileMatches = terms.filter((term) => combined.includes(term)).slice(0, 6);
+  const profileMatches = terms.filter((term) => combined.includes(term) || term.split(" ").filter(Boolean).every((token) => combined.includes(token))).slice(0, 6);
   const categoryMatches = selected.flatMap((category) => CATEGORY_TERMS[category].filter((term) => combined.includes(term))).slice(0, 6);
-  if (!profileMatches.length && !categoryMatches.length) return null;
-  if (classification === "potential-buyer-signal-unconfirmed" && !profileMatches.length) return null;
+  if (classification === "potential-buyer-signal-unconfirmed" && !profileMatches.length) return { opportunity: null, reason: "weak-profile-match" };
+  if (!profileMatches.length && !categoryMatches.length) return { opportunity: null, reason: "weak-profile-match" };
   const score = (classification === "explicit-project-request" ? 10 : classification === "freelance-or-contract" ? 8 : 4) + Math.min(profileMatches.length * 2, 12) + Math.min(categoryMatches.length * 2, 8) + (isFresh(record.provider, record.publishedAt) ? 3 : 0);
   const excerpt = record.description.slice(0, 360).trim();
   const prospectType: ProspectType = classification === "potential-buyer-signal-unconfirmed" ? "potential-customer" : "active-request";
-  return {
-    source: record.provider,
-    sourceUrl: record.url,
-    title: record.title || "Untitled opportunity",
-    description: excerpt || "The source did not provide a description.",
-    publishedAt: record.publishedAt,
-    classification,
-    prospectType,
-    organization: record.organization || "Organization not identified by the source",
-    observedNeed: excerpt || "The source did not provide a clear need statement.",
-    nextStep: prospectType === "potential-customer" ? "Inspect the project signal and verify a legitimate contact route before reaching out." : "Open the original request and decide whether to apply or respond.",
-    contactUrl: record.contactUrl || null,
-    clientType: inferClientType(combined, selected),
-    score,
-    profileMatches,
-    categoryMatches,
-    evidence: [
-      `Public evidence: “${excerpt || "The source did not provide a usable excerpt."}”`,
-      profileMatches.length ? `Profile terms found in source text: ${profileMatches.join(", ")}.` : "No direct profile keyword overlap was found.",
-      categoryMatches.length ? `Customer category language found in source text: ${categoryMatches.join(", ")}.` : "The source does not explicitly identify a selected customer category.",
-      classification === "potential-buyer-signal-unconfirmed" ? "Buying intent is inferred, not explicit. Treat this as a public signal to investigate, not a promise of work." : `The source text supports the classification: ${classification.replaceAll("-", " ")}.`,
-    ],
-    budgetSignal: budgetSignal(`${record.title} ${record.description}`),
-    contactSignal: /\b(apply|application|contact|email|submit|reach out)\b/i.test(combined),
-    attribution: `Source data from ${record.provider}. Open the original listing before acting.`,
-    providerRecordId: record.id,
-  };
+  return { opportunity: {
+      source: record.provider,
+      sourceUrl: record.url,
+      title: record.title || "Untitled opportunity",
+      description: excerpt || "The source did not provide a description.",
+      publishedAt: record.publishedAt,
+      classification,
+      prospectType,
+      organization: record.organization || "Organization not identified by the source",
+      observedNeed: excerpt || "The source did not provide a clear need statement.",
+      nextStep: prospectType === "potential-customer" ? "Inspect the project signal and verify a legitimate contact route before reaching out." : "Open the original request and decide whether to apply or respond.",
+      contactUrl: record.contactUrl || null,
+      clientType: inferClientType(combined, selected),
+      score,
+      profileMatches,
+      categoryMatches,
+      evidence: [
+        `Public evidence: “${excerpt || "The source did not provide a usable excerpt."}”`,
+        profileMatches.length ? `Profile terms found in source text: ${profileMatches.join(", ")}.` : "No direct profile keyword overlap was found.",
+        categoryMatches.length ? `Customer category language found in source text: ${categoryMatches.join(", ")}.` : "The source does not explicitly identify a selected customer category.",
+        classification === "potential-buyer-signal-unconfirmed" ? "Buying intent is inferred, not explicit. Treat this as a public signal to investigate, not a promise of work." : `The source text supports the classification: ${classification.replaceAll("-", " ")}.`,
+      ],
+      budgetSignal: budgetSignal(`${record.title} ${record.description}`),
+      contactSignal: /\b(apply|application|contact|email|submit|reach out)\b/i.test(combined),
+      attribution: `Source data from ${record.provider}. Open the original listing before acting.`,
+      providerRecordId: record.id,
+    } };
+}
+
+export function qualifyOpportunity(record: RawOpportunity, profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): Opportunity | null {
+  return evaluateOpportunity(record, profile, selected, mode).opportunity;
 }
 
 async function queryHackerNews(profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): Promise<{ records: RawOpportunity[]; status: ProviderStatus }> {
   const categoryQuery = selected.flatMap((category) => CATEGORY_TERMS[category].slice(0, 2)).join(" ");
   const skillQuery = profile.searchKeywords.slice(0, 3).join(" ");
-  const phrase = mode === "services" || mode === "active-requests" ? '"looking for a freelancer" OR "need a freelancer" OR "seeking a freelancer"' : '"looking for" OR seeking OR recommendation OR struggling';
-  const query = `${phrase} ${skillQuery} ${categoryQuery}`.trim();
-  const url = `https://hn.algolia.com/api/v1/search_by_date?${new URLSearchParams({ query, tags: "comment", hitsPerPage: "50" })}`;
-  const payload = (await fetchJson(url)) as { hits?: Array<Record<string, unknown>> };
-  const records = (payload.hits || []).flatMap((hit) => {
+  if (mode === "services" || mode === "active-requests") {
+    const query = `"looking for a freelancer" OR "need a freelancer" OR "seeking a freelancer" ${skillQuery} ${categoryQuery}`.trim();
+    const url = `https://hn.algolia.com/api/v1/search_by_date?${new URLSearchParams({ query, tags: "comment", hitsPerPage: "50" })}`;
+    const payload = (await fetchJson(url)) as { hits?: Array<Record<string, unknown>> };
+    const hits = payload.hits || [];
+    const records = hits.flatMap((hit) => {
+      const objectId = text(hit.objectID);
+      const description = text(hit.comment_text || hit.story_title || hit.title);
+      if (!objectId || !description) return [];
+      return [{ provider: "Hacker News", title: text(hit.story_title) || "Hacker News community discussion", description, url: `https://news.ycombinator.com/item?id=${objectId}`, publishedAt: dateValue(hit.created_at || hit.created_at_i), type: "comment", id: objectId, prospectType: "active-request" as const }];
+    });
+    return { records, status: { provider: "Hacker News", status: "queried", detail: `${records.length} public comments returned.`, query, rawCount: hits.length, adapterRejected: hits.length - records.length } };
+  }
+
+  const serviceTerms = [...new Set([...profile.searchKeywords, ...profile.productsAndServices.map((claim) => claim.text), ...profile.skillsAndTechnologies.map((claim) => claim.text)].filter(Boolean))].slice(0, 3);
+  const needTerms = ["looking for a freelancer", "need help with", "recommend a freelancer", "looking for a designer", "looking for a developer"];
+  const searchTerms = [...new Set(needTerms.flatMap((signal) => serviceTerms.slice(0, 2).map((term) => `${signal} ${term}`)).concat(categoryQuery ? [`${categoryQuery} ${serviceTerms[0] || "project"}`] : []))].slice(0, 8);
+  const results = await Promise.allSettled(searchTerms.map(async (term) => {
+    const query = term.replaceAll('"', "");
+    const url = `https://hn.algolia.com/api/v1/search_by_date?${new URLSearchParams({ query, tags: "story", hitsPerPage: "30" })}`;
+    return (await fetchJson(url)) as { hits?: Array<Record<string, unknown>> };
+  }));
+  const hits = results.flatMap((result) => result.status === "fulfilled" ? result.value.hits || [] : []);
+  const seen = new Set<string>();
+  const records = hits.flatMap((hit) => {
     const objectId = text(hit.objectID);
-    const description = text(hit.comment_text || hit.story_title || hit.title);
-    if (!objectId || !description) return [];
-    return [{ provider: "Hacker News", title: text(hit.story_title) || "Hacker News community discussion", description, url: `https://news.ycombinator.com/item?id=${objectId}`, publishedAt: dateValue(hit.created_at || hit.created_at_i), type: "comment", id: objectId, prospectType: (mode === "services" || mode === "active-requests" ? "active-request" : "potential-customer") as ProspectType }];
+    const title = text(hit.title || hit.story_title);
+    const description = text(hit.story_text || hit.comment_text || hit.title || hit.story_title);
+    if (!objectId || !title || !description || seen.has(objectId)) return [];
+    seen.add(objectId);
+    const organization = title.replace(/^(?:show|ask|launch) hn:\s*/i, "").split(/\s+[–—-]\s+/)[0].trim() || text(hit.author) || undefined;
+    return [{ provider: "Hacker News", title, description, url: `https://news.ycombinator.com/item?id=${objectId}`, publishedAt: dateValue(hit.created_at || hit.created_at_i), type: "story", id: objectId, prospectType: "potential-customer" as const, organization }];
   });
-  return { records, status: { provider: "Hacker News", status: "queried", detail: `${records.length} public comments returned.`, query } };
+  return { records, status: { provider: "Hacker News", status: "queried", detail: `${records.length} public Ask/Show/Launch stories returned from ${searchTerms.length} profile-aware queries.`, query: searchTerms.join(" | "), rawCount: hits.length, adapterRejected: hits.length - records.length } };
 }
 
 async function queryJobicy(profile: ProfileDraft): Promise<{ records: RawOpportunity[]; status: ProviderStatus }> {
@@ -212,7 +268,8 @@ async function queryGithub(profile: ProfileDraft): Promise<{ records: RawOpportu
   const response = await fetch(`https://api.github.com/search/issues?${new URLSearchParams({ q: query, per_page: "30" })}`, { signal: AbortSignal.timeout(12_000), headers: { accept: "application/vnd.github+json", "user-agent": "Source/0.1 customer discovery", ...(token ? { authorization: `Bearer ${token}` } : {}) } });
   if (!response.ok) throw new SourceError(`GitHub public issue search returned HTTP ${response.status}.`, 502, "DISCOVERY_PROVIDER_FAILED");
   const payload = (await response.json()) as { items?: Array<Record<string, unknown>> };
-  const records = (payload.items || []).flatMap((item) => {
+  const items = payload.items || [];
+  const records = items.flatMap((item) => {
     const url = text(item.html_url);
     const repositoryUrl = text(item.repository_url);
     const title = text(item.title);
@@ -220,10 +277,14 @@ async function queryGithub(profile: ProfileDraft): Promise<{ records: RawOpportu
     if (!url || !title || !description) return [];
     const repository = repositoryUrl.split("/").slice(-2).join("/");
     const labels = Array.isArray(item.labels) ? item.labels.flatMap((label) => label && typeof label === "object" ? [text((label as Record<string, unknown>).name)] : []).filter(Boolean).join(", ") : "";
-    if (!/(?:help wanted|enhancement|feature request)/i.test(labels)) return [];
+    const combined = `${title} ${description}`;
+    const hasActionableNeed = GITHUB_NEED_PATTERN.test(combined);
+    const hasPublicNeedSignal = hasActionableNeed || (GITHUB_SIGNAL_LABEL_PATTERN.test(labels) && /user story|acceptance criteria|why this needs a human|objective|i want to|we need|build|develop|implement/i.test(combined));
+    const looksInternal = GITHUB_INTERNAL_PATTERN.test(combined);
+    if (!hasPublicNeedSignal || GITHUB_PROMOTION_PATTERN.test(combined) || (looksInternal && !/user story|acceptance criteria|why this needs a human|customer-facing/i.test(description))) return [];
     return [{ provider: "GitHub", title, description, url, publishedAt: dateValue(item.created_at), type: labels || "public issue", id: text(item.id || url), prospectType: "potential-customer" as const, organization: repository || text(item.user && typeof item.user === "object" ? (item.user as Record<string, unknown>).login : "") || undefined }];
   });
-  return { records, status: { provider: "GitHub", status: "queried", detail: `${records.length} open public issues returned after local signal-label filtering. Potential-customer labels are inferred from public project signals.`, query } };
+  return { records, status: { provider: "GitHub", status: "queried", detail: `${records.length} open public issues returned after local public-need filtering. Internal engineering tasks and unsupported commercial assumptions are excluded.`, query, rawCount: items.length, adapterRejected: items.length - records.length } };
 }
 
 async function queryReddit(): Promise<{ records: RawOpportunity[]; status: ProviderStatus }> {
@@ -246,22 +307,37 @@ export async function discoverOpportunities(profile: ProfileDraft, selected: Cus
   const activeMode = mode === "services" || mode === "active-requests";
   const results = await Promise.allSettled([
     queryHackerNews(profile, selected, mode),
-    activeMode ? queryJobicy(profile) : Promise.resolve({ records: [], status: { provider: "Jobicy", status: "skipped" as const, detail: "Jobicy job listings are active-request sources and were skipped for the potential-customer view." } }),
-    activeMode ? queryRemoteOk() : Promise.resolve({ records: [], status: { provider: "Remote OK", status: "skipped" as const, detail: "Remote OK job listings are active-request sources and were skipped for the potential-customer view." } }),
+    activeMode ? queryJobicy(profile) : Promise.resolve({ records: [], status: { provider: "Jobicy", status: "skipped" as const, detail: "Jobicy job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
+    activeMode ? queryRemoteOk() : Promise.resolve({ records: [], status: { provider: "Remote OK", status: "skipped" as const, detail: "Remote OK job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
     queryGithub(profile),
     queryReddit(),
-    activeMode ? querySerpApi(profile, selected[0]) : Promise.resolve({ records: [], status: { provider: "SerpApi", status: "skipped" as const, detail: "SerpApi job search is an active-request source and was skipped for the potential-customer view." } }),
+    activeMode ? querySerpApi(profile, selected[0]) : Promise.resolve({ records: [], status: { provider: "SerpApi", status: "skipped" as const, detail: "SerpApi job search is an active-request source and was skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
   ]);
   const statuses: ProviderStatus[] = [];
   const raw: RawOpportunity[] = [];
+  const diagnostics: Record<string, DiscoveryProviderDiagnostics> = {};
   for (const result of results) {
     if (result.status === "fulfilled") {
       statuses.push(result.value.status);
       raw.push(...result.value.records);
+      const rejected: Partial<Record<DiscoveryRejectionReason, number>> = {};
+      let qualified = 0;
+      for (const record of result.value.records) {
+        const evaluation = evaluateOpportunity(record, profile, selected, mode);
+        if (evaluation.opportunity) qualified += 1;
+        else if (evaluation.reason) rejected[evaluation.reason] = (rejected[evaluation.reason] || 0) + 1;
+      }
+      diagnostics[result.value.status.provider] = {
+        rawCandidates: result.value.status.rawCount ?? result.value.records.length,
+        extractedCandidates: result.value.records.length,
+        adapterRejected: result.value.status.adapterRejected ?? 0,
+        qualified,
+        rejected,
+      };
     } else {
       statuses.push({ provider: "Unknown provider", status: "failed", detail: "The provider could not be reached. Other sources were kept separate." });
     }
   }
   const opportunities = dedupeAndRankOpportunities(raw, profile, selected, mode);
-  return { opportunities, providers: statuses, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale"], mode, selectedCustomerTypes: selected, sourceBoundary: "Potential customers are public signals, not confirmed buying intent." } };
+  return { opportunities, providers: statuses, diagnostics, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale"], mode, selectedCustomerTypes: selected, sourceBoundary: "Potential customers are public signals, not confirmed buying intent." } };
 }

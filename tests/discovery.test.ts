@@ -57,6 +57,10 @@ describe("opportunity employment classification", () => {
 
   it("keeps inferred potential-customer signals separate from active requests", () => {
     expect(classifyOpportunity(record({ provider: "GitHub", title: "Feature request: improve product design workflow", description: "We need product design help to replace this manual process.", type: "enhancement", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Responsive Product Catalogue Design", description: "As a visitor, I want to browse a visually clear and responsive catalogue.", type: "must-have", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Build support for a product workflow", description: "Acceptance criteria cover the public project behavior.", type: "enhancement", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "Hacker News", title: "Show HN: A new website tool", description: "I built a website tool and shared the launch.", prospectType: "potential-customer" }), "potential-customers")).toBe("unknown-employment-type");
+    expect(classifyOpportunity(record({ provider: "Hacker News", title: "Ask HN: Looking for a website designer", description: "Could someone recommend a designer for this project?", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
     expect(classifyOpportunity(record({ provider: "Hacker News", title: "Looking for a freelancer", description: "We need a freelancer for a product design project." }), "active-requests")).toBe("explicit-project-request");
   });
 
@@ -66,9 +70,10 @@ describe("opportunity employment classification", () => {
   });
 
   it("filters irrelevant prospects and removes duplicate source records", () => {
-    const relevant = record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer" });
+    const relevant = record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer", organization: "example/project" });
     const duplicate = { ...relevant, title: "Duplicate title" };
     expect(qualifyOpportunity(record({ provider: "GitHub", title: "Unrelated gardening issue", description: "We need a garden hose.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
+    expect(qualifyOpportunity(record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
     expect(dedupeAndRankOpportunities([relevant, duplicate], profile, ["startups"], "potential-customers")).toHaveLength(1);
   });
 });
