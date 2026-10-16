@@ -3353,3 +3353,87 @@ Current Directive 022C status: **CONTROLLED MERGE PASS; GITHUB PUSH PASS;
 RENDER DEPLOYMENT PASS; PRODUCTION CORE AND OWNERSHIP ACCEPTANCE PASS; EXACT
 390PX AND 320PX MOBILE PASS; OWNER MANUAL SIGN-OFF PENDING**.
 
+## Directive 023 — final documentation and security triage
+
+Date: 2026-10-16 (Africa/Lagos)
+
+Directive 023 was completed within the release boundary. The deployed
+application, Render service, production secrets, hosting plan, infrastructure,
+package manifest, and lockfile were not changed.
+
+### Documentation correction
+
+`README.md` now records the actual public release state instead of the prior
+pre-deployment/Atlas-blocked state:
+
+- Public deployment: `https://source-9k1o.onrender.com`.
+- GitHub repository: `https://github.com/Techkeyy/source`.
+- Verified deployed merge: `64807d1ce7da0c036949d430a0627c9878770323`.
+- Active inference integration: DeepSeek `deepseek-flash`.
+- Confirmed profile, proposal, refresh, logout/login recovery, and account
+  isolation results.
+- Four-category behavior for small businesses, startups, agencies, and
+  individuals, including the evidence-backed agency result and truthful
+  unknown category results where the source did not support a match.
+- Production desktop acceptance and exact 390px/320px mobile acceptance.
+- The known eligibility boundary: Source does not determine a user’s
+  location, schedule, employment, geographic, or availability eligibility;
+  the original listing must be checked.
+- Current unit result: 4 files and 13 tests; typecheck, ESLint, and build
+  passed on the verified merge.
+- Honest technology and sponsor language. No unsupported prize, ranking,
+  sponsor, partner, performance, or submission-complete claim is made.
+
+The detailed audit record is [docs/audit-triage-2026-10-16.md](docs/audit-triage-2026-10-16.md).
+
+### Dependency audit evidence
+
+Commands executed:
+
+- `npm audit --omit=dev`
+- `npm audit --omit=dev --json`
+- `npm audit --json`
+- `npm ls @mastra/core gray-matter js-yaml argparse sprintf-js eslint-config-next @next/eslint-plugin-next fast-glob micromatch braces --all`
+
+The production-only audit reported **5 moderate, 0 high, 0 critical**
+findings. The full audit reported **5 high, 5 moderate, 0 critical** findings.
+The ten npm package-node findings reduce to two advisory chains:
+
+1. **High, development-only:** `braces@3.0.3` through
+   `micromatch@4.0.8` → `fast-glob@3.3.1` →
+   `@next/eslint-plugin-next@16.4.1` → `eslint-config-next@16.4.1`,
+   advisory [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm).
+   The chain is absent from `npm audit --omit=dev` and is not used by the
+   production application. npm’s suggested forced remediation would install
+   `eslint-config-next@14.2.35`, a breaking/downgrade path, so it was not
+   accepted.
+2. **Moderate, production-transitive:** `sprintf-js@1.0.3` through
+   `argparse@1.0.10` → `js-yaml@3.15.2` → `gray-matter@4.0.3` →
+   `@mastra/core@1.77.0`, advisory
+   [GHSA-hp3w-g68c-fv3c](https://github.com/advisories/GHSA-hp3w-g68c-fv3c).
+   `@mastra/core` is a real production dependency used by
+   `src/lib/profile-workflow.ts` and `src/app/api/profile/analyze/route.ts`.
+   Source does not import the vulnerable transitive packages or use Mastra’s
+   workspace-skill/front-matter APIs, but the installed Mastra runtime bundle
+   includes that parser. The risk is therefore limited but non-zero rather
+   than development-only.
+
+No `npm audit fix --force` was run. No safe non-breaking remediation was
+identified. npm’s automated production fix requires `@mastra/core@1.0.4` and
+reports a major change; removing or replacing the workflow boundary would be
+a separate application correction. The moderate chain is documented as a
+follow-up security item and must receive a separately approved correction
+before changing the dependency tree.
+
+### Production-risk verdict and release status
+
+No credible high-severity production exposure was found. The high advisory is
+development-only, and production-only audit reports zero high or critical
+findings. The moderate Mastra chain is residual production risk, but the
+accepted production path does not invoke its vulnerable front-matter
+functionality. The existing verified release remains deployed unchanged.
+
+Current Directive 023 status: **README CORRECTED; AUDIT TRIAGED; NO FORCE FIX;
+NO PRODUCTION CODE OR INFRASTRUCTURE CHANGE; MODERATE TRANSITIVE FOLLOW-UP
+OPEN; OWNER SIGN-OFF PENDING**.
+

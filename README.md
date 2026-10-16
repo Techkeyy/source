@@ -2,13 +2,9 @@
 
 Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to find source-linked opportunities for the customer types they choose.
 
-Source is hosted on [Render](https://source-9k1o.onrender.com). A controlled
-promotion was attempted, but public acceptance stopped at disposable-account
-registration because the Render container could not complete its MongoDB Atlas
-TLS connection. The service was rolled back to the prior known-good commit;
-public acceptance remains pending an Atlas connectivity correction.
+The approved release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is deployed from the verified merge commit [`64807d1ce7da0c036949d430a0627c9878770323`](https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323) in the [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source). Render automatic deployment remains disabled; the prior production revision `6cbe759b16ae775a13d122abb3d9686b69d73877` is retained as the rollback target.
 
-**[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)**
+**[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)** · **[Security audit triage](docs/audit-triage-2026-10-16.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
@@ -46,14 +42,14 @@ Proposal -> save -> logout/login recovery
 
 1. **Creates** an account with a server-side session and MongoDB ownership boundary.
 2. **Fetches** a public URL with SSRF checks, redirect revalidation, size limits, and content normalization.
-3. **Extracts** a structured profile with DeepSeek’s documented Chat Completions endpoint, JSON mode, disabled thinking, and a bounded prompt.
+3. **Extracts** a structured profile with the active DeepSeek Chat Completions integration, JSON mode, disabled thinking, and a bounded prompt.
 4. **Validates** the response with Zod-compatible schema checks and deterministic evidence matching. Claims without matching source quotes are not accepted as verified facts.
 5. **Lets the user edit and confirm** the generated profile before it is persisted.
 6. **Plans** discovery queries from confirmed services, skills, keywords, and one or more selected customer categories: small businesses, startups, agencies, or individuals.
 7. **Queries** public Hacker News, Jobicy, and Remote OK sources, with optional SerpApi coverage when an owner-configured key exists.
 8. **Classifies and ranks** fresh freelance or contract signals, retains original URLs, explains profile/category matches, and labels unconfirmed buyer signals honestly.
 9. **Drafts** an editable proposal from the saved opportunity and confirmed profile evidence.
-10. **Persists** opportunities and proposal drafts so the same account can recover them after refresh or login.
+10. **Persists** profiles, opportunities, and proposal drafts so the same account can recover them after refresh or logout/login.
 
 ## Quickstart
 
@@ -90,41 +86,45 @@ npm run probe:core
 
 The historical script name `probe:gemma` is retained for compatibility with the handoff. It reports the active provider and model, and currently exercises DeepSeek when `INFERENCE_PROVIDER=deepseek`.
 
-## Try the real demo path
+## The accepted production path
 
-The minimum demonstrated path needs a running MongoDB connection, an owner-configured DeepSeek key, and a public website URL. The reproducible server-side acceptance harness is:
+The production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup.
 
-```powershell
-npm run build
-npm run start
-```
+The production path is:
 
-In another terminal:
-
-```powershell
-npm run probe:core
-```
-
-The harness creates temporary test accounts, analyzes `https://www.frog.co/`, confirms an edited profile, runs startup and small-business searches, checks that the Hacker News queries differ, selects a source-linked freelance/contract result with profile overlap, generates a proposal, saves it, logs out and back in, verifies recovery, checks a second account cannot read or draft against the first account’s opportunity, and removes its generated records.
+1. Register an account.
+2. Analyze a public website such as `https://www.frog.co/`.
+3. Review the DeepSeek-generated claims and evidence, then confirm and edit the profile.
+4. Search each selected customer category: small businesses, startups, agencies, and individuals.
+5. Open the original source for a source-linked opportunity and review its restrictions.
+6. Generate, edit, and save a proposal.
+7. Refresh, log out, and log back in to recover the confirmed profile and edited proposal.
 
 There is no offline fixture path in the current release. Source’s core acceptance intentionally requires a real public website, a real model response, permitted live sources, and real persistence. The product does not substitute fixtures when those dependencies are missing.
 
-## Verified current result
+## Verified production result
 
-The latest local integration run passed with:
+The verified public release produced the following results:
 
 | Check | Result |
 |---|---|
+| Public deployment | Render service `source`, deployed commit `64807d1ce7da0c036949d430a0627c9878770323`, deployment `dep-db8tm949v7es73drf4tg` |
 | Active provider/model | DeepSeek, `deepseek-flash` |
-| Website analysis | `https://www.frog.co/`, HTTP 200 source fetch |
-| Profile grounding | 7 evidence-bearing claims and 37 source excerpts in the application response |
-| Customer-type behavior | Startup and small-business Hacker News queries differed |
-| Discovery | Category-dependent live queries; one relevant source-linked result |
-| Relevant result | Source-linked opportunity with profile overlap and explicit classification evidence |
-| Proposal | Generated, edited, saved exactly, and persisted |
-| Recovery | Confirmed profile and edited proposal recovered after refresh and logout/login |
-| Ownership | Second account’s profile/saved list isolated; cross-account proposal read/write denied |
-| Test suite | 3 files, 10 tests passing; malformed JSON regression covered |
+| Website analysis | `https://www.frog.co/`, live HTTP 200 source fetch |
+| Profile grounding | 8 grounded claims from 37 extracted source excerpts in the production response |
+| Profile persistence | Confirmed profile and edits recovered after refresh and logout/login |
+| Four customer categories | Small businesses, startups, agencies, and individuals all preserved the selected category and produced distinct Hacker News query terms |
+| Category evidence | The agencies branch surfaced an evidence-backed `agency` match; the other branches truthfully left customer type unknown when the source did not support it |
+| Discovery | Live Hacker News, Jobicy, and Remote OK sources returned a qualified source-linked contract result |
+| Eligibility warning | The UI correctly warned that Source does not verify user-specific location, schedule, or availability eligibility |
+| Proposal persistence | Proposal was generated, edited, saved exactly, and recovered after refresh and logout/login |
+| Account isolation | A second account could not read or draft against the first account’s opportunity; saved lists remained isolated |
+| Desktop acceptance | Public Chromium browser UAT passed the core user journey and cleanup |
+| Mobile acceptance | Exact 390px and 320px checks passed with no horizontal overflow |
+| Unit suite | 4 test files, 13 tests passing |
+| Build and static checks | Typecheck, ESLint, and production build passed on the verified merge commit |
+
+The corrected public result rendered the em dash (`—`) correctly, retained original source links, and did not claim user-specific eligibility or worldwide availability.
 
 ## Architecture
 
@@ -141,7 +141,7 @@ The latest local integration run passed with:
 
 ## Why URL-first matching matters
 
-The differentiator is not a generic job search. Source uses the user’s own public work as the starting evidence, then requires the user to confirm the resulting profile before discovery. In the verified run, changing the selection from startups to small businesses changed the live Hacker News query, while the returned opportunity retained its original source URL and profile-match explanation.
+The differentiator is not a generic job search. Source uses the user’s own public work as the starting evidence, then requires the user to confirm the resulting profile before discovery. In the production acceptance, changing the selection among startups, small businesses, agencies, and individuals changed the live Hacker News query while each returned opportunity retained its original source URL and profile-match explanation.
 
 ## How I tried to break it
 
@@ -165,8 +165,13 @@ Source’s invariant is: **missing or unverified website evidence never becomes 
 - The system rejects private-network URL targets, credentials in URLs, unsafe redirects, oversized pages, and unsupported ports.
 - Discovery results are public signals, not guarantees of a client, contract, buyer, payment, or response.
 - Unconfirmed buyer signals must be treated as leads to investigate, not as confirmed work.
-- Local desktop and 390px mobile Chromium acceptance has passed, including URL analysis, grounded profile review, customer selection, live discovery, proposal saving, refresh recovery, and logout/login recovery. The public landing page is reachable after rollback, but production acceptance remains blocked at registration by the Atlas TLS failure.
-- The public repository is [Techkeyy/source](https://github.com/Techkeyy/source), and the existing Render service is [source-9k1o.onrender.com](https://source-9k1o.onrender.com).
+- Source does not determine whether a particular user is eligible for a listing’s location, schedule, employment, geographic, or availability requirements. Users must inspect the original listing before acting.
+- SerpApi is optional and is honestly skipped when no key is configured.
+- The production-only npm audit found 5 moderate and 0 high or critical findings. The full development-inclusive audit found 5 high and 5 moderate findings. The high findings are in the development-only ESLint chain; the moderate findings are a transitive Mastra parser chain with residual production risk. No forced audit fix or dependency change was made under this release boundary. See the [full audit triage](docs/audit-triage-2026-10-16.md).
+
+## Sponsor and submission honesty
+
+The documented technologies used by the release are DeepSeek, Mastra, MongoDB Atlas, and Render. Their use is described factually; it is not a claim of sponsorship, prize eligibility, partner status, or a specific hackathon category. No prize, ranking, performance metric, or sponsor integration is claimed without evidence. Owner confirmation is still required before calling the hackathon submission complete.
 
 ## Verification and handoff
 
@@ -175,15 +180,16 @@ npm run typecheck
 npm run lint
 npm test -- --run
 npm run build
+npm audit --omit=dev
 node --check scripts/gemma-check.mjs
 ```
 
-Read [director.md](director.md) for the authoritative claim ledger, provider evidence, deployment gates, and exact next owner action. See [docs/manual-acceptance.md](docs/manual-acceptance.md) for the browser procedure when controlled browser automation is unavailable.
+Read [director.md](director.md) for the authoritative claim ledger, provider evidence, deployment gates, production acceptance, and owner sign-off state. See [docs/manual-acceptance.md](docs/manual-acceptance.md) for the browser procedure when controlled browser automation is unavailable.
 
 ## Status
 
-**CONTROLLED PRODUCTION PROMOTION ROLLED BACK; LOCAL CORE AND DESKTOP/MOBILE CHROMIUM ACCEPTANCE PROVEN; PUBLIC ACCEPTANCE BLOCKED BY ATLAS CONNECTIVITY.**
+**PRODUCTION TECHNICAL ACCEPTANCE PASSED; OWNER SIGN-OFF PENDING.**
 
-No Gemma prize-category eligibility is claimed. The existing Render service is public and currently serves the rollback commit; the promoted release remains unaccepted until production UAT passes. The active provider is DeepSeek because the owner selected it after the OpenRouter free route returned HTTP 429.
+The public release is deployed and the production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The remaining release blockers are owner sign-off and a separately controlled follow-up for the moderate Mastra transitive dependency risk. This documentation commit does not change the deployed application or production infrastructure.
 
 License: not yet selected; this remains a private hackathon deployment candidate.
