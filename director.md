@@ -3017,8 +3017,9 @@ The tested branch revision is
 `054f966350d80d8e245bbda3baeafbc67de553a6`.
 
 The complete evidence package is in [`docs/release-021/`](docs/release-021/),
-including retained Chromium shell artifacts, live measurements, text-boundary
-proof, eligibility evidence, test results, limitations, and the diff manifest.
+including exact 390px Chrome screenshots, viewport measurements, retained
+historical shell artifacts, text-boundary proof, eligibility evidence, test
+results, limitations, and the diff manifest.
 
 ### Proven defects and corrections
 
@@ -3028,13 +3029,12 @@ proof, eligibility evidence, test results, limitations, and the diff manifest.
    adds Next.js `Viewport` metadata (`width: device-width`, `initialScale: 1`),
    constrains the hero art to its content box, reduces narrow headline growth,
    and tightens only the mobile navigation spacing. No blanket overflow rule
-   was added. The live Chromium narrow surface measured `innerWidth: 319`,
-   document `scrollWidth: 304`, hero width `287.53`, heading client width
-   `288`, and heading scroll width `288` on the available 320-class surface.
-   The retained PNG artifacts are in `docs/release-021/landing-320.png` and
-   `docs/release-021/landing-390.png`; because the standalone screenshot
-   process applied a roughly 490px CSS viewport floor, they are not exact
-   320px/390px viewport proof. Exact 390px visual acceptance remains open.
+   was added. The exact Chrome target reported `innerWidth: 390`, document
+   `clientWidth: 390`, document `scrollWidth: 390`, visual viewport `390`,
+   and device pixel ratio `1`. Hero width was `351`, headline width was `351`,
+   public header width was `390`, and the primary header CTA ended at x=`374`;
+   all remained inside the 390px horizontal viewport. Full measurements and
+   exact screenshots are in `docs/release-021/viewport-390.md`.
 
 2. **Eligibility/availability visibility.** Source already required explicit
    contract or freelance evidence for `freelance-or-contract`; this fix does
@@ -3055,22 +3055,23 @@ proof, eligibility evidence, test results, limitations, and the diff manifest.
 
 ### Real local browser journey
 
-Using the live local Chromium connector and a disposable account, the tested
-path passed: registration → live `https://www.frog.co/` analysis → five-claim
-grounded profile review → profile edit/confirmation → selection of startups,
-small businesses, agencies, and individuals → live discovery → BlueTuskr
-source-linked match inspection → eligibility boundary → proposal generation →
-exact proposal edit/save → logout → login → confirmed-profile recovery →
-saved opportunity recovery → exact edited proposal recovery. The browser
+Using installed Chrome with an exact 390x844 mobile target and a disposable
+account, the tested path passed: registration → live `https://www.frog.co/`
+analysis → grounded profile review → profile confirmation → selection of
+startups, small businesses, agencies, and individuals → live discovery →
+BlueTuskr source-linked match inspection → eligibility boundary → proposal
+generation → exact proposal edit/save → saved-work navigation. The browser
 reported no alert errors, and the result source was
 `https://remoteok.com/remote-jobs/remote-graphic-designer-video-editor-bluetuskr-1137507`.
-All disposable records were cleaned up.
+The earlier 319px connector run also covered logout/login recovery and exact
+edited-proposal recovery. The exact screenshots and endpoint evidence are in
+`docs/release-021/viewport-390.md`. All disposable records were cleaned up.
 
 Kane CLI was attempted as required by the browser skill but its Bash service
 returned `E_ACCESSDENIED` before launch; direct Kane authentication was also
-expired and no owner credential was entered. The prescribed real-Chromium
-fallback completed the 320-class journey, but the connector later failed to
-write its kernel assets. The exact-390 evidence boundary is recorded in
+expired and no owner credential was entered. The installed Chrome CDP target
+provided the exact 390px evidence instead. The connector limitation and the
+historical shell-artifact boundary remain recorded in
 `docs/release-021/limitations.md`.
 
 ### Technical evidence
@@ -3096,7 +3097,7 @@ write its kernel assets. The exact-390 evidence boundary is recorded in
 
 | Claim | Mechanism | Boundary | Proof |
 | --- | --- | --- | --- |
-| Narrow landing content fits | Device-width viewport metadata plus scoped mobile sizing | Only the tested responsive surfaces are claimed | Live 319px Chromium geometry; exact 390px visual evidence remains open |
+| Narrow landing content fits | Device-width viewport metadata plus scoped mobile sizing | Only the tested responsive surfaces are claimed | Exact 390px Chrome geometry and screenshots in `viewport-390.md` |
 | Contract labels remain honest | Existing explicit-context classifier | Unknown employment type remains unknown; no eligibility engine | Discovery probe and Vytalize regression |
 | External punctuation is readable | Targeted mojibake-cluster normalization | Legitimate Unicode and invalid repair candidates are preserved | `tests/text.test.ts` plus live BlueTuskr card |
 | Eligibility is not overstated | Visible reminder plus original-source link | Source does not determine user-specific location/schedule eligibility | BlueTuskr browser card and `docs/release-021/eligibility.md` |
@@ -3113,16 +3114,12 @@ settings were not changed.
 
 ### Current acceptance status and replacement-director next steps
 
-Current status: **LOCAL CORE JOURNEY PASS; 320-CLASS LIVE MOBILE PASS; EXACT
-390PX VISUAL EVIDENCE BLOCKED; PRODUCTION UNCHANGED; DIRECTOR APPROVAL
-PENDING**.
+Current status: **LOCAL CORE JOURNEY PASS; EXACT 390PX LIVE CHROME PASS;
+PRODUCTION UNCHANGED; DIRECTOR APPROVAL PENDING**.
 
-1. Re-run the real Chromium visual pass at exact 390px (and 320px if the
-   browser session has changed), using authenticated Kane/local Chromium or
-   owner-led manual UAT; do not treat the retained shell PNGs as exact
-   viewport proof.
-2. Review the evidence package and isolated branch commit, then approve or
-   reject it for controlled deployment. Do not merge or deploy automatically.
+1. Review the exact 390px evidence package and the isolated branch commit.
+2. Approve or reject the candidate for controlled deployment. Do not merge or
+   deploy automatically.
 3. If approved, deploy only this reviewed revision with auto-deploy still
    disabled, then run production registration first and the full production
    journey before any release acceptance claim.
