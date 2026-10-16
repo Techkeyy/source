@@ -216,8 +216,8 @@ Read [director.md](director.md) for the authoritative claim ledger, provider evi
 
 ## Status
 
-**PRODUCTION TECHNICAL AND DESKTOP/MOBILE ACCEPTANCE PASSED; DIRECTIVE 026 BUYER-QUALITY CORRECTION LOCALLY VERIFIED; OWNER SIGN-OFF AND CONTROLLED PROMOTION PENDING.**
+**PRODUCTION TECHNICAL AND DESKTOP/MOBILE ACCEPTANCE PASSED; DIRECTIVE 027 CONTROLLED CUSTOMER-DISCOVERY GATES LOCALLY VERIFIED; MERGE, CONTROLLED PROMOTION, PRODUCTION UAT, AND OWNER SIGN-OFF PENDING.**
 
-The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 026 buyer-quality correction is committed on a separate branch and has not been deployed. Remaining blockers are owner review of the corrected journey, a fresh production acceptance after any approved promotion, owner sign-off, and a separately controlled follow-up for the moderate Mastra transitive dependency risk. This branch does not change the deployed application or production infrastructure.
+The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 027 branch now passes a normal browser flow that surfaces Northampton College’s active Contracts Finder media-buying notice, keeps potential customers separate from research signals, blocks unsupported research drafts, and rejects a branding-only profile from that specialized notice. The branch has not yet been merged, pushed, or deployed. Remaining blockers are the controlled promotion itself, fresh production UAT after promotion, owner sign-off, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
 
 License: not yet selected; this remains a private hackathon deployment candidate.

@@ -3820,3 +3820,87 @@ optional SerpApi, and disabled Reddit boundaries.
 PROCUREMENT SOURCE FEASIBLE AND INTEGRATED CONSERVATIVELY; PRODUCTION
 UNCHANGED; NO MERGE/PUSH/DEPLOYMENT; DIRECTOR APPROVAL REQUIRED.**
 
+## Directive 027 — controlled customer-discovery release verification
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The final buyer-quality correction is tested on branch
+`codex/directive-024-customer-discovery` at code commit
+`8fe019da74cae1682d1d95b896fa47e9cca09ae2` (`fix: keep inferred GitHub work
+out of active requests`). The
+previous evidence HEAD was `d699ce0a0e92fa58ba8a84275dc2c21bfa7abeb9`;
+the new commit adds the explicit GitHub contract-wording regression guard and
+the disposable browser acceptance harness. No merge, GitHub push, Render
+deployment, production-secret change, or infrastructure change has occurred.
+Production remains on `64807d1ce7da0c036949d430a0627c9878770323`; rollback
+target remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Browser acceptance — normal Source flow
+
+The rebuilt production server was exercised through the real browser UI using
+a disposable account and the public media-services page
+`https://www.mindshareworld.com/services`. The profile was analyzed, reviewed,
+edited honestly to media planning/media buying/marketing communications, and
+confirmed through the normal workflow. The browser then ran both Active
+Requests and Potential Customers + Research searches.
+
+- **Active Request surfaced:** `CA18543 - Northampton College - Media planning
+  & Buying Services` from Contracts Finder.
+- **Buyer:** Northampton College.
+- **Status/deadline:** `active`; `2026-11-04T12:00:00.000Z`.
+- **Official notice and application route:**
+  `https://www.contractsfinder.service.gov.uk/Notice/d2301388-4ca6-48fc-805d-eb2e5793377e`.
+- **Qualification boundary:** the card showed SME suitability and open
+  procedure, while explicitly directing the user to inspect the official
+  notice for detailed selection criteria; no eligibility, award, budget, or
+  payment was inferred.
+- **Potential/research results:** browser response tier counts were
+  `active-request: 1`, `potential-customer: 7`, and `research-signal: 9` in
+  the potential-customer view. GitHub issues with contract/job wording were
+  kept out of Active Request unless explicit external-buying language was
+  present. The regression test now protects this boundary.
+- **Research protection:** research cards showed “Research guidance only” and
+  exposed no draft action. Potential cards showed possible, not confirmed,
+  buying intent.
+- **Service compatibility guard:** after the same account was edited to a
+  branding-only profile, the specialized Northampton media-buying notice was
+  not returned. Mentioning “marketing” alone did not qualify the profile.
+- **Cleanup:** the disposable test account and its records were deleted after
+  the run.
+
+### Final verification for controlled promotion
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 19 tests.
+- `npm run build`: PASS — Next.js 16.4.0, TypeScript, 13 static pages, and
+  all dynamic API routes.
+- `npm run probe:discovery`: PASS — live Developer and Brand/design profiles;
+  GitHub accepted candidates were separated into potential/research tiers and
+  no confirmed GitHub/HN buyer was manufactured.
+- `npm run probe:contracts`: PASS — official public OCDS endpoint returned
+  HTTP 200 without credentials; 100 releases and 59 complete service-related
+  evidence records were observed.
+- `npm run probe:core`: PASS — DeepSeek `deepseek-flash`, grounded profile,
+  live discovery including Contracts Finder, profile/save/draft persistence,
+  logout/login recovery, malformed-request guards, account isolation, and
+  cleanup.
+- `npm run probe:ownership`: PASS — separate registrations, owner save,
+  cross-account denial, isolated saved list, and cleanup.
+- `node scripts/directive-027-browser-check.mjs`: PASS — active procurement
+  card, original notice link, future deadline, potential/research separation,
+  research draft block, branding mismatch rejection, and cleanup.
+- `npm audit --omit=dev --json`: 0 high, 0 critical, 5 moderate. The five
+  moderate findings remain the documented production-transitive Mastra parser
+  chain (`@mastra/core` → `gray-matter` → `js-yaml` → `argparse` →
+  `sprintf-js`). No `npm audit fix --force` or speculative dependency change
+  was made. This is residual risk requiring a separately approved correction;
+  it is not claimed as remediated.
+
+### Directive 027 status
+
+**LOCAL CONTROLLED-RELEASE GATES PASS; NORTHAMPTON PROCUREMENT NOTICE
+SURFACED THROUGH THE NORMAL BROWSER FLOW; GITHUB BUYER-QUALITY BOUNDARY
+CORRECTED; MERGE, PUSH, RENDER PROMOTION, AND PRODUCTION UAT MAY PROCEED
+UNDER THE DIRECTOR’S EXPLICIT RELEASE AUTHORIZATION.**
+
