@@ -3233,3 +3233,123 @@ as the rollback target.
 Current Directive 022B status: **BLOCKED BEFORE REMOTE MAIN FETCH; OWNER
 GITHUB DEVICE AUTHORIZATION REQUIRED; PRODUCTION UNCHANGED; ROLLBACK READY**.
 
+## Directive 022C — final controlled release completed
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The owner restored GitHub authentication and authorized completion of the
+controlled release. The approved correction branch was inspected, the
+legitimate Directive 022B handoff change was safeguarded, and the release was
+merged normally into `main` without resetting history or force-pushing.
+
+### GitHub release record
+
+- Live `origin/main` before merge: `52b5c8cef524ffe79b9cedeb489ba3b705a5d0b7`.
+- Approved code commit preserved as an ancestor:
+  `054f966350d80d8e245bbda3baeafbc67de553a6`.
+- Exact 390px evidence and subsequent release handoff commits were preserved.
+- Final normal merge commit:
+  `64807d1ce7da0c036949d430a0627c9878770323`.
+- GitHub `origin/main` was verified after push to point to the exact merge SHA.
+- Commit link:
+  `https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323`.
+- The merged working tree passed `git diff --check` and contained no tracked
+  `.env`, credential, token, private-key, or secret-looking file. The only
+  tracked environment file is `.env.example`; `.env.local` remains ignored.
+
+### Verification on the exact merge commit
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test`: PASS — 4 files, 13 tests.
+- `npm run build`: PASS — Next.js 16.4.0 production build and route
+  generation completed successfully.
+
+### Render deployment record
+
+- Existing Render service: `source` (`srv-db7rok8473hc739m4cvg`).
+- Auto-deploy remained disabled throughout the release.
+- The dashboard's **Deploy a specific commit** flow matched and deployed the
+  exact merge SHA `64807d1ce7da0c036949d430a0627c9878770323` from `main`.
+- Render deployment ID: `dep-db8tm949v7es73drf4tg`.
+- Render build completed successfully, Next.js started on port 10000, the
+  health check returned successfully, and the dashboard reported **Deploy
+  succeeded**.
+- The prior production revision
+  `6cbe759b16ae775a13d122abb3d9686b69d73877` remains the rollback target.
+- Deployment URL: `https://source-9k1o.onrender.com`.
+
+### Production acceptance evidence
+
+The live public service was tested after deployment using disposable records
+that were removed afterward.
+
+- Production core probe: PASS. Registration, live `deepseek` /
+  `deepseek-flash` analysis of `https://www.frog.co/`, 8 grounded claims from
+  37 extracted excerpts, profile confirmation and edit persistence, live
+  Hacker News/Jobicy/Remote OK discovery, source-linked
+  `freelance-or-contract` opportunity, proposal generation, exact proposal
+  edit/save/recovery, logout/login recovery, malformed-request rejection,
+  unauthenticated denial, cross-account proposal denial, and cleanup all
+  passed. Two disposable accounts were deleted.
+- Dedicated ownership probe: PASS. Separate registrations, owner save,
+  cross-account denial, saved-list isolation, and cleanup all passed. Two
+  disposable accounts were deleted.
+- Browser UAT: PASS. A disposable account completed registration, website
+  analysis, grounded profile review, profile confirmation, startup discovery,
+  source inspection, proposal generation, proposal edit/save, refresh
+  recovery, logout/login recovery, and exact edited-proposal recovery.
+- The live result rendered the corrected em dash (`—`) rather than the prior
+  replacement-character corruption and displayed the eligibility boundary:
+  “Eligibility is not verified by Source. Check the original listing for
+  location, schedule, and availability requirements before acting.”
+- The BlueTuskr result retained its original source link, remained classified
+  as `freelance-or-contract`, and did not claim user-specific eligibility or
+  worldwide availability.
+- Four-category production comparison: PASS. Separate searches for small
+  businesses, startups, agencies, and individuals preserved the selected
+  category and produced distinct Hacker News query terms. All four returned a
+  qualified source-linked contract result; only the agencies branch surfaced
+  an evidence-backed `agency` category match, while the other branches
+  truthfully left customer type unknown when the source did not support it.
+- Final browser cleanup deleted the exact disposable UAT user. The dedicated
+  four-category probe also deleted its disposable test account.
+
+### Exact post-deploy mobile verification
+
+The installed Chrome binary was controlled through an isolated DevTools
+session against the public deployment. Both requested CSS viewports passed:
+
+| Viewport | Inner/client/document/body width | Visual viewport | Overflow | Key geometry |
+| --- | ---: | ---: | --- | --- |
+| 390px | 390 / 390 / 390 / 390 | 390 | None | hero 351px wide; headline 351px wide; header 390px wide |
+| 320px | 320 / 320 / 320 / 320 | 320 | None | hero 288px wide; headline 288px wide; header 320px wide |
+
+Device pixel ratio was `1` in both runs. The public page stayed within the
+horizontal viewport at both widths.
+
+### Remaining release notes and owner sign-off
+
+No critical production gate failed and no rollback was required. The known
+product boundary remains that Source does not determine user-specific
+location, schedule, or availability eligibility; users must inspect the
+original listing before acting. SerpApi remains honestly skipped when no key
+is configured. Render's build log reported 10 npm audit findings (5 moderate,
+5 high) from the existing dependency tree; this did not block the verified
+build or deployment and was not changed under the release-freeze scope.
+
+Owner final acceptance should be performed manually at
+`https://source-9k1o.onrender.com` using the owner's own account: analyze a
+public URL, review and confirm the grounded profile, exercise the four
+customer categories, open the original opportunity source to verify its
+restrictions, edit and save a proposal, refresh, sign out, sign back in, and
+confirm the saved work remains isolated to that account. Do not use the
+disposable test records as owner data. If a critical regression appears,
+deploy the preserved rollback commit
+`6cbe759b16ae775a13d122abb3d9686b69d73877` through Render's exact-commit
+deployment control while keeping auto-deploy disabled.
+
+Current Directive 022C status: **CONTROLLED MERGE PASS; GITHUB PUSH PASS;
+RENDER DEPLOYMENT PASS; PRODUCTION CORE AND OWNERSHIP ACCEPTANCE PASS; EXACT
+390PX AND 320PX MOBILE PASS; OWNER MANUAL SIGN-OFF PENDING**.
+
