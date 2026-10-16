@@ -3127,3 +3127,56 @@ PRODUCTION UNCHANGED; DIRECTOR APPROVAL PENDING**.
    `6cbe759b16ae775a13d122abb3d9686b69d73877` and record sanitized evidence.
 5. Owner manual UAT is still required; owner approval has not been claimed.
 
+## Directive 022 — Final controlled deployment preflight
+
+Date: 2026-10-16 (Africa/Lagos)
+
+The Director authorized the controlled merge and production deployment in
+Directive 022. The approved branch is
+`codex/release-021-defect-correction`; the verified code commit is
+`054f966350d80d8e245bbda3baeafbc67de553a6`; the evidence HEAD before this
+preflight is `e17a0d4bb6e1461a42c3e8d4e08d925a18417684`; and the rollback
+point remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Predeployment checks completed
+
+- The working tree was clean before the deployment preflight.
+- The branch contained the approved defect corrections and exact 390px
+  evidence package.
+- No protected authentication, MongoDB, DeepSeek, Render configuration, or
+  secret files were changed by Directive 021A.
+- Typecheck, lint, unit tests, production build, MongoDB probe, and ownership
+  probe passed.
+- No `.env` or credential-looking files are tracked.
+- Render auto-deploy was not changed, and no production request was sent.
+
+### Release blocker before merge
+
+The merge and deployment could not begin because the current host has no valid
+GitHub credential for `Techkeyy`:
+
+- `gh auth status` reports the stored GitHub token is invalid.
+- `git ls-remote` reaches GitHub but fails with sanitized
+  `SEC_E_NO_CREDENTIALS`.
+- The authenticated Render dashboard/CLI is not available through the current
+  browser connector; the connector fails before exposing an authenticated
+  page, and no Render API credential is configured locally.
+
+Consequently, no remote `main` state could be fetched or safely compared, no
+merge SHA can be reported, and no Render deployment ID or deployed SHA exists
+for this directive. Production remains on the known-good rollback revision.
+
+### Required owner action
+
+The owner must re-authenticate the approved GitHub account in the GitHub CLI
+or use the authenticated GitHub web session to merge the reviewed branch, and
+must provide an authenticated Render dashboard session for the existing
+`source` service. After authentication is available, the replacement director
+must fetch `origin/main`, perform a normal non-force merge, record the new merge
+SHA, manually deploy that exact SHA with auto-deploy disabled, record the
+Render deployment ID, and run the production acceptance gates before claiming
+technical acceptance.
+
+Current Directive 022 status: **PREDEPLOYMENT BLOCKED BY MISSING GITHUB AND
+RENDER AUTHENTICATION; PRODUCTION UNCHANGED; ROLLBACK READY**.
+
