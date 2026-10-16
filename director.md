@@ -3437,3 +3437,114 @@ Current Directive 023 status: **README CORRECTED; AUDIT TRIAGED; NO FORCE FIX;
 NO PRODUCTION CODE OR INFRASTRUCTURE CHANGE; MODERATE TRANSITIVE FOLLOW-UP
 OPEN; OWNER SIGN-OFF PENDING**.
 
+## Directive 024 — three-hour customer-discovery pivot
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Release boundary
+
+The customer-discovery pivot is isolated on branch
+`codex/directive-024-customer-discovery`. The existing public deployment at
+`https://source-9k1o.onrender.com` remains unchanged at deployed commit
+`64807d1ce7da0c036949d430a0627c9878770323`; Render auto-deploy remains
+disabled. No production secrets, hosting plan, infrastructure, or existing
+data were changed. The preserved rollback target remains
+`6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Implemented product boundary
+
+Source now presents the narrow pivot promise: **Find customers who need what
+you do.** The existing public-page, DeepSeek, evidence-grounding, MongoDB,
+ownership, persistence, SSRF, and proposal foundations were preserved.
+
+- **Active requests** remain explicit public requests or source-advertised
+  freelance/contract needs from Hacker News, Jobicy, and Remote OK. SerpApi is
+  still optional and is skipped without an owner-configured key.
+- **Potential customers** are separate, cautious signals inferred from public
+  Hacker News discussion and GitHub project issues. Buying intent is never
+  presented as confirmed. Jobicy, Remote OK, and SerpApi are explicitly
+  skipped in this mode.
+- GitHub uses its public issues API with local signal-label filtering for
+  `help wanted`, `enhancement`, and `feature request`; the optional
+  `GITHUB_TOKEN` is server-only when configured.
+- Reddit has a clean disabled adapter boundary. Source does not scrape Reddit
+  or bypass Reddit access restrictions.
+- Each opportunity keeps the organization when the source provides one, the
+  original URL, publication date, source type, observed need/evidence, profile
+  fit, explicit-versus-inferred intent, and eligibility limitation.
+- Active requests offer an editable application proposal. Potential signals
+  offer a cautious, non-assumptive outreach draft. Source never sends messages
+  or performs bulk outreach.
+- My Pipeline now persists status (`saved`, `contacted`, `closed`) and a
+  user-owned next-step note through `PATCH /api/opportunities/[id]`.
+- The existing owned proposal route now generates a cautious outreach draft
+  for potential signals and retains the application-proposal behavior for
+  active requests.
+
+### Local acceptance evidence
+
+A disposable local account was created against the local preview only. It was
+not a production account. The controlled browser journey completed:
+
+- Registration succeeded.
+- `https://www.frog.co/` was analyzed through the active DeepSeek integration;
+  the review UI displayed grounded excerpts and kept editable suggestions
+  visibly separate.
+- The profile was confirmed and persisted.
+- All four customer-category controls were selected successfully: small
+  businesses, startups, agencies, and individuals.
+- Active-request search returned a source-linked Remote OK result for
+  `Graphic Designer & Video Editor` from BlueTuskr, with source date, source
+  link, evidence excerpt, profile fit, contract classification, and the
+  eligibility warning visible.
+- The result was saved to My Pipeline. An editable application proposal was
+  generated, changed to `Edited proposal test.`, saved, and shown as persisted.
+- Potential-customer mode was corrected and rechecked. The provider boundary
+  reported `Hacker News: queried`, `Jobicy: skipped`, `Remote OK: skipped`,
+  `GitHub: queried`, `Reddit: skipped`, and `SerpApi: skipped`. The current
+  frog profile returned no qualifying potential signal, and the UI displayed
+  the honest empty state rather than relabeling an active job as a potential
+  customer.
+
+During source investigation, a direct public GitHub issue search produced the
+public example
+`https://github.com/elasticpath/plasmic/issues/662` (created 2026-10-05), an
+open product-design/build issue with public acceptance criteria. It is usable
+only as an inferred project signal; it does not prove that the organization is
+buying services. Hacker News broad “seeking freelancer” results were also
+reviewed and are intentionally excluded when they advertise the freelancer’s
+availability rather than a customer request.
+
+### Checks on the pivot branch
+
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 16 tests.
+- `npm run build`: PASS — Next.js 16.4.0 production build; 13 static pages
+  generated and the new owned opportunity route included.
+- `npm run probe:discovery`: PASS. The live probe queried Hacker News, Jobicy,
+  Remote OK, and GitHub; SerpApi was skipped without a key. The Remote OK
+  Vytalize regression remained classified as full-time employment rather than
+  freelance/contract. The probe reports source signals, not verified buyers.
+- `npm audit --omit=dev --json`: 0 high, 5 moderate, 0 critical.
+- `npm audit --json`: 5 high, 5 moderate, 0 critical. The high chain is
+  development-only ESLint tooling; the moderate Mastra parser chain is the
+  same limited residual production risk documented in
+  `docs/audit-triage-2026-10-16.md`.
+- No `npm audit fix --force` was run. No dependency or framework upgrade was
+  made.
+
+### Outstanding blockers and owner action
+
+The pivot is not a production release yet. Before promotion, the owner must
+review the branch, run the new journey against the public service, and approve
+a controlled exact-commit Render deployment with auto-deploy still disabled.
+The public production release remains the rollback baseline while that review
+is pending. A separate security correction is required before changing the
+Mastra dependency chain; the current audit did not justify changing the
+approved application.
+
+Current Directive 024 status: **PIVOT IMPLEMENTED ON ISOLATED BRANCH; LOCAL
+ACCEPTANCE AND STATIC CHECKS PASS; PRODUCTION UNCHANGED; RENDER DEPLOYMENT NOT
+REQUESTED; OWNER REVIEW AND CONTROLLED PROMOTION PENDING**.
+

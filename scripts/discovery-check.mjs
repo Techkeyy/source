@@ -13,7 +13,7 @@ const toDate = (value) => {
   }
   return null;
 };
-const freshnessDays = { "Hacker News": 21, Jobicy: 30, "Remote OK": 21, SerpApi: 14 };
+const freshnessDays = { "Hacker News": 21, Jobicy: 30, "Remote OK": 21, GitHub: 45, SerpApi: 14 };
 const classificationNames = ["explicit-project-request", "freelance-or-contract", "potential-buyer-signal-unconfirmed", "full-time-employment", "unknown-employment-type", "irrelevant", "expired-or-stale"];
 const regressionChecks = {};
 
@@ -44,7 +44,7 @@ function classify(provider, title, description, type, publishedAt) {
   const age = date ? Date.now() - date.getTime() : Number.POSITIVE_INFINITY;
   if (!date || age < 0 || age > (freshnessDays[provider] || 14) * 86_400_000) return "expired-or-stale";
   if (fullTimeTypePattern.test(type) || fullTimeContextPattern.test(combined)) return "full-time-employment";
-  if (provider === "Hacker News" && /seek(?:ing|s)\s+freelancer|looking for (?:a|an) freelancer|need (?:a|an) freelancer/.test(combined)) return "explicit-project-request";
+  if (provider === "Hacker News" && /\b(?:looking for|need|seeking)\s+(?:a\s+)?freelancer\b/i.test(combined)) return "explicit-project-request";
   if (contractTypePattern.test(type) || contractContextPatterns.some((pattern) => pattern.test(combined))) return "freelance-or-contract";
   if (/looking for|seeking|need|wanted|hiring/.test(combined)) return "potential-buyer-signal-unconfirmed";
   return "unknown-employment-type";
@@ -58,7 +58,7 @@ function summarize(provider, records) {
 
 const providers = [];
 try {
-  const query = new URLSearchParams({ query: "SEEKING FREELANCER", tags: "comment", hitsPerPage: "50" });
+  const query = new URLSearchParams({ query: '"looking for a freelancer" OR "need a freelancer" OR "seeking a freelancer"', tags: "comment", hitsPerPage: "50" });
   const payload = await fetchJson("https://hn.algolia.com/api/v1/search_by_date?" + query);
   const records = (payload.hits || []).map((hit) => ({ title: clean(hit.story_title) || "Hacker News freelancer discussion", description: clean(hit.comment_text || hit.story_title || hit.title), type: "comment", publishedAt: hit.created_at || hit.created_at_i })).filter((record) => record.description);
   providers.push(summarize("Hacker News", records));
@@ -89,6 +89,15 @@ try {
   providers.push(summarize("Remote OK", records));
 } catch (error) {
   providers.push({ provider: "Remote OK", status: "failed", message: error.message });
+}
+
+try {
+  const query = new URLSearchParams({ q: "product design is:issue is:open", per_page: "30" });
+  const payload = await fetchJson("https://api.github.com/search/issues?" + query, { accept: "application/vnd.github+json", "user-agent": "Source/0.1 discovery probe" });
+  const records = (payload.items || []).map((item) => ({ title: clean(item.title), description: clean(item.body || item.title), type: Array.isArray(item.labels) ? item.labels.map((label) => clean(label?.name)).filter(Boolean).join(", ") : "public issue", publishedAt: item.created_at, url: item.html_url })).filter((record) => record.title && record.description && /(?:help wanted|enhancement|feature request)/i.test(record.type));
+  providers.push(summarize("GitHub", records));
+} catch (error) {
+  providers.push({ provider: "GitHub", status: "failed", message: error.message });
 }
 
 if (process.env.SERPAPI_KEY?.trim()) {

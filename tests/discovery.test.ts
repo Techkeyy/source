@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { classifyOpportunity, type RawOpportunity } from "@/lib/discovery";
+import { classifyOpportunity, dedupeAndRankOpportunities, qualifyOpportunity, type RawOpportunity } from "@/lib/discovery";
+import type { ProfileDraft } from "@/lib/types";
 
 function record(overrides: Partial<RawOpportunity> = {}): RawOpportunity {
   return {
@@ -12,6 +13,25 @@ function record(overrides: Partial<RawOpportunity> = {}): RawOpportunity {
     ...overrides,
   };
 }
+
+const profile: ProfileDraft = {
+  businessName: "Example Studio",
+  summary: "A product design studio.",
+  productsAndServices: [{ text: "Product design", evidence: ["We design products."] }],
+  problemsSolved: [],
+  skillsAndTechnologies: [{ text: "Research", evidence: ["Our research practice."] }],
+  valueProposition: [],
+  differentiators: [],
+  portfolioEvidence: [],
+  customerSegments: [],
+  searchKeywords: ["product design", "research"],
+  buyerIntentSignals: [],
+  inferenceNotes: [],
+  sourceUrl: "https://example.com/",
+  analyzedAt: new Date().toISOString(),
+  model: "test",
+  grounding: { sourceTitle: "Example", sourceExcerptCount: 2, unsupportedFields: [] },
+};
 
 describe("opportunity employment classification", () => {
   it("does not mistake technical API contracts for a contract job", () => {
@@ -32,5 +52,23 @@ describe("opportunity employment classification", () => {
 
   it("keeps an untyped listing unknown instead of implying a contract", () => {
     expect(classifyOpportunity(record({ type: "", description: "Build a useful product with a small engineering team." }), "services")).toBe("unknown-employment-type");
+    expect(classifyOpportunity(record({ provider: "Hacker News", description: "SEEKING FREELANCE WORK in UX and web design." }), "active-requests")).not.toBe("explicit-project-request");
+  });
+
+  it("keeps inferred potential-customer signals separate from active requests", () => {
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Feature request: improve product design workflow", description: "We need product design help to replace this manual process.", type: "enhancement", prospectType: "potential-customer" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "Hacker News", title: "Looking for a freelancer", description: "We need a freelancer for a product design project." }), "active-requests")).toBe("explicit-project-request");
+  });
+
+  it("does not promote unsupported intent or stale content", () => {
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Project update", description: "We shipped a new release.", prospectType: "potential-customer" }), "potential-customers")).toBe("unknown-employment-type");
+    expect(classifyOpportunity(record({ publishedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() }), "active-requests")).toBe("expired-or-stale");
+  });
+
+  it("filters irrelevant prospects and removes duplicate source records", () => {
+    const relevant = record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer" });
+    const duplicate = { ...relevant, title: "Duplicate title" };
+    expect(qualifyOpportunity(record({ provider: "GitHub", title: "Unrelated gardening issue", description: "We need a garden hose.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
+    expect(dedupeAndRankOpportunities([relevant, duplicate], profile, ["startups"], "potential-customers")).toHaveLength(1);
   });
 });
