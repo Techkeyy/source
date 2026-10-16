@@ -65,8 +65,18 @@ describe("opportunity employment classification", () => {
   });
 
   it("does not promote unsupported intent or stale content", () => {
-    expect(classifyOpportunity(record({ provider: "GitHub", title: "Project update", description: "We shipped a new release.", prospectType: "potential-customer" }), "potential-customers")).toBe("unknown-employment-type");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Project update", description: "We shipped a new release.", prospectType: "potential-customer" }), "potential-customers")).toBe("research-signal-only");
     expect(classifyOpportunity(record({ publishedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() }), "active-requests")).toBe("expired-or-stale");
+  });
+
+  it("keeps internal GitHub work as research signals instead of buyers", () => {
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Device Website Development", description: "Objective: develop a browser-based interface for device monitoring and control.", prospectType: "potential-customer", organization: "edwardschmitz/sigcore-uc" }), "potential-customers")).toBe("potential-buyer-signal-unconfirmed");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Branding backlog", description: "Internal project backlog with an existing blocker and assigned task.", prospectType: "research-signal", organization: "Transf-ORM/Transf-ORM-CLI" }), "potential-customers")).toBe("research-signal-only");
+    expect(classifyOpportunity(record({ provider: "GitHub", title: "Brand + design pipeline", description: "Internal branding workflow with named project owners.", prospectType: "research-signal", organization: "federicomrod/Milton" }), "potential-customers")).toBe("research-signal-only");
+  });
+
+  it("treats an official procurement notice as an active external request", () => {
+    expect(classifyOpportunity(record({ provider: "Contracts Finder", title: "Website and digital services tender", description: "The buyer is seeking to appoint an experienced digital service provider.", prospectType: "active-request", buyerIntent: "confirmed", organization: "Public Buyer", contactUrl: "https://www.contractsfinder.service.gov.uk/Notice/example", deadline: new Date(Date.now() + 86_400_000).toISOString(), noticeStatus: "active" }), "potential-customers")).toBe("explicit-project-request");
   });
 
   it("filters irrelevant prospects and removes duplicate source records", () => {

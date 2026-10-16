@@ -297,12 +297,14 @@ textarea { resize: vertical; line-height: 1.55; }
 .opportunity-card.explicit-project-request { border-top: 3px solid var(--accent); }
 .opportunity-card.freelance-or-contract { border-top: 3px solid #8c7bc2; }
 .opportunity-card.potential-buyer-signal-unconfirmed { border-top: 3px solid #d8ae55; }
+.opportunity-card.research-signal-only { border-top: 3px solid #8e9a94; }
 .opportunity-topline, .opportunity-meta, .card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
 .opportunity-topline { justify-content: space-between; }
 .classification { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 6px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; }
 .classification.explicit-project-request { background: var(--mint); color: var(--accent-deep); }
 .classification.freelance-or-contract { background: var(--lavender); color: var(--lavender-ink); }
 .classification.potential-buyer-signal-unconfirmed { background: var(--signal-soft); color: var(--signal); }
+.classification.research-signal-only { background: #edf0ee; color: #52635b; }
 .match-score { color: var(--accent-deep); font-size: 12px; font-weight: 800; }
 .opportunity-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-top: 17px; }
 .opportunity-card h2 { margin: 0 0 8px; font-size: 29px; line-height: 1.05; }
@@ -313,6 +315,7 @@ textarea { resize: vertical; line-height: 1.55; }
 .prospect-answer-grid > div { display: grid; gap: 7px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); }
 .prospect-answer-grid strong { font-size: 12px; line-height: 1.45; }
 .potential-card .prospect-answer-grid > div:first-child { border-color: #eadfbf; background: #fffaf0; }
+.research-card .prospect-answer-grid > div:last-child { border-color: #d8dfdb; background: #f5f7f5; }
 .evidence-list { display: grid; gap: 7px; padding: 14px 15px; border-radius: 10px; background: var(--surface-soft); color: var(--muted); font-size: 11px; line-height: 1.45; }
 .evidence-list strong { display: flex; align-items: center; gap: 6px; color: var(--ink); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; }
 .evidence-list strong .icon { color: var(--accent); }
@@ -320,6 +323,7 @@ textarea { resize: vertical; line-height: 1.55; }
 .eligibility-note .icon { flex: 0 0 auto; margin-top: 1px; }
 .budget-line { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; color: var(--accent-deep); font-size: 11px; font-weight: 800; }
 .card-actions { margin-top: 19px; }
+.action-guidance { color: var(--muted); font-size: 11px; font-weight: 700; }
 .empty-state { margin-top: 30px; padding: 65px 30px; border: 1px dashed var(--line-strong); border-radius: var(--radius-md); text-align: center; }
 .empty-mark { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 19px; border-radius: 50%; background: var(--mint); color: var(--accent); }
 .empty-state h2 { margin-bottom: 11px; font-size: 32px; }

@@ -3684,3 +3684,138 @@ PROJECT SIGNALS NOW RECOVER; HACKER NEWS EMPTY RESULT IS HONEST AFTER STRICT
 INTENT FILTERING; ACCOUNT/PERSISTENCE/OUTREACH JOURNEY PASS; PRODUCTION
 UNCHANGED; OWNER REVIEW AND CONTROLLED PROMOTION REQUIRED.**
 
+## Directive 026 — buyer-quality distinction and procurement feasibility
+
+Date: 2026-10-16 (Africa/Lagos)
+
+### Release boundary
+
+This correction remains on `codex/directive-024-customer-discovery`, based on
+the accepted implementation `0240698ec4e245a495e927b275f5443e5aa696d1`.
+No GitHub merge, push, Render deployment, production secret change,
+infrastructure change, model/provider switch, or Reddit activation was made.
+Production remains at [source-9k1o.onrender.com](https://source-9k1o.onrender.com)
+on deployed commit `64807d1ce7da0c036949d430a0627c9878770323`; the rollback
+target remains `6cbe759b16ae775a13d122abb3d9686b69d73877`.
+
+### Implemented buyer-quality boundary
+
+The discovery model now carries a three-way `prospectType` and an explicit
+buyer-intent level:
+
+- **Active Request** (`active-request`, confirmed): the source explicitly seeks
+  a supplier, contractor, vendor, tender response, or other external service.
+- **Potential Customer** (`potential-customer`, possible): an identifiable
+  organization/project has an observed business or service need and a
+  defensible service fit, but commercial intent is unknown.
+- **Research Signal** (`research-signal`, unsupported): work needs doing, but
+  the source does not support the conclusion that an external provider is
+  being considered.
+
+The card, pipeline, evidence list, next-step guidance, and saved-record
+compatibility path now expose the tier and uncertainty. No commercial
+confidence percentage or buyer score is presented. Numeric ranking remains an
+internal service-fit ordering only. Research signals cannot create a new
+proposal/outreach draft, and potential/active records require a public
+`contactUrl` before a new draft is generated. Existing saved drafts continue
+to load and remain editable for compatibility.
+
+The GitHub adapter no longer silently drops internal or blocked work. It
+records blocker/dependency/owner metadata as research evidence, while
+external-service language can qualify an issue as an active request. Issue
+creation, an unassigned issue, a `help wanted` label, or technical fit alone
+does not imply outsourcing.
+
+### Named GitHub examples
+
+The live public bodies were re-read from the GitHub API and classified as
+follows:
+
+| Example | Evidence | Final classification | Intent |
+| --- | --- | --- | --- |
+| [SigCore — Device Website Development](https://github.com/edwardschmitz/sigcore-uc/issues/6) | Concrete website/device-interface objective and requirements; no supplier, contractor, proposal, or external-provider language | Potential Customer | Possible; external buying unverified |
+| [Transf-ORM — Branding: logo, favicon, marketing landing page](https://github.com/Transf-ORM/Transf-ORM-CLI/issues/149) | Internal product visual-identity backlog, blocked by another issue, acceptance criteria | Research Signal | Unsupported |
+| [Milton — Brand + design pipeline for client-facing content](https://github.com/federicomrod/Milton/issues/59) | Internal status/owner/horizon, named Miles/Sofia/Federico owners, Canva workflow and client dependency metadata | Research Signal | Unsupported |
+
+None of these three is presented as a confirmed buyer. No unsolicited GitHub
+issue comment or invented contact detail is produced.
+
+### Live discovery evidence
+
+The updated two-profile live probe passed and returned the following bounded
+counts on 2026-10-16:
+
+| Profile / provider | Raw | Extracted | Adapter rejected | Accepted | Active | Potential | Research | Local rejection reasons |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Developer / Hacker News | 185 | 159 | 26 | 0 | 0 | 0 | 0 | 157 stale; 2 unsupported |
+| Developer / GitHub | 30 | 6 | 24 | 5 | 0 | 2 | 3 | 1 stale |
+| Brand/design / Hacker News | 165 | 152 | 13 | 0 | 0 | 0 | 0 | 149 stale; 3 unsupported |
+| Brand/design / GitHub | 30 | 15 | 15 | 15 | 0 | 8 | 7 | none after adapter filtering |
+
+The source mix therefore produced **20 accepted GitHub candidates** across
+the two profiles: **10 Potential Customer**, **10 Research Signal**, and **0
+confirmed Active Request** in that GitHub/HN sample. Hacker News returned no
+fresh qualified record in this run. The acceptance is honest: the real
+confirmed external requests came from the procurement source below, not from
+relabeling GitHub project issues.
+
+### Stronger source feasibility — official UK Contracts Finder
+
+The official public OCDS endpoint
+`https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search`
+was queried for 2026-09-01 through 2026-10-16 with `stages=tender&limit=100`.
+It returned HTTP 200 without credentials. The result contained 100 tender
+releases, 59 broad digital/design/marketing-related matches, and 59 records
+with buyer identity, deadline, and official notice links. The response also
+exposed notice status, publication date, scope, procurement method, SME
+suitability, and CPV classification. The [Contracts Finder feasibility
+note](docs/contracts-finder-feasibility-2026-10-16.md) records the exact
+probe and limitations.
+
+One actionable public request reviewed was [CA18543 — Northampton College
+Media planning & Buying Services](https://www.contractsfinder.service.gov.uk/Notice/d2301388-4ca6-48fc-805d-eb2e5793377e): active/open procurement, deadline
+2026-11-04 12:00 UTC, buyer Northampton College, advertising/marketing CPV
+classification, SME suitability, and a supplier-portal route in the public
+notice. It is an Active Request, not a promise of eligibility, award, or
+payment. The adapter preserves the existing HN, GitHub, Jobicy, Remote OK,
+optional SerpApi, and disabled Reddit boundaries.
+
+### UI, persistence, and security evidence
+
+- Discovery cards show Active Request, Potential Customer, or Research Signal;
+  each card includes source, date, organization/project, observed need,
+  service fit, buyer-intent level, evidence, limitations, and next step.
+- Research cards offer save/research guidance only. No outreach draft is
+  offered without a legitimate public contact/application route.
+- Existing profile, saved opportunity, proposal edit, refresh, logout/login,
+  account-isolation, and cleanup paths remain compatible.
+- `npm run probe:core`: PASS — real `https://www.frog.co/` DeepSeek profile,
+  9 grounded claims, live discovery including Contracts Finder, save/edit/
+  recovery, ownership, malformed-request guards, and cleanup.
+- `npm run probe:ownership`: PASS — separate registrations, owner save,
+  cross-account denial, isolated saved list, and cleanup.
+- Updated browser journey: PASS — public page analysis, profile confirmation,
+  discovery, save, proposal-route behavior, refresh recovery, logout/login
+  recovery, and exact 390px/320px checks with no horizontal overflow. Updated
+  screenshots are retained under `docs/uiux-015/source-screenshots/`.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS with `--max-warnings 0`.
+- `npm test -- --run`: PASS — 4 files, 18 tests.
+- `npm run build`: PASS — Next.js 16.4.0 production build, 13 static pages,
+  all dynamic API routes included.
+- `npm run probe:discovery`: PASS — two realistic profiles, HN/GitHub live
+  evidence, tier counts, overclaiming guard, and Remote OK full-time
+  regression.
+- `npm run probe:contracts`: PASS — official public endpoint, 100 releases,
+  59 complete current matches.
+- `npm audit --omit=dev --json`: PASS for high/critical exposure — 0 high,
+  0 critical, 5 moderate. The previously documented high findings remain in
+  the development-only audit chain; no `npm audit fix --force` or speculative
+  framework/core upgrade was run.
+
+### Directive 026 status
+
+**BUYER-QUALITY DISTINCTION IMPLEMENTED AND LOCALLY ACCEPTED; OFFICIAL
+PROCUREMENT SOURCE FEASIBLE AND INTEGRATED CONSERVATIVELY; PRODUCTION
+UNCHANGED; NO MERGE/PUSH/DEPLOYMENT; DIRECTOR APPROVAL REQUIRED.**
+

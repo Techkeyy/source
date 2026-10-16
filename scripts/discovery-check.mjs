@@ -31,8 +31,9 @@ const potentialSignalPattern = /\b(?:feature request|enhancement|help wanted|mus
 const hnPotentialSignalPattern = /\b(?:looking for|seeking)\s+(?:a|an|the|some)\s+(?:freelancer|developer|designer|agency|help|recommendation|solution)|\bneed\s+(?:help|a\s+(?:freelancer|developer|designer|agency|website|solution))\b|\b(?:want to hire|freelance(?:r|rs)?|could someone recommend|anyone recommend)\b|\b(?:customer-facing|user story|acceptance criteria)\b/i;
 const githubSignalLabelPattern = /\b(?:help wanted|enhancement|feature request|must-have|ready-for-human|client request|external)\b/i;
 const githubNeedPattern = /\b(?:i want to|we want to|we need|need a|looking for|build(?:ing)?|objective|develop(?:ing)?|implement(?:ation|ing)?|product catalogue|design direction|product brief|customer-facing|user story|acceptance criteria|why this needs a human)\b/i;
-const githubInternalPattern = /\b(?:fix typo|refactor|unit tests?|test coverage|ci\/cd|dependency|npm audit|lint|internal|assigned task|database migration|api endpoint)\b/i;
+const githubInternalPattern = /\b(?:fix typo|refactor|unit tests?|test coverage|ci\/cd|dependency|dependencies|npm audit|lint|internal|assigned task|database migration|api endpoint|blocked by|client dependency|owner\s*:|horizon\s*:|gates?\s+client|verification guide)\b/i;
 const githubPromotionPattern = /\b(?:best .* company in|advertising production company|graphic design course|learn .* career|support small business marketing|seo services?|past websites?|portfolio|showcase my work)\b/i;
+const githubExternalBuyingPattern = /\b(?:looking for|seeking|need|want to hire|hire)\s+(?:an?\s+)?(?:freelancer|contractor|agency|vendor|supplier|service provider|developer|designer)|\b(?:request(?:ing)?|invite)\s+(?:for\s+)?(?:proposal|quotation|tender)s?\b|\b(?:external|outsourc(?:e|ing))\s+(?:developer|designer|agency|provider|support)\b/i;
 const fullTimePattern = /\b(?:full[- ]?time|permanent|annual salary|employee benefits|health insurance)\b/i;
 
 async function fetchJson(url, headers = {}) {
@@ -63,10 +64,18 @@ function evaluate(record, profile) {
   if (!isFresh(record.provider, record.publishedAt)) return { accepted: false, reason: "expired-or-stale" };
   if (fullTimePattern.test(combined) || fullTimePattern.test(record.type)) return { accepted: false, reason: "full-time-employment" };
   const signalPattern = record.provider === "Hacker News" ? hnPotentialSignalPattern : potentialSignalPattern;
-  if (!signalPattern.test(`${combined} ${record.type}`)) return { accepted: false, reason: "unsupported-customer-intent" };
+  if (!signalPattern.test(`${combined} ${record.type}`) && record.provider !== "GitHub") return { accepted: false, reason: "unsupported-customer-intent" };
   if (!record.organization) return { accepted: false, reason: "missing-organization" };
   const matches = profileMatches(profile, record.title, record.description);
   if (!matches.length) return { accepted: false, reason: "weak-profile-match" };
+  const looksInternal = record.provider === "GitHub" && githubInternalPattern.test(`${combined} ${record.type}`);
+  const tier = record.provider === "GitHub" && githubExternalBuyingPattern.test(combined)
+    ? "active-request"
+    : looksInternal
+      ? "research-signal"
+      : record.provider === "Hacker News"
+        ? "potential-customer"
+        : "potential-customer";
   return {
     accepted: true,
     prospect: {
@@ -78,25 +87,28 @@ function evaluate(record, profile) {
       compatibleService: profile.compatibleServices.find((service) => matches.some((match) => service.includes(match) || match.includes(service))) || profile.compatibleServices[0],
       profileMatches: matches,
       categoryMatches: categoryMatches(record.title, record.description),
-      buyingIntent: "unconfirmed",
-      nextStep: "Inspect the original public source and verify a legitimate contact route before cautious outreach.",
+      tier,
+      buyingIntent: tier === "active-request" ? "confirmed" : tier === "potential-customer" ? "possible" : "unsupported",
+      nextStep: tier === "active-request" ? "Inspect the original application route and eligibility." : tier === "potential-customer" ? "Inspect the original source and verify a legitimate contact route before cautious outreach." : "Investigate whether external providers are accepted; do not assume a buyer.",
     },
   };
 }
 
 function createProviderDiagnostics(provider, rawCandidates, extractedCandidates, adapterRejected, evaluations) {
   const rejected = {};
+  const tierCounts = { "active-request": 0, "potential-customer": 0, "research-signal": 0 };
   let qualified = 0;
   const prospects = [];
   for (const evaluation of evaluations) {
     if (evaluation.accepted) {
       qualified += 1;
       prospects.push(evaluation.prospect);
+      tierCounts[evaluation.prospect.tier] = (tierCounts[evaluation.prospect.tier] || 0) + 1;
     } else {
       rejected[evaluation.reason] = (rejected[evaluation.reason] || 0) + 1;
     }
   }
-  return { provider, rawCandidates, extractedCandidates, adapterRejected, qualified, rejected, prospects };
+  return { provider, rawCandidates, extractedCandidates, adapterRejected, qualified, tierCounts, rejected, prospects };
 }
 
 async function queryHackerNews(profile) {
@@ -133,8 +145,7 @@ async function queryGitHub(profile) {
     const hasActionableNeed = githubNeedPattern.test(combined);
     const hasPublicNeedSignal = hasActionableNeed || (githubSignalLabelPattern.test(labels) && /user story|acceptance criteria|why this needs a human|objective|i want to|we need|build|develop|implement/i.test(combined));
     const looksInternal = githubInternalPattern.test(combined);
-    const hasUserNeedEvidence = /user story|acceptance criteria|why this needs a human|customer-facing/i.test(combined);
-    if (!title || !description || !item.html_url || !hasPublicNeedSignal || githubPromotionPattern.test(combined) || (looksInternal && !hasUserNeedEvidence)) return [];
+    if (!title || !description || !item.html_url || !hasPublicNeedSignal || githubPromotionPattern.test(combined)) return [];
     const repositoryUrl = clean(item.repository_url);
     const organization = repositoryUrl.split("/").slice(-2).join("/") || clean(item.user?.login) || undefined;
     return [{ provider: "GitHub", title, description, url: clean(item.html_url), publishedAt: item.created_at, type: labels || "public issue", organization }];
@@ -202,7 +213,7 @@ console.log(JSON.stringify({
   policy: {
     note: "Potential customers are public project or discussion signals, not confirmed buyers. No contact is invented and no outreach is sent.",
     acceptanceTarget: "At least one fresh, organization-linked, profile-compatible signal; ideally 1–3 across more than one source.",
-    sources: ["Hacker News story search", "GitHub public issue search"],
+    sources: ["Hacker News story search", "GitHub public issue search", "Official UK Contracts Finder OCDS probe (run separately as probe:contracts)"],
   },
 }));
 if (status === "fail") process.exitCode = 1;
