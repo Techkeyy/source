@@ -88,14 +88,22 @@ try {
   const meAfterRegistration = await request("/api/auth/me", {}, jars[0]);
   assert(meAfterRegistration.response.ok && meAfterRegistration.data?.user?.id === state.userIds[0], "authenticated session was not recovered");
 
-  const analysis = await request("/api/profile/analyze", { method: "POST", body: JSON.stringify({ url: "https://www.netguru.com/" }) }, jars[0]);
+  const analysis = await request("/api/profile/analyze", { method: "POST", body: JSON.stringify({ url: "https://www.mindshareworld.com/services" }) }, jars[0]);
   assert(analysis.response.ok, `profile analysis returned HTTP ${analysis.response.status}`);
   assert(analysis.data?.analysis?.provider === "deepseek", `profile analysis provider was ${analysis.data?.analysis?.provider || "missing"}`);
   assert(analysis.data?.analysis?.model === "deepseek-flash", `profile analysis model was ${analysis.data?.analysis?.model || "missing"}`);
   assert(typeof analysis.data?.profile?.businessName === "string" && analysis.data.profile.businessName.length > 0, "profile has no business name");
   assert(typeof analysis.data?.profile?.summary === "string" && analysis.data.profile.summary.length > 0, "profile has no summary");
   assert(groundedClaimCount(analysis.data.profile) >= 1, "profile contains no grounded claims");
-  state.profile = { ...analysis.data.profile, summary: `${analysis.data.profile.summary} Integration review confirmed.`, offeringType: "service-provider", discoveryObjective: "external-services" };
+  state.profile = {
+    ...analysis.data.profile,
+    productsAndServices: [{ text: "Media planning", evidence: [] }, { text: "Media buying", evidence: [] }, ...analysis.data.profile.productsAndServices],
+    skillsAndTechnologies: [{ text: "Audience strategy", evidence: [] }, { text: "Campaign measurement", evidence: [] }, ...analysis.data.profile.skillsAndTechnologies],
+    searchKeywords: ["media planning", "media buying", "audience strategy", ...analysis.data.profile.searchKeywords].slice(0, 16),
+    summary: `${analysis.data.profile.summary} Integration review confirmed.`,
+    offeringType: "service-provider",
+    discoveryObjective: "external-services",
+  };
 
   const confirmation = await request("/api/profile/confirm", { method: "POST", body: JSON.stringify({ profile: state.profile }) }, jars[0]);
   assert(confirmation.response.ok && confirmation.data?.saved === true, `profile confirmation returned HTTP ${confirmation.response.status}`);
@@ -124,7 +132,7 @@ try {
   assert(startupQuery && smallBusinessQuery && startupQuery !== smallBusinessQuery, "customer selection did not materially change the Hacker News query");
 
   const relevant = [...(state.startupSearch.opportunities || []), ...(state.smallBusinessSearch.opportunities || [])]
-    .find((item) => item?.sourceUrl && item?.profileMatches?.length > 0 && ["explicit-project-request", "freelance-or-contract"].includes(item.classification));
+    .find((item) => item?.sourceUrl && item?.contactUrl && item?.profileMatches?.length > 0 && ["explicit-project-request", "freelance-or-contract"].includes(item.classification));
   assert(relevant, "no source-linked opportunity with profile overlap and freelance/project classification was returned");
 
   const saved = await request("/api/opportunities/save", { method: "POST", body: JSON.stringify({ opportunity: relevant }) }, jars[0]);

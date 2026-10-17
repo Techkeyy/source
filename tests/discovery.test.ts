@@ -119,6 +119,48 @@ describe("opportunity employment classification", () => {
     expect(qualifyOpportunity(blueTuskr, reachProfile, ["startups"], "active-requests")).toBeNull();
   });
 
+  it("rejects the observed Jobicy full-time media recruitment false positive", () => {
+    const observedRecruitment = record({
+      provider: "Jobicy",
+      title: "Director, Programmatic B2B",
+      description: "We are looking for a Director, Programmatic to oversee the programmatic buying division of multiple B2B clients. This full-time role includes annual salary, benefits, and employee responsibilities.",
+      type: "Full-Time",
+      organization: "Wpromote",
+      url: "https://jobicy.com/jobs/155535-director-programmatic-b2b",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    expect(classifyOpportunity(observedRecruitment, "active-requests")).toBe("full-time-employment");
+    expect(qualifyOpportunity(observedRecruitment, mediaBuyer, ["agencies"], "active-requests")).toBeNull();
+  });
+
+  it("rejects a Jobicy contract-role listing when its source is recruitment rather than an external service request", () => {
+    const observedContractRole = record({
+      provider: "Jobicy",
+      title: "Staff Machine Learning Engineer, Ads Foundational Representations",
+      description: "Reddit is hiring for a staff engineering role. Responsibilities include building ads models and cross-functional projects. Qualifications, interviews, benefits, and candidate privacy information are provided.",
+      type: "Contract",
+      organization: "Reddit",
+      url: "https://jobicy.com/jobs/155056-staff-machine-learning-engineer-ads-foundational-representations",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    expect(classifyOpportunity(observedContractRole, "active-requests")).toBe("unknown-employment-type");
+    expect(qualifyOpportunity(observedContractRole, mediaBuyer, ["agencies"], "active-requests")).toBeNull();
+  });
+
+  it("preserves a genuinely contract-shaped Jobicy match for a service provider", () => {
+    const contractListing = record({
+      provider: "Jobicy",
+      title: "Freelance media buying consultant",
+      description: "Seeking a freelance media buying consultant for a project-based engagement supporting campaign planning and paid media execution.",
+      type: "Contract",
+      organization: "Example Agency",
+      contactUrl: "https://jobicy.com/jobs/example-media-contract",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    expect(classifyOpportunity(contractListing, "active-requests")).toBe("freelance-or-contract");
+    expect(qualifyOpportunity(contractListing, mediaBuyer, ["agencies"], "active-requests")).not.toBeNull();
+  });
+
   it("does not let generic profile words establish product relevance", () => {
     const genericIssue = record({
       provider: "GitHub",

@@ -86,7 +86,9 @@ try {
   await services.fill("Media planning\nMedia buying\nMarketing communications");
   await skills.fill("Audience strategy\nCampaign measurement");
   await keywords.fill("media planning, media buying, marketing communications, audience strategy");
-  await page.getByRole("button", { name: /Confirm and choose an audience|Save profile and continue/ }).click();
+  await page.getByLabel("Offering type", { exact: true }).selectOption("service-provider");
+  await page.getByLabel("Discovery objective", { exact: true }).selectOption("external-services");
+  await page.getByRole("button", { name: /Confirm offering and choose an audience|Save profile and continue/ }).click();
   await page.getByRole("heading", { name: "Find customers who need what you do." }).waitFor({ state: "visible", timeout: 30_000 });
 
   activeSearch = await search("Active requests");

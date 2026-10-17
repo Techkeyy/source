@@ -56,6 +56,8 @@ export interface RawOpportunity {
 
 const FULL_TIME_TYPE_PATTERN = /\b(full[- ]?time|permanent|salary|employee|employment)\b/i;
 const FULL_TIME_CONTEXT_PATTERN = /\b(full[- ]?time|permanent(?:\s+(?:role|position|job|employment))?|annual\s+salary|salary\s+(?:range|package)|employee\s+benefits|health\s+insurance|paid\s+(?:time off|vacation|sick)|benefits\s+package)\b/i;
+const JOBICY_EXTERNAL_SERVICE_PATTERN = /\b(?:freelance|independent|external)\s+(?:service(?:s)?|consult(?:ant|ing)|contract(?:or)?|agency|vendor|supplier|designer|developer|writer|marketer|media\s+(?:planner|buyer|buying))\b|\b(?:seeking|looking for|need(?:s)?|hire)\s+(?:an?\s+)?(?:freelance|independent|external)\b/i;
+const JOBICY_RECRUITMENT_PATTERN = /\b(?:role|position|responsibilit(?:y|ies)|qualifications?|benefits?|interview|recruit(?:er|ment)|candidate|workforce|employee|salary|paid\s+(?:leave|time off|vacation)|reports?\s+to|hiring|application\s+process|equal\s+opportunity)\b/i;
 const CONTRACT_TYPE_PATTERN = /\b(freelance|contract(?:or)?|temporary|fixed[- ]term|project[- ]based|part[- ]time\s+contract)\b/i;
 const CONTRACT_CONTEXT_PATTERNS = [
   /\bfreelance(?:r|rs)?\b/i,
@@ -84,6 +86,10 @@ function text(value: unknown) {
   return typeof value === "string" ? normalizeExternalText(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()) : "";
 }
 
+function textList(value: unknown) {
+  return Array.isArray(value) ? value.map(text).filter(Boolean).join(", ") : text(value);
+}
+
 function dateValue(value: unknown) {
   if (typeof value === "number") return new Date(value > 10_000_000_000 ? value : value * 1000).toISOString();
   if (typeof value === "string" && value.trim()) {
@@ -105,10 +111,16 @@ function isFresh(provider: string, publishedAt: string | null) {
   return age >= 0 && age <= FRESHNESS_DAYS[provider] * 24 * 60 * 60 * 1000;
 }
 
+function isJobicyExternalServiceRequest(record: RawOpportunity) {
+  const combined = `${record.title} ${record.description} ${record.type}`;
+  return JOBICY_EXTERNAL_SERVICE_PATTERN.test(combined) && !JOBICY_RECRUITMENT_PATTERN.test(combined);
+}
+
 export function classifyOpportunity(record: RawOpportunity, mode: DiscoveryMode): OpportunityClassification {
   const combined = `${record.title} ${record.description} ${record.type}`;
   if (!isFresh(record.provider, record.publishedAt)) return "expired-or-stale";
   if (FULL_TIME_TYPE_PATTERN.test(record.type) || FULL_TIME_CONTEXT_PATTERN.test(combined)) return "full-time-employment";
+  if (record.provider === "Jobicy" && !isJobicyExternalServiceRequest(record)) return "unknown-employment-type";
   if (record.buyerIntent === "confirmed" || (record.provider === "Contracts Finder" && EXTERNAL_BUYING_PATTERN.test(combined)) || (record.provider === "GitHub" && GITHUB_EXTERNAL_BUYING_PATTERN.test(combined))) return "explicit-project-request";
   if (record.provider === "Hacker News" && /\b(?:looking for|need|seeking)\s+(?:a\s+)?freelancer\b/i.test(combined)) return "explicit-project-request";
   if ((mode === "product" || mode === "potential-customers") && (record.prospectType === "research-signal" || record.provider === "GitHub")) {
@@ -337,9 +349,9 @@ async function queryJobicy(profile: ProfileDraft): Promise<{ records: RawOpportu
   const jobs = ["jobs", "jobListings", "data", "results"].flatMap((key) => Array.isArray(payload[key]) ? payload[key] : []).filter((item): item is Record<string, unknown> => !!item && typeof item === "object");
   const records = jobs.flatMap((job) => {
     const url = text(job.url || job.jobUrl || job.link);
-    const title = text(job.title || job.position || job.jobTitle);
+    const title = text(job.jobTitle || job.title || job.position);
     if (!url || !title) return [];
-    return [{ provider: "Jobicy", title, description: text(job.description || job.jobDescription || job.excerpt), url, publishedAt: dateValue(job.pubDate || job.published || job.publishedAt || job.date), type: text(job.jobType || job.employmentType), id: text(job.id || url), prospectType: "active-request" as const, organization: text(job.company || job.companyName || job.organization) || undefined, contactUrl: text(job.applyUrl || job.applicationUrl) || null }];
+    return [{ provider: "Jobicy", title, description: text(job.jobDescription || job.description || job.jobExcerpt || job.excerpt), url, publishedAt: dateValue(job.pubDate || job.published || job.publishedAt || job.date), type: textList(job.jobType || job.employmentType), id: text(job.id || url), prospectType: "active-request" as const, organization: text(job.companyName || job.company || job.organization) || undefined, contactUrl: text(job.applyUrl || job.applicationUrl || job.jobApplyLink) || null }];
   });
   return { records, status: { provider: "Jobicy", status: "queried", detail: `${records.length} public records returned. Contract status is rechecked from source fields.`, query } };
 }

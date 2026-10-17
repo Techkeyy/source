@@ -407,7 +407,7 @@ textarea { resize: vertical; line-height: 1.55; }
   .boundary-section { padding-block: 26px; }
   .boundary-inner { grid-template-columns: 1fr; gap: 25px; padding: 24px; }
   .public-footer { display: grid; width: 90vw; padding-top: 22px; }
-  .app-brand em { display: none; }
+  .app-nav .brand em { display: none; }
   .user-name { display: none; }
   .context-rail { display: block; width: 90vw; margin-inline: auto; padding-top: 27px; }
   .rail-progress { grid-template-columns: 1fr; margin-top: 25px; padding-block: 15px; }
