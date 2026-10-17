@@ -11,6 +11,7 @@ export type ProspectType = "active-request" | "potential-customer" | "research-s
 export type BuyerIntent = "confirmed" | "possible" | "unsupported";
 export type OfferingType = "service-provider" | "product-owner" | "unclear";
 export type DiscoveryObjective = "external-services" | "product-users";
+export type ProfileOrigin = "website" | "manual";
 export type OpportunityClassification =
   | "explicit-project-request"
   | "freelance-or-contract"
@@ -41,6 +42,8 @@ export interface ProfileDraft {
   buyerIntentSignals: GroundedClaim[];
   inferenceNotes: string[];
   sourceUrl: string;
+  portfolioUrl?: string;
+  profileOrigin?: ProfileOrigin;
   analyzedAt: string;
   model: string;
   grounding: {
