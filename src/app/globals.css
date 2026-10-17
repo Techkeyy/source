@@ -298,7 +298,7 @@ textarea { resize: vertical; line-height: 1.55; }
 .results-summary span { color: var(--accent-deep); font-weight: 700; }
 .provider-line { padding: 14px 0; border-bottom: 1px solid var(--line); }
 .opportunity-list { display: grid; gap: 15px; margin-top: 22px; }
-.opportunity-card { padding: 23px; }
+.opportunity-card { min-width: 0; padding: 23px; }
 .opportunity-card.explicit-project-request { border-top: 3px solid var(--accent); }
 .opportunity-card.freelance-or-contract { border-top: 3px solid #8c7bc2; }
 .opportunity-card.potential-buyer-signal-unconfirmed { border-top: 3px solid #d8ae55; }
@@ -311,13 +311,15 @@ textarea { resize: vertical; line-height: 1.55; }
 .classification.potential-buyer-signal-unconfirmed { background: var(--signal-soft); color: var(--signal); }
 .classification.research-signal-only { background: #edf0ee; color: #52635b; }
 .match-score { color: var(--accent-deep); font-size: 12px; font-weight: 800; }
-.opportunity-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-top: 17px; }
+.opportunity-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; min-width: 0; margin-top: 17px; }
+.opportunity-title-row > div { min-width: 0; }
 .opportunity-card h2 { margin: 0 0 8px; font-size: 29px; line-height: 1.05; }
+.opportunity-card h2, .opportunity-meta, .opportunity-description, .prospect-answer-grid strong, .evidence-list, .eligibility-note { overflow-wrap: anywhere; }
 .opportunity-meta { color: var(--muted); font-size: 11px; }
 .opportunity-meta span + span::before { content: "/"; margin-right: 9px; color: var(--line-strong); }
 .opportunity-description { max-width: 780px; margin: 19px 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .prospect-answer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
-.prospect-answer-grid > div { display: grid; gap: 7px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); }
+.prospect-answer-grid > div { display: grid; min-width: 0; gap: 7px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); }
 .prospect-answer-grid strong { font-size: 12px; line-height: 1.45; }
 .potential-card .prospect-answer-grid > div:first-child { border-color: #eadfbf; background: #fffaf0; }
 .research-card .prospect-answer-grid > div:last-child { border-color: #d8dfdb; background: #f5f7f5; }

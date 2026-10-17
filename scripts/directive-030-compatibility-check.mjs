@@ -134,7 +134,24 @@ try {
   assert(bypassAttempt.response.ok, `product-owner search returned HTTP ${bypassAttempt.response.status}`);
   const productProviders = Object.fromEntries((bypassAttempt.data?.providers || []).map((provider) => [provider.provider, provider.status]));
   assert(bypassAttempt.data?.policy?.mode === "potential-customers", "client mode bypassed the confirmed product objective");
+  assert(productProviders["Contracts Finder"] === "skipped", "product-owner discovery queried external-service procurement instead of skipping Contracts Finder");
   assert(productProviders.Jobicy === "skipped" && productProviders["Remote OK"] === "skipped" && productProviders.SerpApi === "skipped", "product-owner job sources were not skipped");
+
+  const confirmedService = {
+    ...oldServiceProfile,
+    offeringType: "service-provider",
+    discoveryObjective: "external-services",
+    offeringTypeSuggestion: "service-provider",
+  };
+  const serviceConfirm = await request("/api/profile/confirm", { method: "POST", body: JSON.stringify({ profile: confirmedService }) }, jars[1]);
+  assert(serviceConfirm.response.ok, `modern service confirmation returned HTTP ${serviceConfirm.response.status}`);
+  const serviceSearch = await request("/api/opportunities/search", {
+    method: "POST",
+    body: JSON.stringify({ customerTypes: ["startups"], mode: "active-requests" }),
+  }, jars[1]);
+  assert(serviceSearch.response.ok, `service-provider search returned HTTP ${serviceSearch.response.status}`);
+  const serviceProviders = Object.fromEntries((serviceSearch.data?.providers || []).map((provider) => [provider.provider, provider.status]));
+  assert(serviceProviders["Contracts Finder"] === "queried", "service-provider discovery did not preserve Contracts Finder procurement matching");
 
   console.log(JSON.stringify({
     status: "pass",
@@ -148,6 +165,7 @@ try {
       clientActiveRequestBypass: "blocked",
       effectiveProductMode: bypassAttempt.data.policy.mode,
       jobSources: productProviders,
+      contractsFinder: { productOwner: productProviders["Contracts Finder"], serviceProvider: serviceProviders["Contracts Finder"] },
     },
     cleanup: "requested",
   }));

@@ -4089,3 +4089,38 @@ production account and records were deleted after the check.
 **Directive 031 final status: GO for owner sign-off; HOLD on hackathon
 publication until the owner explicitly authorizes submission.**
 
+## Directive 033 — Reach semantic matching and cross-objective correction
+
+Updated 2026-10-17 (Africa/Lagos). The P0 correction is complete on the new
+branch `codex/directive-033-semantic-product-matching`; controlled promotion is
+pending the final merge/deployment record below.
+
+The defect was systemic: product-owner discovery still queried Contracts Finder,
+and product compatibility accepted broad source/profile token overlap. The
+bounded correction now requires a grounded, phrase-level product capability and
+a concrete product use-case signal. Product brand names, generic vocabulary,
+incidental payment words, and unrelated service-procurement notices do not
+qualify. Contracts Finder is explicitly skipped for product-owner discovery and
+remains enabled for service-provider procurement matching. The result-card CSS
+also prevents long evidence text from expanding the document at 320px without
+using overflow clipping.
+
+The required matrix passed: Northampton media buying, Department for Education
+Oracy, BlueTuskr graphic design, generic GitHub work, brand-only overlap,
+incidental payment/passkey overlap, and branding-vs-media cross-objective
+matches were rejected. A synthetic, clearly labeled product evaluator with
+passkey peer-to-peer payment and claim-link requirements qualified in unit
+tests only; no live product buyer was invented. A live Mindshare service profile
+continued to surface Northampton College CA18543 as a confirmed active request.
+
+The real local browser journey against the public Reach page returned an honest
+empty state: 0 active requests, 0 potential customers, and 0 research signals;
+Contracts Finder was reported as skipped. Exact 320px and 390px profile and
+results measurements passed with document/body widths equal to the viewport and
+the Sign out control visible. Disposable accounts were cleaned up.
+
+Final local verification passed: typecheck, zero-warning lint, 33 unit/regression
+tests, production build, discovery, Contracts Finder, DeepSeek core, ownership,
+legacy compatibility, and the Directive 033 browser harness. Full evidence is
+in [docs/directive-033-release-gates.md](docs/directive-033-release-gates.md).
+
