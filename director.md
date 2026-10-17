@@ -4124,3 +4124,21 @@ tests, production build, discovery, Contracts Finder, DeepSeek core, ownership,
 legacy compatibility, and the Directive 033 browser harness. Full evidence is
 in [docs/directive-033-release-gates.md](docs/directive-033-release-gates.md).
 
+### Directive 033 controlled-promotion status
+
+The normal merge was verified on the exact merged tree and pushed to GitHub:
+
+- Merge SHA: `b8c27b267e82b20765be410bd281a4cabfbb0494`.
+- GitHub: [Techkeyy/source commit b8c27b2](https://github.com/Techkeyy/source/commit/b8c27b267e82b20765be410bd281a4cabfbb0494).
+- Exact-merge checks: typecheck passed, zero-warning lint passed, 33 tests
+  passed, production build passed, and the working tree was clean.
+
+No Render deployment was initiated because the authenticated dashboard
+connector failed during initialization. No deployment ID or new production
+SHA is claimed. The last verified live runtime remains
+`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, with immediate rollback target
+`53a24e72543f6ed300996a62d711b93b7f48ce4c`; automatic deployment remains
+disabled. Production UAT for `b8c27b2` is still outstanding, so Directive 033
+is **HOLD** pending owner-controlled Render deployment and acceptance. Do not
+publish the hackathon entry.
+

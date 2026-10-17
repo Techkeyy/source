@@ -87,3 +87,19 @@ The final local run passed:
 The final merge and deployment identifiers, production acceptance, and rollback
 target are appended below after controlled promotion. No hackathon entry is
 published by this correction.
+
+## Controlled promotion status
+
+- The normal merge was pushed to GitHub `main` as
+  `b8c27b267e82b20765be410bd281a4cabfbb0494`:
+  [GitHub commit](https://github.com/Techkeyy/source/commit/b8c27b267e82b20765be410bd281a4cabfbb0494).
+- No Render deployment was initiated in this run. The authenticated dashboard
+  connector failed during initialization, so no deployment ID or deployed SHA
+  is invented.
+- Last verified live runtime before this correction remains
+  `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`; its verified immediate rollback
+  target remains `53a24e72543f6ed300996a62d711b93b7f48ce4c`.
+- Automatic deployment remains disabled. Production acceptance for this new
+  SHA is therefore still pending and the release is **HOLD** until the owner
+  manually deploys the exact merge SHA and repeats Reach negative, service
+  positive, persistence/isolation, and 320/390 checks.
