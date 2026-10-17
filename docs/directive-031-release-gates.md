@@ -187,12 +187,13 @@ accounts and cleanup:
 - Profile edits, saved opportunity, proposal generation, proposal editing,
   logout/login recovery, unauthenticated denial, malformed-request rejection,
   cross-account proposal denial, and saved-list/profile isolation all passed.
-- Exact 320px and 390px installed-Chrome measurements passed on the audited
-  application code: after the fix, document/body widths were `305/305` at
-  320px and `375/375` at 390px, with Sign out fully in bounds and no
-  horizontal overflow. The production runtime is the exact deployed merge
-  SHA; the same responsive code path is live. The pre-fix 320px geometry
-  remains recorded above for audit comparison.
+- Exact installed-Chrome measurements passed directly against the live Render
+  service after promotion on authenticated landing/profile/results/saved-
+  pipeline screens: document/body widths were `305/305` at 320px and `375/375`
+  at 390px, with Sign out at `235.572–288.888` and `301.968–355.284`
+  respectively, enabled and clickable. No visible control exceeded the
+  viewport. The pre-fix 320px geometry remains recorded above for audit
+  comparison.
 
 **Post-promotion production gates: PASS.** Owner sign-off and authorization to
 publish the hackathon submission remain outstanding. The moderate transitive

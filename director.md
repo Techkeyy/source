@@ -4079,10 +4079,12 @@ cleanup passed. The Reach flow analyzed the real public page as Product Owner,
 forced the server's effective mode to Potential Customers, skipped Jobicy,
 Remote OK, and SerpApi, and did not promote generic job/project signals.
 
-The exact installed-Chrome 320px/390px geometry gate passed on the audited code:
-320px document/body `305/305`, Sign out `235.572–288.888`; 390px
-document/body `375/375`, Sign out `301.968–355.284`; no control exceeded the
-viewport. The exact deployed SHA contains that same responsive correction.
+The exact installed-Chrome 320px/390px geometry gate passed directly against
+the live Render service on authenticated landing/profile/results/saved-pipeline
+screens: 320px document/body `305/305`, Sign out `235.572–288.888`; 390px
+document/body `375/375`, Sign out `301.968–355.284`; no visible control
+exceeded the viewport and Sign out remained enabled/clickable. The disposable
+production account and records were deleted after the check.
 
 **Directive 031 final status: GO for owner sign-off; HOLD on hackathon
 publication until the owner explicitly authorizes submission.**
