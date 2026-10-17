@@ -15,6 +15,7 @@
     "probe:discovery": "node scripts/discovery-check.mjs",
     "probe:contracts": "node scripts/contracts-finder-check.mjs",
     "probe:directive-030-compat": "node scripts/directive-030-compatibility-check.mjs",
+    "probe:directive-033-browser": "node scripts/directive-033-browser-check.mjs",
     "probe:ownership": "node scripts/auth-ownership-check.mjs",
     "probe:core": "node scripts/core-acceptance-check.mjs",
     "probe:all": "npm run probe:mongodb && npm run probe:gemma && npm run probe:discovery && npm run probe:contracts && npm run probe:ownership"

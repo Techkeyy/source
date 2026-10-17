@@ -119,6 +119,57 @@ describe("opportunity employment classification", () => {
     expect(qualifyOpportunity(blueTuskr, reachProfile, ["startups"], "active-requests")).toBeNull();
   });
 
+  it("rejects brand-name, generic, and incidental-payment matches for a product owner", () => {
+    const northampton = record({
+      provider: "Contracts Finder",
+      title: "Media Planning & Buying Services",
+      description: "Northampton College invites tenders for media planning and buying services. The supplier will manage campaign reach.",
+      organization: "Northampton College",
+      buyerIntent: "confirmed",
+      noticeStatus: "active",
+      deadline: new Date(Date.now() + 86_400_000).toISOString(),
+    });
+    const oracy = record({
+      provider: "Contracts Finder",
+      title: "Oracy Framework Expert Panel",
+      description: "The Department for Education seeks experts for an education framework and panel.",
+      organization: "Department for Education",
+      buyerIntent: "confirmed",
+      noticeStatus: "active",
+    });
+    const brandOnly = record({ provider: "GitHub", title: "Reach release notes", description: "Reach is mentioned in this unrelated project update.", prospectType: "potential-customer", organization: "example/repo" });
+    const incidentalPayment = record({ provider: "GitHub", title: "Finance dashboard copy", description: "We need a marketing dashboard that mentions payment status and customer reach.", prospectType: "potential-customer", organization: "example/finance" });
+    const incidentalPasskeyPayment = record({ provider: "GitHub", title: "Passkey onboarding documentation", description: "We need to document account onboarding while a separate payment status field remains in the dashboard.", prospectType: "potential-customer", organization: "example/docs" });
+    const genericIssue = record({ provider: "GitHub", title: "General product backlog", description: "We need to improve the user workflow and replace a manual process.", prospectType: "potential-customer", organization: "example/backlog" });
+
+    for (const candidate of [northampton, oracy, brandOnly, incidentalPayment, incidentalPasskeyPayment, genericIssue]) {
+      expect(qualifyOpportunity(candidate, reachProfile, ["startups"], "potential-customers")).toBeNull();
+    }
+  });
+
+  it("accepts a product opportunity only when a grounded capability and concrete use case both match", () => {
+    const productEvaluation = record({
+      provider: "GitHub",
+      title: "Evaluating passkey peer-to-peer payment pilots",
+      description: "Our organization is seeking a product for passkey-based peer-to-peer payment flows and claim-link payments. We want to pilot a safer recipient workflow.",
+      prospectType: "potential-customer",
+      organization: "synthetic-payments-evaluator/example",
+    });
+    expect(qualifyOpportunity(productEvaluation, reachProfile, ["startups"], "potential-customers")).toEqual(expect.objectContaining({ prospectType: "potential-customer", profileMatches: expect.arrayContaining(["passkey-based payment interactions"]) }));
+  });
+
+  it("rejects Contracts Finder from product-owner qualification even when the tender mentions payment", () => {
+    const tender = record({
+      provider: "Contracts Finder",
+      title: "Payment processing services",
+      description: "The buyer is seeking a supplier for payment processing and customer communications.",
+      organization: "Public Buyer",
+      buyerIntent: "confirmed",
+      noticeStatus: "active",
+    });
+    expect(qualifyOpportunity(tender, reachProfile, ["startups"], "active-requests")).toBeNull();
+  });
+
   it("rejects the observed Jobicy full-time media recruitment false positive", () => {
     const observedRecruitment = record({
       provider: "Jobicy",
@@ -217,8 +268,8 @@ describe("opportunity employment classification", () => {
   it("requires product-relevant demand for product owners", () => {
     const relevant = record({
       provider: "Hacker News",
-      title: "Ask HN: How can we handle recipient payments?",
-      description: "We need a payment workflow for recipients. Could someone recommend a safer claim experience?",
+      title: "Ask HN: How can we handle passkey peer-to-peer payments?",
+      description: "We need a passkey-based peer-to-peer payment workflow for recipients. Could someone recommend a safer claim-link experience for a pilot?",
       prospectType: "potential-customer",
       organization: "Example Payments",
     });

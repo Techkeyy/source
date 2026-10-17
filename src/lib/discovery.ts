@@ -80,7 +80,30 @@ const GITHUB_INTERNAL_PATTERN = /\b(?:fix typo|refactor|unit tests?|test coverag
 const GITHUB_PROMOTION_PATTERN = /\b(?:best .* company in|advertising production company|graphic design course|learn .* career|support small business marketing|seo services?|past websites?|portfolio|showcase my work|key services|best for:|final thoughts|before hiring|companies? helping .* businesses|businesses looking for .* (?:company|partner|provider)|top .* companies?|leading .* companies?)\b/i;
 const GITHUB_EXTERNAL_BUYING_PATTERN = /\b(?:looking for|seeking|need|want to hire|hire)\s+(?:an?\s+)?(?:freelancer|contractor|agency|vendor|supplier|service provider|developer|designer)|\b(?:request(?:ing)?|invite)\s+(?:for\s+)?(?:proposal|quotation|tender)s?\b|\b(?:external|outsourc(?:e|ing))\s+(?:developer|designer|agency|provider|support)\b/i;
 const GENERIC_MATCH_TERMS = new Set(["about", "account", "after", "again", "also", "and", "app", "available", "batch", "between", "business", "calmer", "clear", "company", "customers", "develop", "development", "doing", "fast", "from", "fund", "have", "help", "human", "into", "made", "move", "need", "open", "people", "private", "product", "project", "projects", "protected", "record", "right", "service", "services", "settle", "share", "simple", "sends", "send", "sending", "test", "that", "the", "this", "their", "token", "tokens", "using", "value", "want", "way", "what", "with", "work", "works"]);
-const PRODUCT_NEED_PATTERN = /\b(?:adopt|buy|buying|customer(?:s)?|integrat(?:e|ion|ing)|need(?:s)?|pilot|procure|replace|roll ?out|seeking|solution|use case|user(?:s)?|vendor|workflow|(?:payment|payout|wallet|checkout|remittance|settlement|claim|passkey|token|finance|money|transaction)s?)\b/i;
+const PRODUCT_NEED_PATTERN = /\b(?:adopt(?:ed|ing|ion)?|buy(?:ing)?|customer(?:s)?|deploy(?:ed|ing|ment)?|evaluat(?:e|ed|ing|ion)|integrat(?:e|ed|ing|ion)|need(?:s|ed|ing)?|pilot(?:ed|ing)?|procure|replace|roll ?out|seek(?:s|ing)?|solution|use case|user(?:s)?|vendor|workflow|accept(?:s|ed|ing)?|transfer(?:s|red|ring)?|send(?:s|ing)?|receiv(?:e|es|ed|ing)|claim(?:s|ed|ing)?|checkout)\b/i;
+
+const PRODUCT_CAPABILITY_RULES = [
+  {
+    label: "passkey-based payment interactions",
+    profile: /\bpasskeys?(?:[- ](?:based|powered))?(?:[\s-]+(?:peer[- ]to[- ]peer|p2p))?[\s-]+(?:payment|payout|transfer)s?\b/i,
+    source: /\bpasskeys?(?:[- ](?:based|powered))?(?:[\s-]+(?:peer[- ]to[- ]peer|p2p))?[\s-]+(?:payment|payout|transfer)s?\b/i,
+  },
+  {
+    label: "peer-to-peer payment flows",
+    profile: /\b(?:peer[- ]to[- ]peer|p2p)[\s-]+(?:payment|payout|transfer)s?\b/i,
+    source: /\b(?:peer[- ]to[- ]peer|p2p)[\s-]+(?:payment|payout|transfer)s?\b/i,
+  },
+  {
+    label: "claim-link payment flows",
+    profile: /\bclaim[- ]?links?[\s-]+(?:payment|payout|transfer)s?\b/i,
+    source: /\bclaim[- ]?links?[\s-]+(?:payment|payout|transfer)s?\b/i,
+  },
+  {
+    label: "test-token payment demonstrations",
+    profile: /\btest[- ]?tokens?[\s-]+(?:payment|payout|transfer)s?\b/i,
+    source: /\btest[- ]?tokens?[\s-]+(?:payment|payout|transfer)s?\b/i,
+  },
+] as const;
 
 function text(value: unknown) {
   return typeof value === "string" ? normalizeExternalText(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()) : "";
@@ -157,7 +180,19 @@ function termInText(term: string, value: string) {
   return new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(value);
 }
 
-function profileMatchesFor(profile: ProfileDraft, combined: string) {
+function productCapabilityMatches(profile: ProfileDraft, combined: string) {
+  const profileEvidence = [
+    ...profile.productsAndServices,
+    ...profile.problemsSolved,
+    ...profile.skillsAndTechnologies,
+    ...profile.valueProposition,
+    ...profile.differentiators,
+  ].map((claim) => claim.text).join(" ");
+  return PRODUCT_CAPABILITY_RULES.filter((rule) => rule.profile.test(profileEvidence) && rule.source.test(combined)).map((rule) => rule.label);
+}
+
+function profileMatchesFor(profile: ProfileDraft, combined: string, productOwner = false) {
+  if (productOwner) return productCapabilityMatches(profile, combined).slice(0, 6);
   return profileTerms(profile).filter((term) => termInText(term, combined)).slice(0, 6);
 }
 
@@ -175,16 +210,16 @@ function inferClientType(value: string, selected: CustomerType[]) {
 function evaluateOpportunity(record: RawOpportunity, profile: ProfileDraft, selected: CustomerType[], mode: DiscoveryMode): { opportunity: Opportunity | null; reason?: DiscoveryRejectionReason } {
   const combined = `${record.title} ${record.description}`.toLowerCase();
   const productOwner = profile.discoveryObjective === "product-users" || profile.offeringType === "product-owner";
-  if (productOwner && ["Jobicy", "Remote OK", "SerpApi"].includes(record.provider)) return { opportunity: null, reason: "unsupported-customer-intent" };
+  if (productOwner && ["Contracts Finder", "Jobicy", "Remote OK", "SerpApi"].includes(record.provider)) return { opportunity: null, reason: "unsupported-customer-intent" };
   const classification = classifyOpportunity(record, mode);
   if (classification === "expired-or-stale") return { opportunity: null, reason: "expired-or-stale" };
   if (classification === "full-time-employment") return { opportunity: null, reason: "full-time-employment" };
   if (!["explicit-project-request", "freelance-or-contract", "potential-buyer-signal-unconfirmed", "research-signal-only"].includes(classification)) return { opportunity: null, reason: "unsupported-customer-intent" };
   if (classification === "research-signal-only" && mode !== "product" && mode !== "potential-customers") return { opportunity: null, reason: "unsupported-customer-intent" };
   if ((classification === "potential-buyer-signal-unconfirmed" || classification === "research-signal-only") && !record.organization) return { opportunity: null, reason: "missing-organization" };
-  const profileMatches = profileMatchesFor(profile, combined);
+  const profileMatches = profileMatchesFor(profile, combined, productOwner);
   const categoryMatches = selected.flatMap((category) => CATEGORY_TERMS[category].filter((term) => combined.includes(term))).slice(0, 6);
-  if (productOwner && !PRODUCT_NEED_PATTERN.test(combined)) return { opportunity: null, reason: "weak-profile-match" };
+  if (productOwner && (!profileMatches.length || !PRODUCT_NEED_PATTERN.test(combined))) return { opportunity: null, reason: "weak-profile-match" };
   if (["potential-buyer-signal-unconfirmed", "research-signal-only"].includes(classification) && !profileMatches.length) return { opportunity: null, reason: "weak-profile-match" };
   if (!profileMatches.length) return { opportunity: null, reason: "weak-profile-match" };
   const score = (classification === "explicit-project-request" ? 30 : classification === "freelance-or-contract" ? 20 : classification === "potential-buyer-signal-unconfirmed" ? 10 : 0) + Math.min(profileMatches.length * 2, 12) + Math.min(categoryMatches.length * 2, 8) + (isFresh(record.provider, record.publishedAt) ? 3 : 0);
@@ -435,9 +470,21 @@ export async function discoverOpportunities(profile: ProfileDraft, selected: Cus
   const productOwner = profile.discoveryObjective === "product-users" || profile.offeringType === "product-owner";
   const effectiveMode: DiscoveryMode = productOwner ? "potential-customers" : mode;
   const activeMode = !productOwner && (effectiveMode === "services" || effectiveMode === "active-requests");
+  const contractsFinder = productOwner
+    ? Promise.resolve({
+        records: [] as RawOpportunity[],
+        status: {
+          provider: "Contracts Finder",
+          status: "skipped" as const,
+          detail: "Contracts Finder is skipped for product-owner discovery because its notices are external-service procurement, not a demonstrated product-user pathway.",
+          rawCount: 0,
+          adapterRejected: 0,
+        },
+      })
+    : queryContractsFinder(profile);
   const results = await Promise.allSettled([
     queryHackerNews(profile, selected, effectiveMode),
-    queryContractsFinder(profile),
+    contractsFinder,
     activeMode ? queryJobicy(profile) : Promise.resolve({ records: [], status: { provider: "Jobicy", status: "skipped" as const, detail: "Jobicy job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
     activeMode ? queryRemoteOk(profile) : Promise.resolve({ records: [], status: { provider: "Remote OK", status: "skipped" as const, detail: "Remote OK job listings are active-request sources and were skipped for the potential-customer view.", rawCount: 0, adapterRejected: 0 } }),
     queryGithub(profile),
@@ -475,5 +522,5 @@ export async function discoverOpportunities(profile: ProfileDraft, selected: Cus
     counts[tier] += 1;
     return counts;
   }, { "active-request": 0, "potential-customer": 0, "research-signal": 0 } as Record<ProspectType, number>);
-  return { opportunities, providers: statuses, diagnostics, tierCounts, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale", "unrelated job feeds for product owners"], mode: effectiveMode, selectedCustomerTypes: selected, sourceBoundary: "Active requests have explicit supplier intent; potential customers have observed need with buying intent possible; research signals show work without defensible external-buying evidence." } };
+  return { opportunities, providers: statuses, diagnostics, tierCounts, policy: { freshnessDays: FRESHNESS_DAYS, excluded: ["full-time employment", "unknown employment type", "irrelevant", "expired or stale", "unrelated job feeds for product owners", "Contracts Finder service procurement for product owners"], mode: effectiveMode, selectedCustomerTypes: selected, sourceBoundary: "Active requests have explicit supplier intent; potential customers have observed need with buying intent possible; research signals show work without defensible external-buying evidence." } };
 }
