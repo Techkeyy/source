@@ -15,7 +15,15 @@ export async function POST(request: Request) {
     const selected = Array.isArray(body.customerTypes) ? body.customerTypes : [];
     const allowed = new Set(["small-businesses", "startups", "agencies", "individuals"]);
     if (!selected.length || selected.some((item) => !allowed.has(item))) throw new SourceError("Select at least one valid customer type.");
-    const mode: DiscoveryMode = body.mode === "potential-customers" || body.mode === "product" ? body.mode : "active-requests";
+    if (!profileRecord.profile.offeringType || profileRecord.profile.offeringType === "unclear" || !profileRecord.profile.discoveryObjective) {
+      throw new SourceError("Confirm your offering type and discovery objective before searching.", 422, "DISCOVERY_INTENT_REQUIRED");
+    }
+    const requestedMode: DiscoveryMode = body.mode === "potential-customers" || body.mode === "product" ? body.mode : "active-requests";
+    const mode: DiscoveryMode = profileRecord.profile.discoveryObjective === "product-users"
+      ? "potential-customers"
+      : requestedMode === "potential-customers"
+        ? "potential-customers"
+        : "active-requests";
     const result = await discoverOpportunities(profileRecord.profile, selected, mode);
     return Response.json(result);
   } catch (error) {

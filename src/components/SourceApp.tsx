@@ -295,9 +295,11 @@ export default function SourceApp() {
       const result = await api<{ profile: ProfileDraft | null }>("/api/profile");
       if (result.profile) {
         setProfile(result.profile);
-        setProfileConfirmed(true);
+        const hasConfirmedIntent = Boolean(result.profile.offeringType && result.profile.offeringType !== "unclear" && result.profile.discoveryObjective);
+        setProfileConfirmed(hasConfirmedIntent);
         setMode(result.profile.discoveryObjective === "product-users" || result.profile.offeringType === "product-owner" ? "potential-customers" : "active-requests");
-        changeStage("discover");
+        changeStage(hasConfirmedIntent ? "discover" : "profile");
+        if (!hasConfirmedIntent) setNotice("Your saved profile is readable. Confirm its offering type and discovery objective before searching.");
       }
     } catch { /* a new account has no profile yet */ }
   }, [changeStage]);

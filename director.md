@@ -3904,3 +3904,35 @@ SURFACED THROUGH THE NORMAL BROWSER FLOW; GITHUB BUYER-QUALITY BOUNDARY
 CORRECTED; MERGE, PUSH, RENDER PROMOTION, AND PRODUCTION UAT MAY PROCEED
 UNDER THE DIRECTOR’S EXPLICIT RELEASE AUTHORIZATION.**
 
+## Directive 030 — final Reach relevance release gates
+
+Updated 2026-10-17 (Africa/Lagos). The bounded legacy-profile compatibility
+correction was tested locally on `codex/directive-029-reach-regression`.
+
+- Gate 1: **PASS**. Legacy Reach-style and service-provider profiles without
+  offering/objective fields remained readable but received
+  `DISCOVERY_INTENT_REQUIRED` before discovery. Confirmed product objectives
+  were enforced server-side even when the client requested active jobs.
+- Gate 2: **PASS for the required live examples**. Real Reach analysis produced
+  an honest product-signal empty state with unrelated job feeds skipped. A real
+  Mindshare media-service profile surfaced the live Northampton College CA18543
+  Contracts Finder notice through the normal results interface. The official
+  notice URL, buyer, scope, active status, deadline, open procedure, SME signal,
+  and application route were verified. User-edited media-planning terms remain
+  distinct from page evidence. Unrelated Jobicy noise was not counted as a
+  positive result and remains a source limitation.
+- Gate 3: **HOLD / FAIL at exact 320px; PASS at 390px**. Installed Chrome
+  DevTools measured 390px with document width 375px and no overflow. At 320px,
+  the document/body measured 342/343px and the authenticated Sign out control
+  extended beyond the viewport, producing a horizontal scrollbar.
+
+### Directive 030 release decision
+
+**HOLD — no merge, push, Render deployment, or production UAT was performed.**
+The existing production revision and rollback state remain unchanged. The
+minimum server/UI compatibility guard and its disposable probe are recorded in
+[docs/directive-030-release-gates.md](docs/directive-030-release-gates.md).
+A separate explicitly approved mobile-only correction is required before
+controlled promotion. The exact local viewport evidence must not be described
+as a production acceptance result.
+
