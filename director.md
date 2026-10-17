@@ -4060,7 +4060,8 @@ Updated 2026-10-17 after the authorized promotion. The normal merge was pushed
 to GitHub and the exact SHA was manually deployed to Render:
 
 - Merge and deployed SHA: `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`.
-- GitHub `origin/main`: `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`.
+- GitHub runtime push: `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`.
+- Documentation-only evidence follow-up: `c64baf4b519d9ea165749b94d7de0b077d924c4c` on `origin/main`; it was not redeployed.
 - Render deployment: `dep-db9cu2favr4c73djgm4g`, status `Deploy succeeded | Live`.
 - Render source link verified the full SHA above; automatic deployment remained
   disabled.

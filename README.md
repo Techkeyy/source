@@ -144,7 +144,7 @@ Issue creation, a missing assignee, a `help wanted` label, or technical compatib
 
 The official [Contracts Finder API documentation](https://www.contractsfinder.service.gov.uk/apidocumentation) and its public [OCDS notice search](https://www.contractsfinder.service.gov.uk/apidocumentation/Notices/1/GET-Published-Notice-OCDS-Search) are feasible for stronger procurement evidence. A bounded live probe returned 100 recent tender releases and 59 current digital/design/marketing-related matches with status, buyer, deadline, scope, procurement method, SME suitability, and official notice links. Detailed selection criteria may still require opening the notice documents, and a tender is not a guarantee of eligibility or award. The production adapter uses the public endpoint only; it does not scrape or bypass access controls.
 
-The Directive 031 correction was implemented on `codex/directive-029-reach-regression`, merged as `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, and promoted through the controlled Render procedure. The production results are recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md).
+The Directive 031 correction was implemented on `codex/directive-029-reach-regression`, merged as `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, and promoted through the controlled Render procedure. The production results are recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md). A later documentation-only evidence commit, `c64baf4b519d9ea165749b94d7de0b077d924c4c`, is on `origin/main` and was intentionally not redeployed.
 
 ## Architecture
 

@@ -156,7 +156,8 @@ Promotion completed after the local gates passed:
 | Item | Verified value |
 |---|---|
 | GitHub merge SHA | [`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`](https://github.com/Techkeyy/source/commit/1be26da3366c9ddbbd49018ec0cbbdab3ce8795e) |
-| GitHub `origin/main` after push | `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` |
+| GitHub `origin/main` after runtime push | `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` |
+| Documentation-only evidence follow-up | `c64baf4b519d9ea165749b94d7de0b077d924c4c` on `origin/main`; not redeployed |
 | Render deployment | `dep-db9cu2favr4c73djgm4g` |
 | Render deployed SHA | `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` |
 | Immediate rollback target | `53a24e72543f6ed300996a62d711b93b7f48ce4c` / `dep-db918lmq1p3s739n88dg` |
