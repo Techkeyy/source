@@ -86,6 +86,8 @@ The project depends on open-source AI tooling as part of its real workflow rathe
 
 Source uses a hosted DeepSeek API in the verified deployment. It does not claim local inference, Gemma usage, zero-cost inference, or a specific model license. The honest open-innovation claim is the meaningful use of the open-source Mastra workflow and the ability to inspect, replace, and constrain the model step while keeping user-facing decisions deterministic.
 
+The owner must confirm that this architecture satisfies the challenge-wide open-weight/open-source AI requirement. This draft claims open-source workflow tooling and factual use of hosted DeepSeek; it does not claim that the hosted model is locally run, open-weight, or covered by a particular model license.
+
 ## My Agent Session
 
 No DevRelay session is attached to this draft. This optional section should be removed before publication unless the owner adds a genuine session link.
@@ -116,6 +118,7 @@ Do not enter Best Use of Gemma, SerpApi, Reddit, Sentry Agent Tracing, or any ot
 
 - Confirm the participant is 18+ and otherwise eligible under the [official Week 2 rules](https://dev.to/page/hacktoberfest-week2-2026-10-12-contest-rules).
 - Confirm this repository/project was started and completed during the October 12–18, 2026 challenge window. The recorded GitHub repository creation date is October 14, 2026 at 16:52 UTC, and the earliest reachable commit is October 14, 2026 at 16:10 UTC—both after the official October 12, 2026 at 12:00 PM PDT opening. This supports the date-window requirement, but the owner must still attest that no earlier private or local version existed and that the project satisfies the official brand-new-project rule.
+- Confirm that the hosted DeepSeek plus open-source Mastra architecture satisfies the official open-weight/open-source AI requirement; do not rely on the Mastra sponsor-category evidence as an automatic challenge-wide eligibility determination.
 - Confirm the post will be the team’s one Week 2 entry and that any teammates’ DEV handles are credited.
 - Upload the 88-second demo video or replace the Demo section with an approved public video URL.
 - Preserve the Director-verified deployed commit/deployment record and recheck the public production behavior if the post is updated after publication.

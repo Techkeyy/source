@@ -41,7 +41,7 @@ Status: **Draft prepared; not published.**
 | Mastra | `src/lib/profile-workflow.ts` | Mastra wraps the grounded profile-analysis workflow |
 | MongoDB Atlas | `src/lib/db.ts`, persistence/ownership probes | Atlas persists user-owned profiles, opportunities, and proposal drafts |
 | Render | `render.yaml`, public service URL, Director-verified deployment `dep-db9jjv5g1s2s738v6meg` at `06bf4da64afffa4c99d74b9c46e17d3220a90520` | Render hosts the public web service; automatic deployment is disabled |
-| Open-source AI | Mastra workflow is used in the product path | Claim meaningful open-source AI tooling; do not claim local inference or Gemma |
+| Open-source AI | Mastra workflow is used in the product path; hosted DeepSeek is the model provider | Claim meaningful open-source workflow tooling; do not claim local/open-weight inference or Gemma, and obtain owner confirmation that the architecture satisfies the challenge-wide model requirement |
 | Reach/product-owner discovery | Negative gate evidence only | Product-owner discovery is experimental and must not be presented as a customer-acquisition success |
 | First user or paid customer | No verified evidence supplied | Omit the My First User section |
 
@@ -57,14 +57,16 @@ These are technology-use categories, not confirmed eligibility or prize claims. 
 
 ## Blocking owner checks
 
-1. **Eligibility:** GitHub reports repository creation at `2026-10-14T16:52:11Z`; the earliest reachable commit is `568feaf49cc323ce2ee6fe64ca956c61a218f7bc` at `2026-10-14T17:10:27+01:00` (16:10:27 UTC). Both are after the official opening, October 12, 2026 at 12:00 PM PDT (19:00 UTC). The date-window evidence passes, subject to the owner’s attestation that no earlier private or local project existed and the official brand-new-project rule is satisfied.
-2. **Production revision:** the Director directly verified the live Render record as commit `06bf4da64afffa4c99d74b9c46e17d3220a90520`, deployment `dep-db9jjv5g1s2s738v6meg`, with automatic deployment disabled. It includes the approved semantic product-discovery correction; no redeployment is required for this documentation pass.
-3. **Publication:** the DEV post, video upload, and any external submission are still pending explicit owner authorization.
+1. **Eligibility date window:** GitHub reports repository creation at `2026-10-14T16:52:11Z`; the earliest reachable commit is `568feaf49cc323ce2ee6fe64ca956c61a218f7bc` at `2026-10-14T17:10:27+01:00` (16:10:27 UTC). Both are after the official opening, October 12, 2026 at 12:00 PM PDT (19:00 UTC). The date-window evidence passes, subject to the owner’s attestation that no earlier private or local project existed and the official brand-new-project rule is satisfied.
+2. **AI requirement:** production uses hosted DeepSeek and open-source Mastra orchestration. The repository supports a meaningful open-source tooling claim, but the owner must confirm that this architecture satisfies the challenge-wide open-weight/open-source AI requirement; no local/open-weight inference or model-license claim is made.
+3. **Production revision:** the Director directly verified the live Render record as commit `06bf4da64afffa4c99d74b9c46e17d3220a90520`, deployment `dep-db9jjv5g1s2s738v6meg`, with automatic deployment disabled. It includes the approved semantic product-discovery correction; no redeployment is required for this documentation pass.
+4. **Publication:** the DEV post, video upload, and any external submission are still pending explicit owner authorization.
 
 ## Final publishing sequence
 
 1. Owner confirms the date-window evidence, the no-earlier-project attestation, and the one-entry/team-credit requirements.
-2. Owner accepts the Director-verified Render revision and confirms that the public behavior shown in the demo remains accurate.
-3. Owner uploads `source-demo-88s.mp4` or supplies an approved public video URL.
-4. Owner reviews the draft against the current official template and categories.
-5. Owner publishes exactly one DEV post with `#devchallenge` and `#hf26challenge`.
+2. Owner confirms the hosted DeepSeek/open-source Mastra architecture satisfies the official AI requirement.
+3. Owner accepts the Director-verified Render revision and confirms that the public behavior shown in the demo remains accurate.
+4. Owner uploads `source-demo-88s.mp4` or supplies an approved public video URL.
+5. Owner reviews the draft against the current official template and categories.
+6. Owner publishes exactly one DEV post with `#devchallenge` and `#hf26challenge`.
