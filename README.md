@@ -1,14 +1,16 @@
 # Source
 
-Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to investigate public customer signals. It keeps explicit supplier requests separate from potential customers and research-only project signals.
+Source is a customer finder for freelancers, agencies, consultants, and service businesses. It turns a public work URL into an editable, evidence-grounded profile and uses it to investigate public customer signals. It keeps explicit supplier requests separate from potential customers and research-only project signals.
 
-The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the currently deployed production commit is [`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`](https://github.com/Techkeyy/source/commit/1be26da3366c9ddbbd49018ec0cbbdab3ce8795e) in Render deployment `dep-db9cu2favr4c73djgm4g`. Render automatic deployment remains disabled; the verified immediate rollback target is [`53a24e72543f6ed300996a62d711b93b7f48ce4c`](https://github.com/Techkeyy/source/commit/53a24e72543f6ed300996a62d711b93b7f48ce4c), deployment `dep-db918lmq1p3s739n88dg`.
+The product uses three deliberately different labels: **Active Requests** are explicit external-service opportunities; **Potential Customers** have an observed need but unconfirmed commercial intent; and **Research Signals** show work that needs doing without evidence that an outside provider is being considered. None of these labels guarantees a customer, contract, payment, eligibility, or response.
+
+The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the currently deployed production commit is [`06bf4da64afffa4c99d74b9c46e17d3220a90520`](https://github.com/Techkeyy/source/commit/06bf4da64afffa4c99d74b9c46e17d3220a90520) in Render deployment `dep-db9jjv5g1s2s738v6meg`, verified live by the Director. Render automatic deployment remains disabled; the preserved immediate rollback target is the pre-correction runtime [`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`](https://github.com/Techkeyy/source/commit/1be26da3366c9ddbbd49018ec0cbbdab3ce8795e), deployment `dep-db9cu2favr4c73djgm4g`.
 
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)** · **[Security audit triage](docs/audit-triage-2026-10-16.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
-Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The bounded Directive 031 mobile and Jobicy relevance correction is live in the controlled Render deployment recorded in the release evidence; owner sign-off and hackathon submission authorization remain pending.
+Source is for freelancers, agencies, consultants, and small service businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The bounded Directive 031 mobile and Jobicy relevance correction is live in the controlled Render deployment recorded in the release evidence; owner sign-off and hackathon submission authorization remain pending.
 
 ## Why this exists
 
@@ -89,7 +91,7 @@ The historical script name `probe:gemma` is retained for compatibility with the 
 
 ## The accepted production path and current pivot boundary
 
-The production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, exact-width checks, and cleanup. The Directive 031 correction is live as commit `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` (`dep-db9cu2favr4c73djgm4g`); the immediate rollback target is the verified prior live commit `53a24e72543f6ed300996a62d711b93b7f48ce4c` (`dep-db918lmq1p3s739n88dg`).
+The production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, exact-width checks, and cleanup. The current Director-verified live record is commit `06bf4da64afffa4c99d74b9c46e17d3220a90520` (`dep-db9jjv5g1s2s738v6meg`), which includes the approved semantic product-discovery correction. The preserved immediate rollback target is the pre-correction runtime `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` (`dep-db9cu2favr4c73djgm4g`).
 
 The production path is:
 
@@ -112,7 +114,7 @@ The verified public release produced the following results:
 
 | Check | Result |
 |---|---|
-| Public deployment | Render service `source`, deployed commit `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, deployment `dep-db9cu2favr4c73djgm4g`; verified immediate rollback `53a24e72543f6ed300996a62d711b93b7f48ce4c` / `dep-db918lmq1p3s739n88dg` |
+| Public deployment | Render service `source`, Director-verified live commit `06bf4da64afffa4c99d74b9c46e17d3220a90520`, deployment `dep-db9jjv5g1s2s738v6meg`; preserved immediate rollback `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` / `dep-db9cu2favr4c73djgm4g`; automatic deployment disabled |
 | Active provider/model | DeepSeek, `deepseek-flash` |
 | Website analysis | `https://www.frog.co/`, live HTTP 200 source fetch |
 | Profile grounding | 8 grounded claims from 37 extracted source excerpts in the production response |
@@ -144,7 +146,7 @@ Issue creation, a missing assignee, a `help wanted` label, or technical compatib
 
 The official [Contracts Finder API documentation](https://www.contractsfinder.service.gov.uk/apidocumentation) and its public [OCDS notice search](https://www.contractsfinder.service.gov.uk/apidocumentation/Notices/1/GET-Published-Notice-OCDS-Search) are feasible for stronger procurement evidence. A bounded live probe returned 100 recent tender releases and 59 current digital/design/marketing-related matches with status, buyer, deadline, scope, procurement method, SME suitability, and official notice links. Detailed selection criteria may still require opening the notice documents, and a tender is not a guarantee of eligibility or award. The production adapter uses the public endpoint only; it does not scrape or bypass access controls.
 
-The Directive 031 correction was implemented on `codex/directive-029-reach-regression`, merged as `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, and promoted through the controlled Render procedure. The production results are recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md). A later documentation-only evidence commit, `c64baf4b519d9ea165749b94d7de0b077d924c4c`, is on `origin/main` and was intentionally not redeployed.
+The Directive 031 correction was implemented on `codex/directive-029-reach-regression` and is included in the current Director-verified live record. Directive 033's semantic product-discovery correction was merged as [`b8c27b267e82b20765be410bd281a4cabfbb0494`](https://github.com/Techkeyy/source/commit/b8c27b267e82b20765be410bd281a4cabfbb0494); the current live commit is [`06bf4da64afffa4c99d74b9c46e17d3220a90520`](https://github.com/Techkeyy/source/commit/06bf4da64afffa4c99d74b9c46e17d3220a90520) in deployment `dep-db9jjv5g1s2s738v6meg`. The current record is a documentation-only descendant of the approved code merge, and no redeployment was performed during this documentation pass. The pre-correction runtime `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` remains the preserved immediate rollback target. Production results are recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md) and [docs/directive-033-release-gates.md](docs/directive-033-release-gates.md).
 
 ## Architecture
 
