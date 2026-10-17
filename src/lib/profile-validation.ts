@@ -1,5 +1,5 @@
 import { SourceError } from "@/lib/errors";
-import type { DiscoveryObjective, OfferingType, ProfileDraft } from "@/lib/types";
+import type { DiscoveryObjective, OfferingType, ProfileDraft, ProfileOrigin } from "@/lib/types";
 
 const OFFERING_TYPES = new Set<OfferingType>(["service-provider", "product-owner", "unclear"]);
 const DISCOVERY_OBJECTIVES = new Set<DiscoveryObjective>(["external-services", "product-users"]);
@@ -26,7 +26,9 @@ export function cleanProfile(input: unknown): ProfileDraft {
   if (!input || typeof input !== "object") throw new SourceError("The profile could not be read.");
   const record = input as Record<string, unknown>;
   const sourceUrl = typeof record.sourceUrl === "string" ? record.sourceUrl.trim() : "";
-  if (!sourceUrl) throw new SourceError("A profile source URL is required.");
+  const profileOrigin: ProfileOrigin = record.profileOrigin === "manual" ? "manual" : "website";
+  if (!sourceUrl && profileOrigin !== "manual") throw new SourceError("A profile source URL is required.");
+  const portfolioUrl = typeof record.portfolioUrl === "string" ? record.portfolioUrl.trim().slice(0, 500) : "";
   const list = (key: string) => cleanClaimList(record[key]);
   const grounding = record.grounding && typeof record.grounding === "object" ? record.grounding as Record<string, unknown> : {};
   const offeringTypeSuggestion = typeof record.offeringTypeSuggestion === "string" && OFFERING_TYPES.has(record.offeringTypeSuggestion as OfferingType)
@@ -65,13 +67,17 @@ export function cleanProfile(input: unknown): ProfileDraft {
           .slice(0, 10)
       : [],
     sourceUrl,
+    ...(portfolioUrl ? { portfolioUrl } : {}),
+    ...(profileOrigin === "manual" ? { profileOrigin } : {}),
     analyzedAt: typeof record.analyzedAt === "string" ? record.analyzedAt : new Date().toISOString(),
     model: typeof record.model === "string" ? record.model : "unknown",
     grounding: {
       sourceTitle: typeof grounding.sourceTitle === "string" ? grounding.sourceTitle.slice(0, 200) : "Website",
       sourceExcerptCount: Number(grounding.sourceExcerptCount || 0),
       // These claims remain intentionally unsupported even if a client submits them.
-      unsupportedFields: ["pricing", "ownership", "past clients", "years of experience"],
+      unsupportedFields: profileOrigin === "manual"
+        ? ["services", "skills", "summary", "portfolio", "clients", "testimonials", "qualifications", "experience"]
+        : ["pricing", "ownership", "past clients", "years of experience"],
     },
     ...(offeringTypeSuggestion ? { offeringTypeSuggestion } : {}),
     ...(typeof record.offeringTypeSuggestionReason === "string" ? { offeringTypeSuggestionReason: record.offeringTypeSuggestionReason.trim().slice(0, 400) } : {}),
@@ -81,7 +87,14 @@ export function cleanProfile(input: unknown): ProfileDraft {
 }
 
 export function requireCompleteProfile(profile: ProfileDraft) {
-  if (!profile.businessName || !profile.summary) throw new SourceError("Add a name and summary before confirming the profile.");
+  if (!profile.businessName) throw new SourceError("Add a name before confirming the profile.");
+  if (profile.profileOrigin === "manual") {
+    if (!profile.productsAndServices.some((claim) => claim.text.trim().length >= 2)) {
+      throw new SourceError("Add at least one meaningful service before confirming a manual profile.", 422, "SERVICES_REQUIRED");
+    }
+    return;
+  }
+  if (!profile.summary) throw new SourceError("Add a summary before confirming the profile.");
 }
 
 export function requireConfirmedDiscoveryIntent(profile: ProfileDraft) {

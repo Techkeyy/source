@@ -21,7 +21,34 @@ describe("profile persistence boundary", () => {
 
   it("rejects an incomplete profile before it can be saved", () => {
     expect(() => cleanProfile({ ...validProfile, sourceUrl: "" })).toThrow(/source URL/i);
-    expect(() => requireCompleteProfile({ ...cleanProfile(validProfile), summary: "" })).toThrow(/name and summary/i);
+    expect(() => requireCompleteProfile({ ...cleanProfile(validProfile), summary: "" })).toThrow(/summary/i);
+  });
+
+  it("accepts a manual profile without a website while keeping its details user-provided", () => {
+    const manual = cleanProfile({
+      businessName: "Independent Media Studio",
+      summary: "",
+      sourceUrl: "",
+      portfolioUrl: "https://example.com/work",
+      profileOrigin: "manual",
+      productsAndServices: [{ text: "Media planning", evidence: [], inference: true }],
+      skillsAndTechnologies: [{ text: "Audience strategy", evidence: [], inference: true }],
+      grounding: { sourceTitle: "User-provided", sourceExcerptCount: 0 },
+      model: "user-provided",
+    });
+    requireCompleteProfile(manual);
+    expect(manual.profileOrigin).toBe("manual");
+    expect(manual.sourceUrl).toBe("");
+    expect(manual.portfolioUrl).toBe("https://example.com/work");
+    expect(manual.productsAndServices[0].evidence).toEqual([]);
+    expect(manual.productsAndServices[0].inference).toBe(true);
+    expect(manual.grounding.unsupportedFields).toContain("services");
+    expect(manual.grounding.unsupportedFields).toContain("portfolio");
+  });
+
+  it("requires a meaningful service before a manual profile can be confirmed", () => {
+    const manual = cleanProfile({ ...validProfile, sourceUrl: "", summary: "", profileOrigin: "manual", productsAndServices: [] });
+    expect(() => requireCompleteProfile(manual)).toThrow(/meaningful service/i);
   });
 
   it("persists confirmed offering type and objective without weakening legacy profile compatibility", () => {
