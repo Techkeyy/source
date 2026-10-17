@@ -4136,9 +4136,12 @@ The normal merge was verified on the exact merged tree and pushed to GitHub:
 No Render deployment was initiated because the authenticated dashboard
 connector failed during initialization. No deployment ID or new production
 SHA is claimed. The last verified live runtime remains
-`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, with immediate rollback target
-`53a24e72543f6ed300996a62d711b93b7f48ce4c`; automatic deployment remains
-disabled. Production UAT for `b8c27b2` is still outstanding, so Directive 033
-is **HOLD** pending owner-controlled Render deployment and acceptance. Do not
-publish the hackathon entry.
+`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` (deployment
+`dep-db9cu2favr4c73djgm4g`). That pre-correction runtime is the immediate
+rollback target for a `b8c27b2` promotion. The older
+`53a24e72543f6ed300996a62d711b93b7f48ce4c` deployment is a historical fallback,
+not the immediate target. Automatic deployment remains disabled. Production UAT
+for `b8c27b2` is still outstanding, so Directive 033 is **HOLD** pending
+owner-controlled Render deployment and acceptance. Do not publish the
+hackathon entry.
 

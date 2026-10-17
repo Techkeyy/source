@@ -97,8 +97,10 @@ published by this correction.
   connector failed during initialization, so no deployment ID or deployed SHA
   is invented.
 - Last verified live runtime before this correction remains
-  `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`; its verified immediate rollback
-  target remains `53a24e72543f6ed300996a62d711b93b7f48ce4c`.
+  `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, deployment
+  `dep-db9cu2favr4c73djgm4g`. If `b8c27b2` is promoted, this pre-correction
+  runtime is the immediate rollback target. The older `53a24e72543f6ed300996a62d711b93b7f48ce4c`
+  deployment is retained as a historical fallback, not the immediate target.
 - Automatic deployment remains disabled. Production acceptance for this new
   SHA is therefore still pending and the release is **HOLD** until the owner
   manually deploys the exact merge SHA and repeats Reach negative, service
