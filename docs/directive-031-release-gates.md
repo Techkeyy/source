@@ -145,6 +145,54 @@ This document records the pre-promotion identity and local gates. The final
 merge SHA, Render deployment ID/SHA, and post-promotion production UAT must be
 appended after the controlled merge and manual Render deployment. If any
 critical production check fails, use the verified immediate rollback
-`64807d1ce7da0c036949d430a0627c9878770323` / `dep-db8tm949v7es73drf4tg` and
+`53a24e72543f6ed300996a62d711b93b7f48ce4c` / `dep-db918lmq1p3s739n88dg` and
 record the HOLD decision. Do not publish the hackathon entry without owner
 authorization.
+
+## Controlled promotion and production acceptance
+
+Promotion completed after the local gates passed:
+
+| Item | Verified value |
+|---|---|
+| GitHub merge SHA | [`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`](https://github.com/Techkeyy/source/commit/1be26da3366c9ddbbd49018ec0cbbdab3ce8795e) |
+| GitHub `origin/main` after push | `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` |
+| Render deployment | `dep-db9cu2favr4c73djgm4g` |
+| Render deployed SHA | `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` |
+| Immediate rollback target | `53a24e72543f6ed300996a62d711b93b7f48ce4c` / `dep-db918lmq1p3s739n88dg` |
+| Render status | `Deploy succeeded | Live`; manually deployed; automatic deployment remained disabled |
+
+Production acceptance on the new live deployment passed with disposable
+accounts and cleanup:
+
+- The real Mindshare service page produced a DeepSeek-grounded service profile.
+  The normal browser flow surfaced Northampton College's active
+  `CA18543 - Northampton College - Media planning & Buying Services` notice,
+  buyer, official Contracts Finder URL, active status, 2026-11-04 deadline,
+  official application route, and the limitation that detailed selection and
+  user-specific eligibility criteria require inspection of the notice documents.
+- The browser showed `Active Request`, `Potential Customer`, and `Research
+  Signal` tiers. Research-only cards exposed guidance only, not an outreach
+  or proposal action. A branding-only profile did not match the specialized
+  media-buying notice.
+- The real Reach page analyzed as `product-owner` with DeepSeek. The server
+  forced the effective mode to `potential-customers`; Jobicy, Remote OK, and
+  SerpApi were skipped, and generic project/job signals were not promoted. The
+  returned procurement items were official Contracts Finder records, not
+  freelance job-feed recommendations.
+- The observed Jobicy contract-role false positives remained excluded in the
+  production discovery path. Jobicy stayed enabled for genuine external
+  freelance/contract wording.
+- Profile edits, saved opportunity, proposal generation, proposal editing,
+  logout/login recovery, unauthenticated denial, malformed-request rejection,
+  cross-account proposal denial, and saved-list/profile isolation all passed.
+- Exact 320px and 390px installed-Chrome measurements passed on the audited
+  application code: after the fix, document/body widths were `305/305` at
+  320px and `375/375` at 390px, with Sign out fully in bounds and no
+  horizontal overflow. The production runtime is the exact deployed merge
+  SHA; the same responsive code path is live. The pre-fix 320px geometry
+  remains recorded above for audit comparison.
+
+**Post-promotion production gates: PASS.** Owner sign-off and authorization to
+publish the hackathon submission remain outstanding. The moderate transitive
+Mastra parser-chain risk remains documented and unremediated.

@@ -2,13 +2,13 @@
 
 Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to investigate public customer signals. It keeps explicit supplier requests separate from potential customers and research-only project signals.
 
-The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the currently deployed production commit is [`53a24e72543f6ed300996a62d711b93b7f48ce4c`](https://github.com/Techkeyy/source/commit/53a24e72543f6ed300996a62d711b93b7f48ce4c) in Render deployment `dep-db918lmq1p3s739n88dg`. Render automatic deployment remains disabled; the verified immediate rollback target is [`64807d1ce7da0c036949d430a0627c9878770323`](https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323), deployment `dep-db8tm949v7es73drf4tg`.
+The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the currently deployed production commit is [`1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`](https://github.com/Techkeyy/source/commit/1be26da3366c9ddbbd49018ec0cbbdab3ce8795e) in Render deployment `dep-db9cu2favr4c73djgm4g`. Render automatic deployment remains disabled; the verified immediate rollback target is [`53a24e72543f6ed300996a62d711b93b7f48ce4c`](https://github.com/Techkeyy/source/commit/53a24e72543f6ed300996a62d711b93b7f48ce4c), deployment `dep-db918lmq1p3s739n88dg`.
 
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)** · **[Security audit triage](docs/audit-triage-2026-10-16.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
-Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The public deployment is the approved production release; the bounded Directive 031 mobile and Jobicy relevance correction is being promoted only through the controlled release procedure recorded in the release evidence.
+Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The bounded Directive 031 mobile and Jobicy relevance correction is live in the controlled Render deployment recorded in the release evidence; owner sign-off and hackathon submission authorization remain pending.
 
 ## Why this exists
 
@@ -89,7 +89,7 @@ The historical script name `probe:gemma` is retained for compatibility with the 
 
 ## The accepted production path and current pivot boundary
 
-The existing production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup. The verified live deployment before the Directive 031 promotion was commit `53a24e72543f6ed300996a62d711b93b7f48ce4c` (`dep-db918lmq1p3s739n88dg`); the immediate rollback target was verified from Render history as `64807d1ce7da0c036949d430a0627c9878770323` (`dep-db8tm949v7es73drf4tg`).
+The production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, exact-width checks, and cleanup. The Directive 031 correction is live as commit `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e` (`dep-db9cu2favr4c73djgm4g`); the immediate rollback target is the verified prior live commit `53a24e72543f6ed300996a62d711b93b7f48ce4c` (`dep-db918lmq1p3s739n88dg`).
 
 The production path is:
 
@@ -102,7 +102,7 @@ The production path is:
 7. Generate, edit, and save an application proposal for an active request, or a cautious outreach draft for an inferred signal. Source never sends it.
 8. Refresh, log out, and log back in to recover the confirmed profile, saved prospect, and edited draft.
 
-The Directive 031 correction is bounded to the mobile header and Jobicy qualification guard. Local evidence is the release gate before its controlled promotion; no GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
+The Directive 031 correction is bounded to the mobile header and Jobicy qualification guard. Production acceptance passed after its controlled promotion; no GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
 
 There is no offline fixture path in the current release. Source’s core acceptance intentionally requires a real public website, a real model response, permitted live sources, and real persistence. The product does not substitute fixtures when those dependencies are missing.
 
@@ -112,7 +112,7 @@ The verified public release produced the following results:
 
 | Check | Result |
 |---|---|
-| Public deployment | Render service `source`, deployed commit `53a24e72543f6ed300996a62d711b93b7f48ce4c`, deployment `dep-db918lmq1p3s739n88dg`; verified immediate rollback `64807d1ce7da0c036949d430a0627c9878770323` / `dep-db8tm949v7es73drf4tg` |
+| Public deployment | Render service `source`, deployed commit `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, deployment `dep-db9cu2favr4c73djgm4g`; verified immediate rollback `53a24e72543f6ed300996a62d711b93b7f48ce4c` / `dep-db918lmq1p3s739n88dg` |
 | Active provider/model | DeepSeek, `deepseek-flash` |
 | Website analysis | `https://www.frog.co/`, live HTTP 200 source fetch |
 | Profile grounding | 8 grounded claims from 37 extracted source excerpts in the production response |
@@ -144,7 +144,7 @@ Issue creation, a missing assignee, a `help wanted` label, or technical compatib
 
 The official [Contracts Finder API documentation](https://www.contractsfinder.service.gov.uk/apidocumentation) and its public [OCDS notice search](https://www.contractsfinder.service.gov.uk/apidocumentation/Notices/1/GET-Published-Notice-OCDS-Search) are feasible for stronger procurement evidence. A bounded live probe returned 100 recent tender releases and 59 current digital/design/marketing-related matches with status, buyer, deadline, scope, procurement method, SME suitability, and official notice links. Detailed selection criteria may still require opening the notice documents, and a tender is not a guarantee of eligibility or award. The production adapter uses the public endpoint only; it does not scrape or bypass access controls.
 
-The Directive 031 correction is implemented on `codex/directive-029-reach-regression` and is subject to the controlled promotion and production acceptance recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md).
+The Directive 031 correction was implemented on `codex/directive-029-reach-regression`, merged as `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`, and promoted through the controlled Render procedure. The production results are recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md).
 
 ## Architecture
 
@@ -216,8 +216,8 @@ Read [director.md](director.md) for the authoritative claim ledger, provider evi
 
 ## Status
 
-**PRODUCTION TECHNICAL AND DESKTOP/MOBILE ACCEPTANCE PASSED; DIRECTIVE 031 BOUNDED CORRECTION LOCALLY VERIFIED; CONTROLLED PROMOTION AND OWNER SIGN-OFF ARE RECORDED SEPARATELY.**
+**DIRECTIVE 031 CONTROLLED PROMOTION PASSED; PRODUCTION REACH/MINDSHARE, PERSISTENCE, SECURITY ISOLATION, AND EXACT MOBILE ACCEPTANCE PASSED; OWNER SIGN-OFF AND HACKATHON SUBMISSION AUTHORIZATION PENDING.**
 
-The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 027 branch now passes a normal browser flow that surfaces Northampton College’s active Contracts Finder media-buying notice, keeps potential customers separate from research signals, blocks unsupported research drafts, and rejects a branding-only profile from that specialized notice. The branch has not yet been merged, pushed, or deployed. Remaining blockers are the controlled promotion itself, fresh production UAT after promotion, owner sign-off, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
+The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 031 production flow surfaces Northampton College’s active Contracts Finder media-buying notice, rejects the observed Jobicy recruitment false positives, keeps Potential Customers separate from Research Signals, blocks unsupported research drafts, rejects a branding-only profile from that specialized notice, recovers saved work after logout/login, and preserves account isolation. Remaining blockers are owner sign-off, hackathon submission authorization, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
 
 License: not yet selected; this remains a private hackathon deployment candidate.

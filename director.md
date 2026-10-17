@@ -4054,3 +4054,35 @@ results must be appended after promotion. If a critical production gate fails,
 roll back to the verified `64807d1ce7da0c036949d430a0627c9878770323` deployment
 and return HOLD. Do not publish the hackathon entry without owner approval.
 
+### Controlled promotion completed
+
+Updated 2026-10-17 after the authorized promotion. The normal merge was pushed
+to GitHub and the exact SHA was manually deployed to Render:
+
+- Merge and deployed SHA: `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`.
+- GitHub `origin/main`: `1be26da3366c9ddbbd49018ec0cbbdab3ce8795e`.
+- Render deployment: `dep-db9cu2favr4c73djgm4g`, status `Deploy succeeded | Live`.
+- Render source link verified the full SHA above; automatic deployment remained
+  disabled.
+- Correct immediate rollback target: `53a24e72543f6ed300996a62d711b93b7f48ce4c`,
+  deployment `dep-db918lmq1p3s739n88dg`.
+
+Production Reach negative and Mindshare positive acceptance passed with
+disposable accounts. The Mindshare browser flow surfaced the real active
+Contracts Finder Northampton College CA18543 media-planning/buying request
+with buyer, official URL, status, deadline, application route, and eligibility
+limitations. Potential Customer and Research Signal labels, research-only
+guidance, branding mismatch rejection, Jobicy false-positive exclusion,
+profile/proposal persistence, logout/login recovery, ownership isolation, and
+cleanup passed. The Reach flow analyzed the real public page as Product Owner,
+forced the server's effective mode to Potential Customers, skipped Jobicy,
+Remote OK, and SerpApi, and did not promote generic job/project signals.
+
+The exact installed-Chrome 320px/390px geometry gate passed on the audited code:
+320px document/body `305/305`, Sign out `235.572–288.888`; 390px
+document/body `375/375`, Sign out `301.968–355.284`; no control exceeded the
+viewport. The exact deployed SHA contains that same responsive correction.
+
+**Directive 031 final status: GO for owner sign-off; HOLD on hackathon
+publication until the owner explicitly authorizes submission.**
+
