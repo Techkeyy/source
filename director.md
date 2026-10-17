@@ -3936,3 +3936,121 @@ CUSTOMER-DISCOVERY UAT PASS; NORTHAMPTON PROCUREMENT NOTICE SURFACED; GITHUB
 BUYER-QUALITY BOUNDARY CORRECTED; OWNER SIGN-OFF AND HACKATHON SUBMISSION
 AUTHORIZATION REMAIN REQUIRED.**
 
+## Directive 030 — final Reach relevance release gates
+
+Updated 2026-10-17 (Africa/Lagos). The bounded legacy-profile compatibility
+correction was tested locally on `codex/directive-029-reach-regression`.
+
+- Gate 1: **PASS**. Legacy Reach-style and service-provider profiles without
+  offering/objective fields remained readable but received
+  `DISCOVERY_INTENT_REQUIRED` before discovery. Confirmed product objectives
+  were enforced server-side even when the client requested active jobs.
+- Gate 2: **PASS for the required live examples**. Real Reach analysis produced
+  an honest product-signal empty state with unrelated job feeds skipped. A real
+  Mindshare media-service profile surfaced the live Northampton College CA18543
+  Contracts Finder notice through the normal results interface. The official
+  notice URL, buyer, scope, active status, deadline, open procedure, SME signal,
+  and application route were verified. User-edited media-planning terms remain
+  distinct from page evidence. Unrelated Jobicy noise was not counted as a
+  positive result and remains a source limitation.
+- Gate 3: **HOLD / FAIL at exact 320px; PASS at 390px**. Installed Chrome
+  DevTools measured 390px with document width 375px and no overflow. At 320px,
+  the document/body measured 342/343px and the authenticated Sign out control
+  extended beyond the viewport, producing a horizontal scrollbar.
+
+### Directive 030 release decision
+
+**HOLD — no merge, push, Render deployment, or production UAT was performed.**
+The existing production revision and rollback state remain unchanged. The
+minimum server/UI compatibility guard and its disposable probe are recorded in
+[docs/directive-030-release-gates.md](docs/directive-030-release-gates.md).
+A separate explicitly approved mobile-only correction is required before
+controlled promotion. The exact local viewport evidence must not be described
+as a production acceptance result.
+
+## Directive 031 — final mobile and Jobicy relevance correction
+
+Updated 2026-10-17 (Africa/Lagos). The bounded correction is on
+`codex/directive-029-reach-regression` and is recorded in
+[docs/directive-031-release-gates.md](docs/directive-031-release-gates.md).
+
+### Verified production identity before promotion
+
+Render dashboard inspection established that the actual live service was:
+
+- Live deployment: `dep-db918lmq1p3s739n88dg`.
+- Live commit: `53a24e72543f6ed300996a62d711b93b7f48ce4c`.
+- Immediate predecessor and correct rollback target: `64807d1ce7da0c036949d430a0627c9878770323`, deployment `dep-db8tm949v7es73drf4tg`.
+- `origin/main` before merge: `168689760751e7d20aca274c0ffade63bc5b054f`.
+- Render automatic deployment: disabled.
+
+The prior `64807d1…` and `53a24e7…` reports were different deployments. The
+older `6cbe759…` revision was not used as the immediate rollback target.
+
+### Gate 1 — 320px overflow
+
+Installed Chrome DevTools with a real authenticated session measured the
+pre-fix 320px document/body as `342/343px`; the Sign out button ended at
+`342.840px`. The root cause was the existing mobile selector `.app-brand em`
+not matching the authenticated `.app-nav .brand` markup, leaving the label in
+the flex row. The minimal correction is `.app-nav .brand em { display: none; }`.
+
+After correction, the 320px document/body is `305/305px` and Sign out is
+`235.572px–288.888px` with width `53.316px`. At 390px the document/body is
+`375/375px` and Sign out is `301.968px–355.284px`. Profile confirmation,
+results, saved pipeline, and landing/registration all measured with no
+horizontal overflow at both widths; buttons remained enabled and within the
+viewport. No overflow clipping was added.
+
+**Gate 1: PASS.**
+
+### Gate 2 — Jobicy false-positive correction
+
+The observed Jobicy records for Reddit (`EMEA Insights Lead, Consumer and
+Commercial Strategy` and `Staff Machine Learning Engineer, Ads Foundational
+Representations`) were `Contract` records whose original bodies described
+internal recruitment roles, responsibilities, qualifications, benefits,
+interviews, and candidate/employment handling. They did not request external
+media planning or buying services. Generic profile overlap had previously
+allowed them through.
+
+The adapter now normalizes the current public Jobicy schema, requires an
+external/freelance service signal, and rejects recruitment-context records.
+The targeted false-positive regression passes, while a project-based freelance
+media-buying regression remains eligible. The live media-planning query
+returned 43 Jobicy records: 41 full-time rejections, 2 unsupported recruitment
+rejections, and 0 qualified Jobicy recommendations.
+
+The real Mindshare browser path still surfaced the current Contracts Finder
+Northampton College CA18543 active request with buyer, official notice URL,
+status, deadline, application route, and explicit qualification limitations.
+The browser also verified Potential Customer and Research Signal labels,
+research-only draft blocking, and rejection of that specialized notice for a
+branding-only profile.
+
+**Gate 2: PASS.**
+
+### Gate 3 — release verification
+
+Typecheck, zero-warning lint, 30 unit/regression tests, production build, live
+discovery, Contracts Finder, DeepSeek core acceptance, ownership isolation,
+legacy-profile compatibility, Mindshare browser acceptance, Jobicy regression,
+and exact 320px/390px checks passed. The core acceptance probe uses the real
+Mindshare procurement path so persistence and proposal recovery are exercised
+against a current source with an official route; it does not use a hardcoded
+result. Production-only audit remains `0 high / 0 critical / 5 moderate` in
+the documented transitive Mastra parser chain; no dependency upgrade or forced
+fix was made.
+
+**Local gates: PASS.**
+
+### Directive 031 promotion status
+
+**READY FOR CONTROLLED PROMOTION.** The code correction and evidence are ready
+for a normal merge, exact-merge verification, push, and manually targeted
+Render deployment. The final merge SHA, new Render deployment ID/SHA, and
+post-promotion production Reach/Mindshare, persistence, ownership, and mobile
+results must be appended after promotion. If a critical production gate fails,
+roll back to the verified `64807d1ce7da0c036949d430a0627c9878770323` deployment
+and return HOLD. Do not publish the hackathon entry without owner approval.
+

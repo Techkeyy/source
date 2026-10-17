@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyOpportunity, dedupeAndRankOpportunities, qualifyOpportunity, type RawOpportunity } from "@/lib/discovery";
+import { classifyOpportunity, dedupeAndRankOpportunities, profileTerms, qualifyOpportunity, type RawOpportunity } from "@/lib/discovery";
 import type { ProfileDraft } from "@/lib/types";
 
 function record(overrides: Partial<RawOpportunity> = {}): RawOpportunity {
@@ -31,6 +31,19 @@ const profile: ProfileDraft = {
   analyzedAt: new Date().toISOString(),
   model: "test",
   grounding: { sourceTitle: "Example", sourceExcerptCount: 2, unsupportedFields: [] },
+  offeringType: "service-provider",
+  discoveryObjective: "external-services",
+};
+
+const reachProfile: ProfileDraft = {
+  ...profile,
+  businessName: "Reach",
+  summary: "A passkey-powered payment product that lets people send and claim test-token payments.",
+  productsAndServices: [{ text: "Passkey payment product", evidence: ["passkey payment product"] }, { text: "Test-token payments", evidence: ["test-token payments"] }],
+  skillsAndTechnologies: [{ text: "Passkey account", evidence: ["passkey account"] }],
+  searchKeywords: ["payments", "passkey", "test tokens"],
+  offeringType: "product-owner",
+  discoveryObjective: "product-users",
 };
 
 describe("opportunity employment classification", () => {
@@ -91,5 +104,132 @@ describe("opportunity employment classification", () => {
     expect(qualifyOpportunity(record({ provider: "GitHub", title: "Unrelated gardening issue", description: "We need a garden hose.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
     expect(qualifyOpportunity(record({ provider: "GitHub", title: "Product design feature request", description: "We need product design help.", prospectType: "potential-customer" }), profile, ["startups"], "potential-customers")).toBeNull();
     expect(dedupeAndRankOpportunities([relevant, duplicate], profile, ["startups"], "potential-customers")).toHaveLength(1);
+  });
+
+  it("does not match Reach's payment product to a graphic-design contractor listing", () => {
+    const blueTuskr = record({
+      provider: "Jobicy",
+      title: "Graphic Designer & Video Editor",
+      description: "Create branded visual content for a team. Coordinate with people and test creative concepts.",
+      type: "contract",
+      organization: "BlueTuskr",
+      contactUrl: "https://example.com/apply",
+    });
+    expect(profileTerms(reachProfile)).not.toEqual(expect.arrayContaining(["people", "human", "between", "test"]));
+    expect(qualifyOpportunity(blueTuskr, reachProfile, ["startups"], "active-requests")).toBeNull();
+  });
+
+  it("rejects the observed Jobicy full-time media recruitment false positive", () => {
+    const observedRecruitment = record({
+      provider: "Jobicy",
+      title: "Director, Programmatic B2B",
+      description: "We are looking for a Director, Programmatic to oversee the programmatic buying division of multiple B2B clients. This full-time role includes annual salary, benefits, and employee responsibilities.",
+      type: "Full-Time",
+      organization: "Wpromote",
+      url: "https://jobicy.com/jobs/155535-director-programmatic-b2b",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    expect(classifyOpportunity(observedRecruitment, "active-requests")).toBe("full-time-employment");
+    expect(qualifyOpportunity(observedRecruitment, mediaBuyer, ["agencies"], "active-requests")).toBeNull();
+  });
+
+  it("rejects a Jobicy contract-role listing when its source is recruitment rather than an external service request", () => {
+    const observedContractRole = record({
+      provider: "Jobicy",
+      title: "Staff Machine Learning Engineer, Ads Foundational Representations",
+      description: "Reddit is hiring for a staff engineering role. Responsibilities include building ads models and cross-functional projects. Qualifications, interviews, benefits, and candidate privacy information are provided.",
+      type: "Contract",
+      organization: "Reddit",
+      url: "https://jobicy.com/jobs/155056-staff-machine-learning-engineer-ads-foundational-representations",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    expect(classifyOpportunity(observedContractRole, "active-requests")).toBe("unknown-employment-type");
+    expect(qualifyOpportunity(observedContractRole, mediaBuyer, ["agencies"], "active-requests")).toBeNull();
+  });
+
+  it("preserves a genuinely contract-shaped Jobicy match for a service provider", () => {
+    const contractListing = record({
+      provider: "Jobicy",
+      title: "Freelance media buying consultant",
+      description: "Seeking a freelance media buying consultant for a project-based engagement supporting campaign planning and paid media execution.",
+      type: "Contract",
+      organization: "Example Agency",
+      contactUrl: "https://jobicy.com/jobs/example-media-contract",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    expect(classifyOpportunity(contractListing, "active-requests")).toBe("freelance-or-contract");
+    expect(qualifyOpportunity(contractListing, mediaBuyer, ["agencies"], "active-requests")).not.toBeNull();
+  });
+
+  it("does not let generic profile words establish product relevance", () => {
+    const genericIssue = record({
+      provider: "GitHub",
+      title: "Operational backup preparation",
+      description: "This issue records a read-only preparation stage and a simple way to review the work.",
+      prospectType: "potential-customer",
+      organization: "Example/project",
+    });
+    expect(qualifyOpportunity(genericIssue, reachProfile, ["startups"], "potential-customers")).toBeNull();
+  });
+
+  it("does not treat promotional company roundups as external requests", () => {
+    const promotion = record({
+      provider: "GitHub",
+      title: "8 eCommerce App Development Companies Helping South African Businesses Go Mobile",
+      description: "Businesses looking for a scalable eCommerce technology partner can compare these companies. Key Services include mobile development and payment integrations. Best for startups.",
+      type: "public issue",
+      organization: "example/promotion",
+      prospectType: "potential-customer",
+    });
+    expect(classifyOpportunity(promotion, "active-requests")).not.toBe("explicit-project-request");
+    expect(qualifyOpportunity(promotion, profile, ["startups"], "active-requests")).toBeNull();
+  });
+
+  it("rejects category-only matches for a service provider", () => {
+    const categoryOnly = record({
+      provider: "Jobicy",
+      title: "Startup operations coordinator",
+      description: "Help our startup organize its weekly work and customer meetings.",
+      type: "contract",
+      organization: "Example Startup",
+    });
+    expect(qualifyOpportunity(categoryOnly, profile, ["startups"], "active-requests")).toBeNull();
+  });
+
+  it("keeps specialized media buying eligible while rejecting broad branding overlap", () => {
+    const northampton = record({
+      provider: "Contracts Finder",
+      title: "Media planning and buying services",
+      description: "Northampton College invites tenders for media planning and buying services.",
+      type: "tender · services",
+      organization: "Northampton College",
+      buyerIntent: "confirmed",
+      noticeStatus: "active",
+      deadline: new Date(Date.now() + 86_400_000).toISOString(),
+      contactUrl: "https://www.contractsfinder.service.gov.uk/Notice/CA18543",
+    });
+    const mediaBuyer: ProfileDraft = { ...profile, productsAndServices: [{ text: "Media planning and buying", evidence: ["media planning and buying"] }], skillsAndTechnologies: [], searchKeywords: ["media planning", "media buying"] };
+    const brandingProvider: ProfileDraft = { ...profile, productsAndServices: [{ text: "Brand strategy and visual identity", evidence: ["brand strategy"] }], skillsAndTechnologies: [], searchKeywords: ["branding", "visual identity"] };
+    expect(qualifyOpportunity(northampton, mediaBuyer, ["small-businesses"], "active-requests")).not.toBeNull();
+    expect(qualifyOpportunity(northampton, brandingProvider, ["small-businesses"], "active-requests")).toBeNull();
+  });
+
+  it("requires product-relevant demand for product owners", () => {
+    const relevant = record({
+      provider: "Hacker News",
+      title: "Ask HN: How can we handle recipient payments?",
+      description: "We need a payment workflow for recipients. Could someone recommend a safer claim experience?",
+      prospectType: "potential-customer",
+      organization: "Example Payments",
+    });
+    const irrelevant = record({
+      provider: "Hacker News",
+      title: "Ask HN: Looking for a graphic designer",
+      description: "Could someone recommend a designer for our marketing site?",
+      prospectType: "potential-customer",
+      organization: "Example Studio",
+    });
+    expect(qualifyOpportunity(relevant, reachProfile, ["startups"], "potential-customers")).not.toBeNull();
+    expect(qualifyOpportunity(irrelevant, reachProfile, ["startups"], "potential-customers")).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 import { SourceError } from "./errors";
 import { optionalEnv, requiredEnv } from "./env";
 import type { ExtractedWebsite } from "./extract";
+import { inferOfferingTypeSuggestion } from "./offering";
 import type { GroundedClaim, ProfileDraft } from "./types";
 import { z } from "zod";
 
@@ -136,6 +137,13 @@ DATA END`;
 }
 
 function buildDraft(raw: ReturnType<typeof parseJson>, site: ExtractedWebsite, model: string): ProfileDraft {
+  const offeringSuggestion = inferOfferingTypeSuggestion({
+    summary: asString(raw.summary) || site.description,
+    productsAndServices: groundedClaims(raw.productsAndServices, site.text),
+    customerSegments: groundedClaims(raw.customerSegments, site.text),
+    searchKeywords: Array.isArray(raw.searchKeywords) ? raw.searchKeywords.filter((item): item is string => typeof item === "string") : [],
+    sourceText: site.text,
+  });
   return {
     businessName: asString(raw.businessName) || site.title,
     summary: asString(raw.summary) || site.description,
@@ -153,6 +161,8 @@ function buildDraft(raw: ReturnType<typeof parseJson>, site: ExtractedWebsite, m
     analyzedAt: new Date().toISOString(),
     model,
     grounding: { sourceTitle: site.title, sourceExcerptCount: site.excerpts.length, unsupportedFields: ["pricing", "ownership", "past clients", "years of experience"] },
+    offeringTypeSuggestion: offeringSuggestion.type,
+    offeringTypeSuggestionReason: offeringSuggestion.reason,
   };
 }
 

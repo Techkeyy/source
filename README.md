@@ -2,13 +2,13 @@
 
 Source turns a freelancer’s public project URL into an editable, evidence-grounded profile and uses it to investigate public customer signals. It keeps explicit supplier requests separate from potential customers and research-only project signals.
 
-The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the deployed production merge commit is [`53a24e72543f6ed300996a62d711b93b7f48ce4c`](https://github.com/Techkeyy/source/commit/53a24e72543f6ed300996a62d711b93b7f48ce4c). Render automatic deployment remains disabled; the prior production revision `6cbe759b16ae775a13d122abb3d9686b69d73877` is retained as the rollback target.
+The approved production release is live at [https://source-9k1o.onrender.com](https://source-9k1o.onrender.com). The application is maintained in the actual [Techkeyy/source GitHub repository](https://github.com/Techkeyy/source); the currently deployed production commit is [`53a24e72543f6ed300996a62d711b93b7f48ce4c`](https://github.com/Techkeyy/source/commit/53a24e72543f6ed300996a62d711b93b7f48ce4c) in Render deployment `dep-db918lmq1p3s739n88dg`. Render automatic deployment remains disabled; the verified immediate rollback target is [`64807d1ce7da0c036949d430a0627c9878770323`](https://github.com/Techkeyy/source/commit/64807d1ce7da0c036949d430a0627c9878770323), deployment `dep-db8tm949v7es73drf4tg`.
 
 **[Director evidence](director.md)** · **[Manual acceptance](docs/manual-acceptance.md)** · **[Phase 3 live report](docs/phase-3-live-integration-report.md)** · **[Source probes](evidence/source-probes-2026-10-13.md)** · **[Security audit triage](docs/audit-triage-2026-10-16.md)**
 
 > *“What can I credibly offer this buyer, and where is the evidence that I am a relevant match?”*
 
-Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The public deployment is the approved production release from merge SHA `53a24e72543f6ed300996a62d711b93b7f48ce4c`; owner sign-off and hackathon submission authorization remain pending.
+Source is for freelancers and small independent businesses that need a faster path from their existing work to evidence-backed customer discovery. It does not guarantee customers, payments, hiring outcomes, or responses. The public deployment is the approved production release; the bounded Directive 031 mobile and Jobicy relevance correction is being promoted only through the controlled release procedure recorded in the release evidence.
 
 ## Why this exists
 
@@ -89,7 +89,7 @@ The historical script name `probe:gemma` is retained for compatibility with the 
 
 ## The accepted production path and current pivot boundary
 
-The existing production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup. The customer-discovery pivot is now merged and deployed from `53a24e72543f6ed300996a62d711b93b7f48ce4c`; this documentation preserves the production evidence and remaining owner-submission boundary.
+The existing production technical acceptance used the public deployment at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) with disposable records that were deleted after testing. It covered registration, live website analysis, grounded profile review, profile confirmation and editing, discovery, proposal editing and saving, recovery, ownership isolation, and cleanup. The verified live deployment before the Directive 031 promotion was commit `53a24e72543f6ed300996a62d711b93b7f48ce4c` (`dep-db918lmq1p3s739n88dg`); the immediate rollback target was verified from Render history as `64807d1ce7da0c036949d430a0627c9878770323` (`dep-db8tm949v7es73drf4tg`).
 
 The production path is:
 
@@ -102,7 +102,7 @@ The production path is:
 7. Generate, edit, and save an application proposal for an active request, or a cautious outreach draft for an inferred signal. Source never sends it.
 8. Refresh, log out, and log back in to recover the confirmed profile, saved prospect, and edited draft.
 
-The buyer-quality correction is included in the production acceptance path from merge SHA `53a24e72543f6ed300996a62d711b93b7f48ce4c`; the controlled deployment remains unchanged unless an owner-approved release is made. No GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
+The Directive 031 correction is bounded to the mobile header and Jobicy qualification guard. Local evidence is the release gate before its controlled promotion; no GitHub issue, missing assignee, or internal backlog item is presented as proof of outsourcing.
 
 There is no offline fixture path in the current release. Source’s core acceptance intentionally requires a real public website, a real model response, permitted live sources, and real persistence. The product does not substitute fixtures when those dependencies are missing.
 
@@ -112,21 +112,20 @@ The verified public release produced the following results:
 
 | Check | Result |
 |---|---|
-| Public deployment | Render service `source`, deployed merge commit `53a24e72543f6ed300996a62d711b93b7f48ce4c`, deployment `dep-db918lmq1p3s739n88dg`; auto-deploy disabled |
+| Public deployment | Render service `source`, deployed commit `53a24e72543f6ed300996a62d711b93b7f48ce4c`, deployment `dep-db918lmq1p3s739n88dg`; verified immediate rollback `64807d1ce7da0c036949d430a0627c9878770323` / `dep-db8tm949v7es73drf4tg` |
 | Active provider/model | DeepSeek, `deepseek-flash` |
 | Website analysis | `https://www.frog.co/`, live HTTP 200 source fetch |
 | Profile grounding | 8 grounded claims from 37 extracted source excerpts in the production response |
 | Profile persistence | Confirmed profile and edits recovered after refresh and logout/login |
 | Four customer categories | Small businesses, startups, agencies, and individuals all preserved the selected category and produced distinct Hacker News query terms |
 | Category evidence | The agencies branch surfaced an evidence-backed `agency` match; the other branches truthfully left customer type unknown when the source did not support it |
-| Discovery | Live Hacker News, GitHub, Jobicy, Remote OK, and official Contracts Finder adapters; Northampton College’s active media-buying tender surfaced through the normal browser flow |
-| Buyer-quality tiers | Active Request, Potential Customer, and Research Signal were all verified in production; GitHub contract/job wording without external-buying evidence stayed out of Active Request |
+| Discovery | Live Hacker News, Jobicy, and Remote OK sources returned a qualified source-linked contract result in the accepted release; the pivot also adds GitHub potential-signal querying behind a separate mode |
 | Eligibility warning | The UI correctly warned that Source does not verify user-specific location, schedule, or availability eligibility |
 | Proposal persistence | Proposal was generated, edited, saved exactly, and recovered after refresh and logout/login |
 | Account isolation | A second account could not read or draft against the first account’s opportunity; saved lists remained isolated |
 | Desktop acceptance | Public Chromium browser UAT passed the core user journey and cleanup |
 | Mobile acceptance | Exact 390px and 320px checks passed with no horizontal overflow |
-| Unit suite | Final merged release: 4 files, 19 tests passing |
+| Unit suite | Existing production merge: 4 files, 13 tests; Directive 026 branch: 4 files, 18 tests passing |
 | Build and static checks | Typecheck, ESLint, and production build passed on the verified merge and again on the customer-discovery branch |
 
 The corrected public result rendered the em dash (`—`) correctly, retained original source links, and did not claim user-specific eligibility or worldwide availability.
@@ -145,7 +144,7 @@ Issue creation, a missing assignee, a `help wanted` label, or technical compatib
 
 The official [Contracts Finder API documentation](https://www.contractsfinder.service.gov.uk/apidocumentation) and its public [OCDS notice search](https://www.contractsfinder.service.gov.uk/apidocumentation/Notices/1/GET-Published-Notice-OCDS-Search) are feasible for stronger procurement evidence. A bounded live probe returned 100 recent tender releases and 59 current digital/design/marketing-related matches with status, buyer, deadline, scope, procurement method, SME suitability, and official notice links. Detailed selection criteria may still require opening the notice documents, and a tender is not a guarantee of eligibility or award. The production adapter uses the public endpoint only; it does not scrape or bypass access controls.
 
-The Directive 027 correction is merged and deployed from `53a24e72543f6ed300996a62d711b93b7f48ce4c`. Production UAT passed with disposable accounts and cleanup. Owner sign-off and hackathon-submission authorization are still required; the moderate Mastra transitive dependency risk remains documented and unremediated.
+The Directive 031 correction is implemented on `codex/directive-029-reach-regression` and is subject to the controlled promotion and production acceptance recorded in [docs/directive-031-release-gates.md](docs/directive-031-release-gates.md).
 
 ## Architecture
 
@@ -217,8 +216,8 @@ Read [director.md](director.md) for the authoritative claim ledger, provider evi
 
 ## Status
 
-**PRODUCTION TECHNICAL, DESKTOP/MOBILE, AND DIRECTIVE 027 CUSTOMER-DISCOVERY ACCEPTANCE PASSED; OWNER SIGN-OFF AND HACKATHON SUBMISSION AUTHORIZATION PENDING.**
+**PRODUCTION TECHNICAL AND DESKTOP/MOBILE ACCEPTANCE PASSED; DIRECTIVE 031 BOUNDED CORRECTION LOCALLY VERIFIED; CONTROLLED PROMOTION AND OWNER SIGN-OFF ARE RECORDED SEPARATELY.**
 
-The public release is deployed at [source-9k1o.onrender.com](https://source-9k1o.onrender.com) from merge SHA `53a24e72543f6ed300996a62d711b93b7f48ce4c`; Render deployment `dep-db918lmq1p3s739n88dg` is live and auto-deploy remains disabled. Production browser and API acceptance passed: the normal workflow surfaced Northampton College’s active Contracts Finder media-buying notice, kept potential customers separate from research signals, blocked unsupported research drafts, rejected a branding-only profile from that specialized notice, recovered saved work after logout/login, preserved account isolation, and passed 390px/320px overflow checks. Remaining blockers are owner sign-off, hackathon submission authorization, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
+The public release is deployed and its production desktop, mobile, persistence, four-category, ownership, and cleanup gates passed. The Directive 027 branch now passes a normal browser flow that surfaces Northampton College’s active Contracts Finder media-buying notice, keeps potential customers separate from research signals, blocks unsupported research drafts, and rejects a branding-only profile from that specialized notice. The branch has not yet been merged, pushed, or deployed. Remaining blockers are the controlled promotion itself, fresh production UAT after promotion, owner sign-off, and a separately controlled follow-up for the moderate Mastra transitive dependency risk.
 
 License: not yet selected; this remains a private hackathon deployment candidate.
